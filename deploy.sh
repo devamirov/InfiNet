@@ -15,11 +15,11 @@ NC='\033[0m' # No Color
 SERVER_IP="75.119.155.9"
 SERVER_USER="root"  # Change if you use a different user
 SERVER_PATH="/var/www/infinet.services"
-SSH_KEY="$HOME/Desktop/contabo_key.txt"
+SSH_KEY="$HOME/Desktop/servercc.txt"
 BACKEND_PORT="3000"
 
 # API Configuration - Update these or they'll be prompted
-GEMINI_API_KEY="AIzaSyBMoXVtx_O4uwyUCLwrNQGN3xQvPMxCp6c"
+GEMINI_API_KEY="GEMINI_KEY"
 EMAIL_USER="amirxtet@gmail.com"
 EMAIL_PASS=""
 TELEGRAM_BOT_TOKEN=""
