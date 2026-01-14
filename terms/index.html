@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="InfiNet Services Terms & Conditions covering the InfiNet website and the InfiNet Hub mobile application." />
+  <title>InfiNet Services | Terms & Conditions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: #F2F5F7;
+      color: #1e293b;
+      line-height: 1.65;
+      font-size: 18px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background: linear-gradient(45deg, #B8F5B8 0%, #A8F0A8 25%, #B0E6FF 50%, #B8F5B8 75%, #A8F0A8 100%);
+      color: #1e293b;
+      padding: 80px 20px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .privacy-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #000000;
+      color: #FFFFFF !important;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .privacy-button:hover,
+    .privacy-button:active,
+    .privacy-button:visited {
+      color: #00EB00 !important;
+      background-color: #000000;
+    }
+
+    .header-logo {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 120px;
+      z-index: 1;
+      background: transparent;
+    }
+
+    .header-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: transparent;
+      mix-blend-mode: normal;
+    }
+
+    @media (max-width: 768px) {
+      .privacy-button {
+        top: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+
+      .header-logo {
+        top: -15px;
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    header h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 600;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    header p {
+      font-size: 18px;
+      max-width: 800px;
+      margin: 0 auto 24px;
+      color: rgba(30, 41, 59, 0.9);
+    }
+
+    header .meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      font-size: 14px;
+      color: rgba(30, 41, 59, 0.8);
+      margin-top: 24px;
+    }
+
+    header a {
+      color: #060097;
+      text-decoration: underline;
+    }
+
+    header a:hover {
+      color: #00EB00 !important;
+    }
+
+    header a:active,
+    header a:visited {
+      color: #060097;
+    }
+
+    main {
+      padding: 60px 20px;
+      background-color: #FFFFFF;
+    }
+
+    .section {
+      margin-bottom: 48px;
+      padding: 40px;
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      border: 1px solid #E1E8F0;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .section h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .section p {
+      color: #67768e;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .section ul {
+      padding-left: 24px;
+      margin-bottom: 16px;
+      color: #67768e;
+    }
+
+    .section li {
+      margin-bottom: 12px;
+      font-size: 18px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .section a {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .section strong {
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .highlight-card {
+      background-color: #E8F8F5;
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid #B0E6FF;
+    }
+
+    .highlight-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 12px;
+    }
+
+    .highlight-card p {
+      margin: 0;
+      color: #67768e;
+      font-size: 16px;
+    }
+
+    .card-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background-color: #E8F8F5;
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid #B0E6FF;
+    }
+
+    .card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #000000;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    .card ul {
+      margin: 0;
+    }
+
+    .card a {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .callout {
+      background-color: #E8F8F5;
+      border-left: 4px solid #00BFFF;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 24px;
+      color: #1e293b;
+    }
+
+    .callout strong {
+      color: #000000;
+      font-weight: 600;
+    }
+
+    .callout a {
+      color: #060097;
+      text-decoration: underline;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .callout a:hover {
+      color: #00EB00;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: #F2F5F7;
+      color: #67768e;
+      font-size: 14px;
+    }
+
+    footer p {
+      margin: 4px 0;
+    }
+
+    a {
+      color: #060097;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #00EB00;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 60px 20px 40px;
+      }
+
+      header h1 {
+        font-size: 32px;
+      }
+
+      header p {
+        font-size: 16px;
+      }
+
+      main {
+        padding: 40px 20px;
+      }
+
+      .section {
+        padding: 28px 20px;
+      }
+
+      .section h2 {
+        font-size: 24px;
+      }
+
+      .section p,
+      .section li {
+        font-size: 16px;
+      }
+
+      .highlight-grid,
+      .card-list {
+        grid-template-columns: 1fr;
+      }
+
+      header .meta {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="privacy-button" onclick="window.history.back(); return false;">
+      ← Privacy Policy
+    </button>
+    <div class="header-logo">
+      <img src="./infinet1.png" alt="InfiNet Logo" />
+    </div>
+    <div class="container">
+      <h1>Terms & Conditions</h1>
+      <p>
+        These Terms & Conditions ("Terms") govern your access to and use of InfiNet Services, including the InfiNet website 
+        (<a href="https://infinet.services" target="_blank" rel="noopener">https://infinet.services</a>), the InfiNet Hub mobile 
+        application for iOS and Android, and all related services, features, and tools (collectively, the "Service"). 
+        By accessing or using the Service, you agree to be bound by these Terms.
+      </p>
+      <div class="meta">
+        <span><strong>Effective Date:</strong> 24 November 2025</span>
+        <span><strong>Applies to:</strong> InfiNet website, InfiNet Hub mobile app, AI Studio Assistant & Creator suite</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="section">
+        <h2>1. Acceptance of Terms</h2>
+        <p>
+          By downloading, installing, accessing, or using InfiNet Hub or any part of the Service, you acknowledge that you have read, 
+          understood, and agree to be bound by these Terms and our Privacy Policy. If you do not agree to these Terms, you may not 
+          access or use the Service.
+        </p>
+        <p>
+          We may modify these Terms at any time. We will notify you of material changes through in-app notifications, email, or website 
+          announcements. Your continued use of the Service after such modifications constitutes your acceptance of the updated Terms.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>2. Description of Service</h2>
+        <p>
+          InfiNet Hub is a mobile application and web platform that provides AI-powered tools and services, including but not limited to:
+        </p>
+        <div class="card-list">
+          <div class="card">
+            <h3>AI Studio Assistant</h3>
+            <ul>
+              <li>AI-powered chat assistant</li>
+              <li>Voice message processing</li>
+              <li>Conversation history management</li>
+              <li>Multi-language support</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Creator Tools</h3>
+            <ul>
+              <li>Blog post generation</li>
+              <li>Social media content creation</li>
+              <li>Image generation (AI-powered)</li>
+              <li>Prompt engineering tools</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Automation Features</h3>
+            <ul>
+              <li>Workflow automation suggestions</li>
+              <li>Business process optimization</li>
+              <li>Integration recommendations</li>
+              <li>Automation blueprints</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Web Tools Suite</h3>
+            <ul>
+              <li>Domain availability checker</li>
+              <li>WHOIS domain lookup</li>
+              <li>QR code generator</li>
+              <li>SEO preview generator</li>
+              <li>Business name generator</li>
+              <li>Color palette generator</li>
+              <li>UTM URL generator</li>
+              <li>URL shortener</li>
+              <li>Website speed test</li>
+              <li>IP address lookup</li>
+              <li>Image resizer and compressor</li>
+              <li>Favicon generator</li>
+              <li>File format converter</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Project Management</h3>
+            <ul>
+              <li>Project tracking and management</li>
+              <li>Support ticket system</li>
+              <li>File upload and sharing</li>
+              <li>Invoice management</li>
+              <li>Payment receipt tracking</li>
+            </ul>
+          </div>
+        </div>
+        <p>
+          We reserve the right to modify, suspend, or discontinue any part of the Service at any time, with or without notice.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>3. Eligibility and Account Registration</h2>
+        <ul>
+          <li><strong>Age Requirement:</strong> You must be at least 13 years of age (or 16 in the European Economic Area) to use the Service. If you are under 18, you represent that you have your parent's or guardian's permission to use the Service.</li>
+          <li><strong>Account Creation:</strong> To access certain features, you must create an account by providing accurate, current, and complete information, including your name, email address, and password.</li>
+          <li><strong>Account Security:</strong> You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</li>
+          <li><strong>Account Termination:</strong> You may terminate your account at any time by contacting us or using the account deletion feature in the app. We reserve the right to suspend or terminate your account if you violate these Terms.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>4. User Conduct and Prohibited Activities</h2>
+        <p>You agree not to:</p>
+        <ul>
+          <li>Use the Service for any illegal, harmful, or fraudulent purpose</li>
+          <li>Violate any applicable laws or regulations</li>
+          <li>Infringe upon the intellectual property rights of others</li>
+          <li>Upload, transmit, or share content that is offensive, defamatory, threatening, or violates the rights of others</li>
+          <li>Attempt to gain unauthorized access to the Service or related systems</li>
+          <li>Interfere with or disrupt the Service or servers</li>
+          <li>Use automated systems (bots, scrapers) to access the Service without permission</li>
+          <li>Reverse engineer, decompile, or disassemble any part of the Service</li>
+          <li>Share your account credentials with others or allow others to use your account</li>
+          <li>Generate content that promotes violence, discrimination, or illegal activities</li>
+          <li>Use the Service to spam, harass, or harm other users</li>
+        </ul>
+        <div class="callout">
+          <strong>Consequences:</strong> Violation of these Terms may result in immediate suspension or termination of your account and access to the Service, and may subject you to legal action.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>5. Intellectual Property Rights</h2>
+        <p>
+          <strong>Our Rights:</strong> The Service, including all software, designs, text, graphics, logos, and other content, is owned by InfiNet Services or its licensors and is protected by copyright, trademark, and other intellectual property laws.
+        </p>
+        <p>
+          <strong>Your Content:</strong> You retain ownership of any content you create, upload, or generate using the Service. By using the Service, you grant us a limited, non-exclusive, worldwide, royalty-free license to use, store, and display your content solely for the purpose of providing and improving the Service.
+        </p>
+        <p>
+          <strong>AI-Generated Content:</strong> Content generated by AI tools (including but not limited to text, images, and other creative works) is provided "as-is." You are responsible for ensuring that AI-generated content complies with applicable laws and does not infringe upon the rights of others. We do not claim ownership of AI-generated content, but you may not use it in ways that violate these Terms or applicable law.
+        </p>
+        <p>
+          <strong>Third-Party Services:</strong> The Service uses third-party AI services (Google Gemini, OpenAI DALL·E, etc.) and file processing services. Your use of AI-generated content and processed files may be subject to the terms and conditions of these third-party providers.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>6. Payment Terms and Subscriptions</h2>
+        <p><strong>Free Service:</strong> InfiNet Hub is currently free to download and use. All core features, including AI Studio, Creator Tools, Automation Features, Web Tools Suite, and Project Management, are available at no cost.</p>
+        <ul>
+          <li><strong>Manual Payment Tracking:</strong> The app includes invoice management features that allow you to track payments and upload payment receipts (e.g., for Whish Money settlements). This is for record-keeping purposes only and does not involve in-app purchases or payment processing.</li>
+          <li><strong>Future Pricing:</strong> We reserve the right to introduce premium features or subscriptions in the future. Any such changes will be communicated in advance, and existing free features will remain available.</li>
+          <li><strong>Refunds:</strong> Since the app is currently free, refund policies do not apply. If we introduce paid features in the future, refund policies will be governed by the app store platforms (Apple App Store or Google Play Store).</li>
+          <li><strong>Taxes:</strong> Currently not applicable as the service is free. If paid features are introduced in the future, you will be responsible for any applicable taxes or fees associated with your purchase.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>7. Third-Party Services and AI Providers</h2>
+        <p>
+          The Service integrates with third-party services, including AI providers such as Google Gemini and OpenAI. Your use of these services is subject to their respective terms of service and privacy policies:
+        </p>
+        <ul>
+          <li><strong>Google Gemini API:</strong> <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Google Terms of Service</a></li>
+          <li><strong>OpenAI DALL·E:</strong> <a href="https://openai.com/policies/terms-of-use" target="_blank" rel="noopener">OpenAI Terms of Use</a></li>
+        </ul>
+        <p>
+          We are not responsible for the availability, accuracy, or content of third-party services. Any issues with third-party services should be addressed directly with the provider.
+        </p>
+        <div class="callout">
+          <strong>AI Content Disclaimer:</strong> AI-generated content may contain errors, inaccuracies, or offensive material. We are not responsible for the accuracy, quality, or appropriateness of AI-generated content. You are responsible for reviewing and verifying all AI-generated content before use.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>8. Disclaimer of Warranties</h2>
+        <p>
+          THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO:
+        </p>
+        <ul>
+          <li>Warranties of merchantability, fitness for a particular purpose, or non-infringement</li>
+          <li>Warranties that the Service will be uninterrupted, error-free, or secure</li>
+          <li>Warranties regarding the accuracy, reliability, or quality of AI-generated content</li>
+          <li>Warranties that defects will be corrected</li>
+        </ul>
+        <p>
+          We do not guarantee that the Service will meet your requirements or that it will be available at all times. The Service may be subject to outages, maintenance, or technical issues beyond our control.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>9. Limitation of Liability</h2>
+        <p>
+          TO THE MAXIMUM EXTENT PERMITTED BY LAW, INFINET SERVICES SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO:
+        </p>
+        <ul>
+          <li>Loss of profits, revenue, data, or business opportunities</li>
+          <li>Damages arising from your use or inability to use the Service</li>
+          <li>Damages resulting from AI-generated content or third-party services</li>
+          <li>Damages arising from unauthorized access to or use of your account</li>
+        </ul>
+        <p>
+          Our total liability to you for all claims arising from or related to the Service shall not exceed the amount you paid to us in the 12 months preceding the claim, or $100, whichever is greater.
+        </p>
+        <div class="callout">
+          <strong>Jurisdiction-Specific Rights:</strong> Some jurisdictions do not allow the exclusion of certain warranties or limitations of liability. If you are located in such a jurisdiction, some of the above limitations may not apply to you.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>10. Indemnification</h2>
+        <p>
+          You agree to indemnify, defend, and hold harmless InfiNet Services, its affiliates, officers, directors, employees, and agents from and against any claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) arising from:
+        </p>
+        <ul>
+          <li>Your use of the Service</li>
+          <li>Your violation of these Terms</li>
+          <li>Your violation of any rights of another party</li>
+          <li>Content you create, upload, or generate using the Service</li>
+          <li>Your use of AI-generated content in violation of applicable laws</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>11. Termination</h2>
+        <p><strong>By You:</strong> You may terminate your account at any time by contacting us or using the account deletion feature in the app.</p>
+        <p><strong>By Us:</strong> We may suspend or terminate your account immediately, without prior notice, if you:</p>
+        <ul>
+          <li>Violate these Terms or our Privacy Policy</li>
+          <li>Engage in fraudulent, illegal, or harmful activities</li>
+          <li>Fail to pay required fees</li>
+          <li>Abuse or misuse the Service</li>
+          <li>Interfere with the operation of the Service</li>
+        </ul>
+        <p>
+          Upon termination, your right to use the Service will immediately cease. We may delete your account data, content, and information, subject to our Privacy Policy and applicable data retention requirements.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>12. Governing Law and Dispute Resolution</h2>
+        <p>
+          <strong>Governing Law:</strong> These Terms shall be governed by and construed in accordance with the laws of the European Union (specifically Germany, where our servers are hosted), without regard to its conflict of law provisions. For users outside the EU, these Terms shall be governed by the laws of the jurisdiction where InfiNet Services operates.
+        </p>
+        <p>
+          <strong>Dispute Resolution:</strong> Any disputes arising from or related to these Terms or the Service shall be resolved through:
+        </p>
+        <ul>
+          <li>Good faith negotiation between the parties</li>
+          <li>Mediation, if negotiation fails, through a mutually agreed mediator</li>
+          <li>Binding arbitration, if mediation fails, in accordance with the rules of the International Chamber of Commerce (ICC) or another mutually agreed arbitration organization</li>
+        </ul>
+        <p>
+          You waive any right to participate in a class-action lawsuit or class-wide arbitration against InfiNet Services.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>13. Changes to Terms</h2>
+        <p>
+          We reserve the right to modify these Terms at any time. Material changes will be communicated through:
+        </p>
+        <ul>
+          <li>In-app notifications when you open the app</li>
+          <li>Email notifications to your registered email address</li>
+          <li>Website announcements on <a href="https://infinet.services" target="_blank" rel="noopener">infinet.services</a></li>
+          <li>Updated "Effective Date" at the top of these Terms</li>
+        </ul>
+        <p>
+          Your continued use of the Service after changes constitutes your acceptance of the updated Terms. If you do not agree to the changes, you must stop using the Service and terminate your account.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>14. Severability</h2>
+        <p>
+          If any provision of these Terms is found to be invalid, illegal, or unenforceable, the remaining provisions shall remain in full force and effect. The invalid provision shall be modified to the minimum extent necessary to make it valid and enforceable.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>15. Entire Agreement</h2>
+        <p>
+          These Terms, together with our Privacy Policy, constitute the entire agreement between you and InfiNet Services regarding your use of the Service and supersede all prior agreements and understandings.
+        </p>
+      </section>
+
+      <section class="section">
+        <h2>16. Contact Information</h2>
+        <p>If you have any questions about these Terms, please contact us:</p>
+        <div class="callout">
+          <strong>InfiNet Services &mdash; Legal Team</strong><br />
+          Email: <a href="mailto:admin@infinet.services">admin@infinet.services</a><br />
+          Website: <a href="https://infinet.services" target="_blank" rel="noopener">https://infinet.services</a><br />
+          Prefer in-app? Open <em>Profile &gt; App Policies &gt; Terms & Conditions</em> inside the InfiNet Hub app.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© <span id="year"></span> InfiNet Services. All rights reserved.</p>
+      <p>Last updated 24 November 2025.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
+

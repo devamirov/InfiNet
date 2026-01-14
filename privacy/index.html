@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="InfiNet Services Privacy Policy covering the InfiNet website and the InfiNet Hub mobile application." />
+  <title>InfiNet Services | Privacy Policy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: #F2F5F7;
+      color: #1e293b;
+      line-height: 1.65;
+      font-size: 18px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      background: linear-gradient(45deg, #B8F5B8 0%, #A8F0A8 25%, #B0E6FF 50%, #B8F5B8 75%, #A8F0A8 100%);
+      color: #1e293b;
+      padding: 80px 20px 60px;
+      text-align: center;
+      position: relative;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: #000000;
+      color: #FFFFFF !important;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .terms-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #000000;
+      color: #FFFFFF !important;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none !important;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .back-button:hover,
+    .back-button:active,
+    .back-button:visited {
+      color: #00EB00 !important;
+      background-color: #000000;
+    }
+
+    .terms-button:hover,
+    .terms-button:active,
+    .terms-button:visited {
+      color: #00EB00 !important;
+      background-color: #000000;
+    }
+
+    .header-logo {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 120px;
+      z-index: 1;
+      background: transparent;
+    }
+
+    .header-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: transparent;
+      mix-blend-mode: normal;
+    }
+
+    @media (max-width: 768px) {
+      .back-button {
+        top: 15px;
+        left: 15px;
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+
+      .terms-button {
+        top: 15px;
+        right: calc(15px - 2mm);
+        padding: 6px 12px;
+        font-size: 11px;
+      }
+
+      .header-logo {
+        top: -15px;
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    header h1 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 600;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    header p {
+      font-size: 18px;
+      max-width: 800px;
+      margin: 0 auto 24px;
+      color: rgba(30, 41, 59, 0.9);
+    }
+
+    header .meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      font-size: 14px;
+      color: rgba(30, 41, 59, 0.8);
+      margin-top: 24px;
+    }
+
+    header a {
+      color: #060097;
+      text-decoration: underline;
+    }
+
+    header a:hover {
+      color: #00EB00 !important;
+    }
+
+    header a:active,
+    header a:visited {
+      color: #060097;
+    }
+
+    main {
+      padding: 60px 20px;
+      background-color: #FFFFFF;
+    }
+
+    .section {
+      margin-bottom: 48px;
+      padding: 40px;
+      background-color: #FFFFFF;
+      border-radius: 8px;
+      border: 1px solid #E1E8F0;
+      box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    }
+
+    .section h2 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+
+    .section p {
+      color: #67768e;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    .section ul {
+      padding-left: 24px;
+      margin-bottom: 16px;
+      color: #67768e;
+    }
+
+    .section li {
+      margin-bottom: 12px;
+      font-size: 18px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .section a {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .section strong {
+      color: #1e293b;
+      font-weight: 600;
+    }
+
+    .highlight-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .highlight-card {
+      background-color: #E8F8F5;
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid #B0E6FF;
+    }
+
+    .highlight-card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #000000;
+      margin-bottom: 12px;
+    }
+
+    .highlight-card p {
+      margin: 0;
+      color: #67768e;
+      font-size: 16px;
+    }
+
+    .card-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background-color: #E8F8F5;
+      border-radius: 8px;
+      padding: 24px;
+      border: 1px solid #B0E6FF;
+    }
+
+    .card h3 {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #000000;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+
+    .card ul {
+      margin: 0;
+    }
+
+    .card a {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .callout {
+      background-color: #E8F8F5;
+      border-left: 4px solid #00BFFF;
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 24px;
+      color: #1e293b;
+    }
+
+    .callout strong {
+      color: #000000;
+      font-weight: 600;
+    }
+
+    .callout a {
+      color: #060097;
+      text-decoration: underline;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-all;
+    }
+
+    .callout a:hover {
+      color: #00EB00;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px 20px;
+      background-color: #F2F5F7;
+      color: #67768e;
+      font-size: 14px;
+    }
+
+    footer p {
+      margin: 4px 0;
+    }
+
+    a {
+      color: #060097;
+      text-decoration: underline;
+    }
+
+    a:hover {
+      color: #00EB00;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 60px 20px 40px;
+      }
+
+      header h1 {
+        font-size: 32px;
+      }
+
+      header p {
+        font-size: 16px;
+      }
+
+      main {
+        padding: 40px 20px;
+      }
+
+      .section {
+        padding: 28px 20px;
+      }
+
+      .section h2 {
+        font-size: 24px;
+      }
+
+      .section p,
+      .section li {
+        font-size: 16px;
+      }
+
+      .highlight-grid,
+      .card-list {
+        grid-template-columns: 1fr;
+      }
+
+      header .meta {
+        flex-direction: column;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button class="back-button" onclick="window.history.back(); return false;">
+      ← Back
+    </button>
+    <a href="/terms/index.html" class="terms-button">
+      Terms & Conditions →
+    </a>
+    <div class="header-logo">
+      <img src="./infinet1.png" alt="InfiNet Logo" />
+    </div>
+    <div class="container">
+      <h1>InfiNet Privacy Policy</h1>
+      <p>
+        This Privacy Policy explains how InfiNet Services ("InfiNet", "we", "us", "our") collects, uses, discloses,
+        and protects information when you visit <a href="https://infinet.services" target="_blank" rel="noopener">https://infinet.services</a>,
+        use the InfiNet Hub mobile application for iOS or Android, interact with our AI Studio tools, or otherwise engage with our services.
+        It is designed to meet the disclosure standards required by Apple's App Store, Google Play, GDPR, and other global privacy frameworks.
+      </p>
+      <div class="meta">
+        <span><strong>Effective Date:</strong> 24 November 2025</span>
+        <span><strong>Applies to:</strong> InfiNet website, InfiNet Hub mobile app, AI Studio Assistant & Creator suite</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="section">
+        <h2>Quick Commitments</h2>
+        <p>We built InfiNet Hub with privacy by design. These pillars guide every product decision.</p>
+        <div class="highlight-grid">
+          <div class="highlight-card">
+            <h3>Minimal data first</h3>
+            <p>We collect only what we need to verify your identity, personalize workspaces, and provide AI-powered assistance.</p>
+          </div>
+          <div class="highlight-card">
+            <h3>No data sales ever</h3>
+            <p>We never sell or lease personal data. Information is only shared with vetted processors that help us deliver the service.</p>
+          </div>
+          <div class="highlight-card">
+            <h3>Security obsessed</h3>
+            <p>Passwords are hashed, data in transit is encrypted, and infrastructure is monitored 24/7 on Contabo-secured servers.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>1. What Data We Collect</h2>
+        <p>We collect information in three primary ways &mdash; directly from you, automatically through your devices, and from trusted partners. This section complies with App Store and Google Play Store disclosure requirements.</p>
+        <div class="card-list">
+          <div class="card">
+            <h3>A. Information you provide</h3>
+            <ul>
+              <li><strong>Account Information:</strong> Name, email address, company name, phone number (optional), role/title, profile avatar image.</li>
+              <li><strong>Authentication Data:</strong> Hashed passwords, email verification codes, password reset tokens, two-factor authentication codes.</li>
+              <li><strong>User Content:</strong> AI chat messages and prompts, Creator form inputs (blog topics, social media posts, image prompts), uploaded images and files, voice recordings (for AI voice features), support tickets, feedback submissions.</li>
+              <li><strong>Tools Usage Data:</strong> URLs processed for shortening, domains checked for availability, IP addresses looked up, files uploaded for conversion (images, documents), image files processed for resizing or favicon generation, QR code data, SEO preview inputs, business name keywords, color palette inputs, UTM parameters, speed test URLs.</li>
+              <li><strong>Payment Information:</strong> Purchase confirmations, invoices, billing addresses (processed securely through third-party payment processors; we do not store full credit card numbers). Note: The app is free to use. Payment information relates only to manual invoice tracking and receipt uploads for Whish Money settlements.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>B. Automatically collected (iOS & Android)</h3>
+            <ul>
+              <li><strong>Device Information:</strong> Device model, operating system version (iOS/Android), app version, unique device identifiers (IDFV on iOS, Android ID on Android), device language and region settings.</li>
+              <li><strong>App Usage Data:</strong> Feature usage, navigation paths, timestamps, session duration, screen views, button taps, AI feature interactions.</li>
+              <li><strong>Performance & Diagnostics:</strong> Crash logs, error reports, performance metrics, memory usage, network request logs.</li>
+              <li><strong>Network Information:</strong> IP address, network type (WiFi/cellular), approximate geographic location (derived from IP), user agent, referrer URLs.</li>
+              <li><strong>Mobile-Specific Data:</strong> Push notification tokens (for iOS and Android), Expo/React Native device identifiers, locally cached AI responses and generated content stored on your device.</li>
+              <li><strong>Permissions Data:</strong> 
+                <ul style="margin-top: 8px; padding-left: 20px;">
+                  <li><strong>Camera:</strong> Used only when you explicitly choose to take photos for image generation features (AI Creator tools). We do not continuously access your camera or record video. Photos are processed when you actively use the image generation feature and are not stored unless you choose to save them.</li>
+                  <li><strong>Microphone:</strong> Used for voice messages sent to the AI assistant. Audio is only recorded when you actively use the voice recording feature.</li>
+                  <li><strong>Photo Library:</strong> Used to save QR codes and generated images, and to select images for use in the app.</li>
+                  <li><strong>Storage:</strong> Used for file management, saving downloads, and caching app data.</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>C. From service partners</h3>
+            <ul>
+              <li><strong>App Stores:</strong> Apple App Store and Google Play Store provide purchase status, subscription information, crash analytics, and app review data.</li>
+              <li><strong>Email Services:</strong> Email delivery platforms (SendGrid, Twilio) provide delivery confirmations, bounce reports, and suppression lists.</li>
+              <li><strong>Analytics Providers:</strong> App Store analytics (Apple App Store and Google Play Store) provide aggregated usage statistics and engagement metrics. We do not currently use third-party analytics services like Google Analytics.</li>
+              <li><strong>AI Service Providers:</strong> Google Gemini API and OpenAI DALL·E receive prompt content and generation requests (see Section 5 for details).</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>2. How We Use Information</h2>
+        <ul>
+          <li>Account creation, sign-in, multi-factor email verification, and password recovery.</li>
+          <li>Operating the AI Studio Assistant, Creator (blog, social, prompt, and image requests), and automation blueprints.</li>
+          <li>Providing Web Tools Suite features (domain checking, QR code generation, file conversion, image processing, URL shortening, SEO preview, and other utility tools).</li>
+          <li>Routing prompts to Google Gemini models and OpenAI's DALL·E image endpoint, while limiting payloads to what is necessary for generation.</li>
+          <li>Processing files through our file converter service for format conversion (files are processed temporarily and deleted immediately after conversion).</li>
+          <li>Syncing activity history across devices, maintaining recent projects, and showing relevant recommendations.</li>
+          <li>Sending transactional emails, push notifications, and critical product announcements.</li>
+          <li>Monitoring uptime, detecting abuse, preventing fraud, and securing accounts.</li>
+          <li>Complying with legal obligations, enforcing policies, and responding to lawful requests.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>3. Legal Bases for Processing</h2>
+        <p>If you are located in the European Economic Area, United Kingdom, or any jurisdiction that requires a legal basis, we rely on:</p>
+        <ul>
+          <li><strong>Contract necessity</strong> &mdash; to provide the services you request (projects, AI workflows, account management).</li>
+          <li><strong>Legitimate interests</strong> &mdash; to protect users, improve products, and prevent abuse (balanced against your rights).</li>
+          <li><strong>Consent</strong> &mdash; for optional marketing, analytics, and certain data sharing with AI partners.</li>
+          <li><strong>Legal obligations</strong> &mdash; to maintain tax records, respond to government authorities, or comply with platform rules.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>4. How We Share Information</h2>
+        <p>We disclose personal data only when necessary to run InfiNet Hub or comply with the law. This disclosure meets App Store and Google Play Store requirements.</p>
+        <ul>
+          <li><strong>Service Providers &amp; Infrastructure:</strong> Contabo (cloud hosting in EU), PM2 (process manager), Apache reverse proxy, database and storage vendors. These providers process data under strict contractual agreements.</li>
+          <li><strong>File Converter Service:</strong> Files uploaded for conversion (images, documents) are processed by our file converter service hosted separately. Files are processed temporarily and deleted immediately after conversion. No files are stored permanently on the converter service.</li>
+          <li><strong>AI &amp; Creative Engines (Third-Party Data Sharing):</strong> 
+            <ul style="margin-top: 8px; padding-left: 20px;">
+              <li><strong>Google LLC (Gemini API):</strong> Receives chat messages, prompts, and conversation context to generate AI responses. Google's privacy policy applies: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">https://policies.google.com/privacy</a></li>
+              <li><strong>OpenAI, LLC (DALL·E):</strong> Receives image generation prompts and parameters to create AI-generated images. OpenAI's privacy policy applies: <a href="https://openai.com/policies/privacy-policy" target="_blank" rel="noopener">https://openai.com/policies/privacy-policy</a></li>
+              <li>We strip personally identifiable information from prompts when possible before sending to AI providers.</li>
+            </ul>
+          </li>
+          <li><strong>App Store Platforms:</strong> Apple App Store and Google Play Store receive app usage analytics, crash reports, and purchase data as part of their standard app distribution services.</li>
+          <li><strong>Communications Services:</strong> Email and push notification platforms (Apple Push Notification Service, Firebase Cloud Messaging) deliver verification codes, alerts, and reports.</li>
+          <li><strong>Third-Party Tool Services:</strong> Some Web Tools features use third-party APIs (e.g., IP lookup services). When you use these tools, only the necessary data (such as IP addresses for lookup) is sent to the third-party service. These services process data according to their own privacy policies.</li>
+          <li><strong>Analytics &amp; Diagnostics:</strong> Tools that help us measure feature adoption, crashes, and performance receive pseudonymized metrics (no personally identifiable information).</li>
+          <li><strong>Compliance &amp; Safety:</strong> We may share information when required by law, during security investigations, or in connection with a merger, acquisition, or financing.</li>
+        </ul>
+        <div class="callout">
+          <strong>Important:</strong> We never sell or rent personal data. We do not share your data with advertisers or data brokers. All third-party sharing is limited to what is necessary to provide our services.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>5. Web Tools Suite &amp; File Processing</h2>
+        <p>InfiNet Hub includes a comprehensive Web Tools Suite that processes various types of data. This section discloses how your data is handled when using these tools, as required by App Store and Google Play Store policies.</p>
+        <ul>
+          <li><strong>Tools Data Processing:</strong> When you use our Web Tools (domain checker, QR generator, file converter, image resizer, etc.), we process the data you provide (URLs, domains, IP addresses, files, images) to deliver the requested service. This data is processed temporarily and is not used for any other purpose.</li>
+          <li><strong>File Converter Service:</strong> Files uploaded for conversion are sent to our file converter service for processing. Files are converted and immediately deleted from the converter service. We do not store your files permanently. The converted files are returned to you and cached locally on your device if you choose to save them.</li>
+          <li><strong>Tools History:</strong> We maintain a history of your tool usage (which tools you used, when, and basic parameters) to provide you with a history feature in the app. This history is stored locally on your device and synced to our servers for cross-device access. You can clear this history at any time.</li>
+          <li><strong>Third-Party Tool Services:</strong> Some tools (like IP lookup) may use third-party APIs. In such cases, only the necessary data (e.g., IP address for lookup) is sent to the third-party service, and their privacy policies apply.</li>
+          <li><strong>Data Minimization:</strong> We only collect and process the minimum data necessary to provide each tool's functionality. We do not use tool usage data for advertising or marketing purposes.</li>
+        </ul>
+        <div class="callout">
+          <strong>Your Control:</strong> You can clear your tool history at any time from the app settings. Files processed through the converter service are automatically deleted after conversion.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>6. AI Studio &amp; Creative Tools (Third-Party AI Services)</h2>
+        <p>To deliver AI-powered experiences, we use third-party AI services. This section discloses how your data is processed by these services, as required by App Store and Google Play Store policies.</p>
+        <ul>
+          <li><strong>Google Gemini API:</strong> When you use the AI Assistant chat feature or voice messages, your messages and conversation context are sent to Google's Gemini API to generate responses. Google processes this data according to their privacy policy. We do not share your account information with Google, only the conversation content.</li>
+          <li><strong>OpenAI DALL·E:</strong> When you generate images using our Image Creator feature, your image prompts and parameters are sent to OpenAI's DALL·E service. OpenAI processes this data according to their privacy policy. Generated images are stored temporarily on our servers and cached in the app.</li>
+          <li><strong>Data Minimization:</strong> We strip personally identifiable information (email, name, account details) from prompts whenever possible before forwarding them to AI providers.</li>
+          <li><strong>Content Storage:</strong> Chat conversations and Creator prompts are temporarily logged to maintain conversation history, improve responses, and surface recent activity. You can delete this data at any time.</li>
+          <li><strong>Image Caching:</strong> Image generation results are cached on our servers and within the mobile app until you save or clear them. You can clear cached content from the app settings.</li>
+          <li><strong>Safety Measures:</strong> We enforce content filters and rate limits to prevent abusive or unsafe generations. We do not use your content to train AI models without your explicit consent.</li>
+        </ul>
+        <div class="callout">
+          <strong>Your Control:</strong> You can opt out of AI features at any time by not using the AI Assistant or Creator tools. You can also delete your conversation history and generated content from within the app.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>7. Data Retention</h2>
+        <ul>
+          <li>Account data is stored for as long as your account remains active or as required by law.</li>
+          <li>Email verification codes, OTPs, and reset tokens expire within minutes and are purged within 30 days.</li>
+          <li>AI prompts, chat logs, and Creator outputs are retained until you delete them, clear cache, or request erasure.</li>
+          <li>Tools usage history (domain checks, QR codes, file conversions, etc.) is retained until you clear it from the app or request erasure.</li>
+          <li>Files processed through the file converter service are deleted immediately after conversion and are not stored.</li>
+          <li>Backups and server logs are retained for up to 12 months for disaster recovery and security auditing.</li>
+        </ul>
+      </section>
+
+      <section class="section">
+        <h2>8. Security & Data Protection</h2>
+        <p>We implement industry-standard security measures to protect your data, as required by App Store and Google Play Store security guidelines:</p>
+        <ul>
+          <li><strong>Encryption:</strong> All data in transit is encrypted using Transport Layer Security (HTTPS/TLS). Data at rest is encrypted using industry-standard encryption methods.</li>
+          <li><strong>Password Security:</strong> Passwords are hashed using bcrypt and other industry-standard algorithms; we never store plain-text passwords.</li>
+          <li><strong>Access Controls:</strong> Access to production systems is restricted to authorized personnel via SSH keys, multi-factor authentication, and role-based access controls.</li>
+          <li><strong>Secure Infrastructure:</strong> Our servers are hosted on Contabo's secure EU data centers with regular security updates and monitoring.</li>
+          <li><strong>Monitoring & Logging:</strong> Regular monitoring (PM2, Apache logs, custom alerts) detects suspicious behavior, security threats, and uptime issues.</li>
+          <li><strong>App Security:</strong> The InfiNet Hub mobile app uses secure storage for sensitive data, certificate pinning for API communications, and follows iOS and Android security best practices.</li>
+          <li><strong>Incident Response:</strong> We have procedures in place to respond to security incidents and will notify affected users and authorities as required by law.</li>
+        </ul>
+        <div class="callout">
+          <strong>Note:</strong> While we implement strong security measures, no method of transmission or storage is 100% secure. We cannot guarantee absolute security, but we are committed to protecting your data to the best of our ability.
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>9. Your Rights &amp; Choices</h2>
+        <p>Depending on your location, you may have the right to (as required by GDPR, CCPA, and App Store/Google Play Store policies):</p>
+        <ul>
+          <li><strong>Access:</strong> Request a copy of the personal information we hold about you.</li>
+          <li><strong>Correction:</strong> Update or correct inaccurate information directly in the app or by contacting us.</li>
+          <li><strong>Deletion:</strong> Request deletion of your account, chat history, AI-generated content, or specific data points.</li>
+          <li><strong>Data Portability:</strong> Request a copy of your data in a machine-readable format.</li>
+          <li><strong>Opt-Out:</strong> Opt out of marketing communications by using the unsubscribe link or contacting us.</li>
+          <li><strong>Device Permissions:</strong> Revoke app permissions (camera, microphone, storage) through your iOS or Android device settings at any time.</li>
+          <li><strong>Push Notifications:</strong> Disable push notifications through the app settings or your device notification settings.</li>
+          <li><strong>Object to Processing:</strong> Object to processing of your data where we rely on legitimate interests.</li>
+          <li><strong>Withdraw Consent:</strong> Withdraw consent for data processing where consent is the legal basis.</li>
+        </ul>
+        <p>To exercise any right, email <a href="mailto:admin@infinet.services">admin@infinet.services</a> or submit a request from the InfiNet Hub profile screen. We will respond within 30 days (or sooner where required by law).</p>
+        <div class="callout">
+          <strong>App Store & Google Play:</strong> You can also manage your data through your Apple ID or Google Account settings, and request app data deletion through the respective app stores.
+        </div>
+      </section>
+
+      <section class="section" id="account-deletion">
+        <h2>9.1. Account Deletion Request</h2>
+        <p><strong>InfiNet Services</strong> (InfiNet Hub) allows you to request deletion of your account and associated data at any time. This section explains how to request account deletion and what data will be deleted or retained.</p>
+        
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">How to Request Account Deletion</h3>
+        <p>To request deletion of your InfiNet Hub account and associated data, please follow these steps:</p>
+        <ol style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li><strong>Send an email request:</strong> Email us at <a href="mailto:admin@infinet.services">admin@infinet.services</a> with the subject line "Account Deletion Request" and include:
+            <ul style="margin-top: 8px; margin-left: 20px; line-height: 1.6;">
+              <li>Your registered email address</li>
+              <li>Your full name (as registered in your account)</li>
+              <li>A clear statement that you want to delete your account and all associated data</li>
+            </ul>
+          </li>
+          <li><strong>Verification:</strong> We will verify your identity by sending a confirmation email to your registered email address. You must respond to confirm the deletion request.</li>
+          <li><strong>Processing:</strong> Once verified, we will process your account deletion request within 30 days (or sooner where required by law).</li>
+        </ol>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">Data That Will Be Deleted</h3>
+        <p>When you request account deletion, the following data will be permanently deleted:</p>
+        <ul style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li>Your account profile information (name, email, phone number, avatar)</li>
+          <li>All projects and project assignments</li>
+          <li>AI chat conversations and prompts</li>
+          <li>AI-generated content (images, text, etc.)</li>
+          <li>Uploaded files and documents</li>
+          <li>Web Tools usage history</li>
+          <li>Support tickets and feedback submissions</li>
+          <li>Authentication tokens and session data</li>
+        </ul>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">Data That May Be Retained</h3>
+        <p>Certain data may be retained for legal or operational reasons, as required by law or our legitimate business interests:</p>
+        <ul style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li><strong>Financial records:</strong> Invoices, billing records, and payment information may be retained for up to 7 years as required by tax and accounting regulations.</li>
+          <li><strong>Backup data:</strong> Data in backups may be retained for up to 12 months before permanent deletion.</li>
+          <li><strong>Logs and analytics:</strong> Anonymized server logs and aggregated analytics data that cannot be linked to your identity may be retained for security and performance monitoring.</li>
+          <li><strong>Legal obligations:</strong> Data required to comply with legal obligations, enforce our Terms of Service, or resolve disputes may be retained as necessary.</li>
+        </ul>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">After Account Deletion</h3>
+        <ul style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li>You will no longer be able to access your account or any data associated with it</li>
+          <li>All your projects, files, and AI-generated content will be permanently deleted</li>
+          <li>You can create a new account at any time, but your previous data cannot be restored</li>
+          <li>You will stop receiving push notifications and emails from InfiNet Hub</li>
+        </ul>
+
+        <div class="callout" style="margin-top: 24px;">
+          <strong>Contact Information:</strong><br />
+          To request account deletion, email us at <a href="mailto:admin@infinet.services">admin@infinet.services</a> with the subject line "Account Deletion Request".<br />
+          We will respond to your request within 30 days (or sooner where required by law).
+        </div>
+      </section>
+
+      <section class="section" id="data-deletion">
+        <h2>9.2. Partial Data Deletion Request</h2>
+        <p><strong>InfiNet Services</strong> (InfiNet Hub) allows you to request deletion of specific data without deleting your entire account. This gives you more control over your personal information.</p>
+        
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">How to Request Partial Data Deletion</h3>
+        <p>You can request deletion of specific data in the following ways:</p>
+        <ol style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li><strong>In-App Deletion:</strong> You can delete certain data directly from within the InfiNet Hub app:
+            <ul style="margin-top: 8px; margin-left: 20px; line-height: 1.6;">
+              <li><strong>AI Chat History:</strong> Open the AI Assistant, go to conversation history, and delete individual conversations or clear all history.</li>
+              <li><strong>AI-Generated Content:</strong> Delete generated images, text, or other AI-created content from the Creator tools section.</li>
+              <li><strong>Web Tools History:</strong> Clear your tool usage history from the app settings.</li>
+              <li><strong>Uploaded Files:</strong> Delete files you've uploaded for projects from the file management section.</li>
+            </ul>
+          </li>
+          <li><strong>Email Request:</strong> For data that cannot be deleted in-app, email us at <a href="mailto:admin@infinet.services">admin@infinet.services</a> with:
+            <ul style="margin-top: 8px; margin-left: 20px; line-height: 1.6;">
+              <li>Your registered email address</li>
+              <li>Specify which data you want deleted (e.g., "Delete my project tracking history", "Remove my profile avatar", "Delete my support tickets")</li>
+            </ul>
+          </li>
+        </ol>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">Types of Data You Can Delete</h3>
+        <p>The following data can be deleted without deleting your account:</p>
+        <ul style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li><strong>AI Conversations:</strong> Chat history and prompts with the AI Assistant</li>
+          <li><strong>AI-Generated Content:</strong> Images, text, and other content created using AI Creator tools</li>
+          <li><strong>Web Tools History:</strong> History of domain checks, QR codes, file conversions, and other tool usage</li>
+          <li><strong>Uploaded Files:</strong> Files and documents you've uploaded to projects</li>
+          <li><strong>Profile Information:</strong> Avatar image, phone number (optional fields)</li>
+          <li><strong>Support Tickets:</strong> Support tickets and feedback submissions (upon request)</li>
+          <li><strong>Project Data:</strong> Individual projects and their associated data (upon request)</li>
+        </ul>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">Data That Cannot Be Deleted Separately</h3>
+        <p>Some data is required for account functionality and cannot be deleted individually:</p>
+        <ul style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li><strong>Account Email:</strong> Required for account identification and login</li>
+          <li><strong>Account Name:</strong> Required for account identification (though you can update it)</li>
+          <li><strong>Authentication Data:</strong> Password hashes and authentication tokens (required for account security)</li>
+          <li><strong>Account Creation Date:</strong> Required for account management</li>
+        </ul>
+        <p>To delete these, you would need to delete your entire account (see <a href="#account-deletion">Account Deletion Request</a> above).</p>
+
+        <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 20px; font-weight: 600;">Processing Time</h3>
+        <ul style="margin-left: 20px; margin-top: 12px; line-height: 1.8;">
+          <li><strong>In-App Deletion:</strong> Immediate - data is deleted as soon as you confirm the action</li>
+          <li><strong>Email Requests:</strong> Processed within 30 days (or sooner where required by law)</li>
+          <li><strong>Backup Data:</strong> Data in backups may take up to 12 months to be fully purged</li>
+        </ul>
+
+        <div class="callout" style="margin-top: 24px;">
+          <strong>Contact Information:</strong><br />
+          To request partial data deletion, email us at <a href="mailto:admin@infinet.services">admin@infinet.services</a> specifying which data you want deleted, or use the in-app deletion features available in the app settings and respective sections.<br />
+          We will respond to your request within 30 days (or sooner where required by law).
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>10. International Data Transfers</h2>
+        <p>InfiNet operates from infrastructure located in the European Union (Contabo data centers in Germany). However, we use third-party services that may process data in other countries:</p>
+        <ul>
+          <li><strong>Google LLC (Gemini API):</strong> Processes data in the United States and other countries where Google operates. Google complies with GDPR and uses Standard Contractual Clauses for international transfers.</li>
+          <li><strong>OpenAI, LLC (DALL·E):</strong> Processes data in the United States. OpenAI complies with GDPR and uses appropriate safeguards for international transfers.</li>
+          <li><strong>Apple App Store & Google Play Store:</strong> Process app data according to their respective privacy policies and may transfer data internationally.</li>
+        </ul>
+        <p>When personal data moves across borders, we rely on Standard Contractual Clauses (SCCs), service-provider certifications, adequacy decisions, or comparable safeguards to ensure an adequate level of protection as required by GDPR and other data protection laws.</p>
+      </section>
+
+      <section class="section">
+        <h2>11. Children's Privacy</h2>
+        <p>InfiNet Hub is intended for users who are 13 years of age or older (as required by Google Play Store) and 16 years of age or older in the European Economic Area (as required by GDPR). We do not knowingly collect information from children under 13. If you are a parent or guardian and believe we have unintentionally collected data from a child under 13, please contact us immediately at <a href="mailto:admin@infinet.services">admin@infinet.services</a> so we can delete it promptly.</p>
+        <p>If you are between 13 and 16 years old (or the age of consent in your jurisdiction), you must have your parent's or guardian's permission to use InfiNet Hub.</p>
+      </section>
+
+      <section class="section">
+        <h2>12. Changes to This Policy</h2>
+        <p>We will update this Privacy Policy whenever we launch significant new features, change how we process data, or to comply with evolving regulations (including App Store and Google Play Store policy updates). We will notify you through:</p>
+        <ul>
+          <li>In-app notifications when you open the app</li>
+          <li>Email notifications to your registered email address</li>
+          <li>Website announcements on <a href="https://infinet.services" target="_blank" rel="noopener">infinet.services</a></li>
+          <li>Updated "Last Updated" date at the top of this policy</li>
+        </ul>
+        <p>Material changes will be communicated at least 30 days before they take effect. Please review this page periodically for the latest information. Continued use of InfiNet Hub after changes constitutes acceptance of the updated policy.</p>
+      </section>
+
+      <section class="section">
+        <h2>13. Contact Us</h2>
+        <p>If you have any questions, privacy requests, or concerns, reach out to us:</p>
+        <div class="callout">
+          <strong>InfiNet Services &mdash; Privacy Team</strong><br />
+          Email: <a href="mailto:admin@infinet.services">admin@infinet.services</a><br />
+          Website: <a href="https://infinet.services" target="_blank" rel="noopener">https://infinet.services</a><br />
+          Prefer in-app? Open <em>Profile &gt; Privacy &amp; Data Protection</em> inside the InfiNet Hub app.
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© <span id="year"></span> InfiNet Services. All rights reserved.</p>
+      <p>Last updated 24 November 2025.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

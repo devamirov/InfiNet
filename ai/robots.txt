@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://ai.infinet.services/sitemap.xml
+
+# Disallow admin and API endpoints
+Disallow: /api/
+Disallow: /admin/
+

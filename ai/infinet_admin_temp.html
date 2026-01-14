@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfiNet AI Agent - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #060097 0%, #57ffff 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #060097;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #060097;
+            border-bottom-color: #060097;
+        }
+        
+        .tab:hover {
+            color: #060097;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+        }
+        
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .session-id {
+            font-family: monospace;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #060097;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #050077;
+        }
+        
+        .conversation-view {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .conversation-view h3 {
+            margin-bottom: 16px;
+            color: #060097;
+        }
+        
+        .message {
+            margin-bottom: 16px;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .message-user {
+            background: #e3f2fd;
+            margin-left: 20%;
+        }
+        
+        .message-ai {
+            background: #f0f0f0;
+            margin-right: 20%;
+        }
+        
+        .message-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #666;
+        }
+        
+        .message-content {
+            line-height: 1.5;
+        }
+        
+        .lead-info {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .lead-info h3 {
+            margin-bottom: 16px;
+            color: #060097;
+        }
+        
+        .lead-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+        
+        .lead-info-item {
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .lead-info-item label {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-bottom: 4px;
+        }
+        
+        .lead-info-item .value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+        
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+            }
+            
+            table {
+                font-size: 12px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, #060097 0%, #57ffff 100%); display: flex; align-items: center; justify-content: center; z-index: 10000;">
+        <div style="background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); max-width: 400px; width: 90%;">
+            <h2 style="color: #060097; margin-bottom: 8px; text-align: center;">InfiNet Admin Panel</h2>
+            <p style="color: #666; text-align: center; margin-bottom: 30px; font-size: 14px;">Enter password to access</p>
+            <input type="password" id="admin-password" placeholder="Enter password" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 16px; margin-bottom: 12px; box-sizing: border-box;" autofocus>
+            <div id="login-error" style="color: #d32f2f; font-size: 14px; margin-bottom: 12px; min-height: 20px; text-align: center;"></div>
+            <button onclick="checkPassword()" style="width: 100%; padding: 12px; background: linear-gradient(135deg, #060097 0%, #57ffff 100%); color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.3s;">Login</button>
+            <p style="text-align: center; margin-top: 20px; font-size: 12px; color: #999;">Press Enter to submit</p>
+        </div>
+    </div>
+    
+    <div class="header" id="admin-header" style="display: none;">
+        <div class="container">
+            <h1>InfiNet AI Agent - Admin Panel</h1>
+            <p>View conversations and leads from your AI assistant</p>
+        </div>
+    </div>
+    
+    <div class="container" id="admin-content" style="display: none;">
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3>Total Conversations</h3>
+                <div class="value" id="stat-conversations">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Leads</h3>
+                <div class="value" id="stat-leads">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Bookings Confirmed</h3>
+                <div class="value" id="stat-bookings">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Messages</h3>
+                <div class="value" id="stat-messages">-</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" data-tab="conversations">Conversations</button>
+            <button class="tab" data-tab="leads">Leads</button>
+        </div>
+        
+        <div id="tab-conversations" class="tab-content active">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>Messages</th>
+                            <th>Last Message</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="conversations-table-body">
+                        <tr>
+                            <td colspan="4" class="loading">Loading conversations...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="tab-leads" class="tab-content">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Session ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Project Type</th>
+                            <th>Booking Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-table-body">
+                        <tr>
+                            <td colspan="6" class="loading">Loading leads...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Conversation Detail Modal -->
+    <div id="conversation-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 20px;">
+        <div style="max-width: 800px; margin: 0 auto; background: white; border-radius: 8px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #060097;">Conversation Details</h2>
+                <button onclick="closeConversationModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            <div id="conversation-detail-content"></div>
+        </div>
+    </div>
+    
+    <!-- Lead Detail Modal -->
+    <div id="lead-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto; padding: 20px;">
+        <div style="max-width: 800px; margin: 0 auto; background: white; border-radius: 8px; padding: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: #060097;">Lead Details</h2>
+                <button onclick="closeLeadModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            <div id="lead-detail-content"></div>
+        </div>
+    </div>
+    
+    <script>
+        // Admin Password
+        // Admin password should be set via environment variable or server-side configuration
+        // This is a placeholder - replace with actual secure password management
+        const ADMIN_PASSWORD = 'YOUR_ADMIN_PASSWORD'; // Set via environment variable
+        
+        // Check if already logged in (session storage)
+        if (sessionStorage.getItem('admin_authenticated') === 'true') {
+            showAdminPanel();
+        } else {
+            document.getElementById('login-screen').style.display = 'flex';
+        }
+        
+        // Password check function
+        function checkPassword() {
+            const passwordInput = document.getElementById('admin-password');
+            const errorDiv = document.getElementById('login-error');
+            const password = passwordInput.value;
+            
+            if (password === ADMIN_PASSWORD) {
+                // Correct password
+                sessionStorage.setItem('admin_authenticated', 'true');
+                showAdminPanel();
+            } else {
+                // Wrong password
+                errorDiv.textContent = 'Incorrect password. Please try again.';
+                passwordInput.value = '';
+                passwordInput.focus();
+                // Shake animation
+                passwordInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    passwordInput.style.animation = '';
+                }, 500);
+            }
+        }
+        
+        // Show admin panel
+        function showAdminPanel() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('admin-header').style.display = 'block';
+            document.getElementById('admin-content').style.display = 'block';
+            // Load data after functions are defined (will be called later)
+            setTimeout(() => {
+                if (typeof loadConversations === 'function') loadConversations();
+                if (typeof refreshStats === 'function') refreshStats();
+            }, 100);
+        }
+        
+        // Allow Enter key to submit
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordInput = document.getElementById('admin-password');
+            if (passwordInput) {
+                passwordInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPassword();
+                    }
+                });
+            }
+        });
+        
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Use relative path for production (goes through Apache reverse proxy)
+        // For localhost development, use: 'http://localhost:3000'
+        const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+            ? 'http://localhost:3000' 
+            : ''; // Empty string means use relative path (current domain)
+        
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`tab-${tabName}`).classList.add('active');
+                
+                // Load data for active tab
+                if (tabName === 'conversations') {
+                    loadConversations();
+                } else if (tabName === 'leads') {
+                    loadLeads();
+                }
+            });
+        });
+        
+        // Load conversations
+        async function loadConversations() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/ai/conversations`);
+                const conversations = await response.json();
+                
+                const tbody = document.getElementById('conversations-table-body');
+                
+                if (conversations.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty-state">No conversations yet</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = conversations.map(conv => `
+                    <tr>
+                        <td><span class="session-id">${conv.session_id}</span></td>
+                        <td>${conv.message_count} messages</td>
+                        <td>${new Date(conv.last_message_at).toLocaleString()}</td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewConversation('${conv.session_id}')">View</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Update stats
+                document.getElementById('stat-conversations').textContent = conversations.length;
+                
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+                document.getElementById('conversations-table-body').innerHTML = 
+                    '<tr><td colspan="4" class="empty-state">Error loading conversations</td></tr>';
+            }
+        }
+        
+        // Load leads
+        async function loadLeads() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/ai/leads`);
+                const leads = await response.json();
+                
+                const tbody = document.getElementById('leads-table-body');
+                
+                if (leads.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No leads yet</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = leads.map(lead => `
+                    <tr>
+                        <td><span class="session-id">${lead.session_id}</span></td>
+                        <td>${lead.name || '-'}</td>
+                        <td>${lead.email || '-'}</td>
+                        <td>${lead.project_type || '-'}</td>
+                        <td>
+                            ${lead.booking_confirmed ? 
+                                '<span class="badge badge-success">Booked</span>' : 
+                                '<span class="badge badge-pending">Pending</span>'}
+                        </td>
+                        <td>
+                            <button class="btn btn-primary" onclick="viewLead('${lead.session_id}')">View</button>
+                        </td>
+                    </tr>
+                `).join('');
+                
+                // Update stats
+                const bookedCount = leads.filter(l => l.booking_confirmed).length;
+                document.getElementById('stat-leads').textContent = leads.length;
+                document.getElementById('stat-bookings').textContent = bookedCount;
+                
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                document.getElementById('leads-table-body').innerHTML = 
+                    '<tr><td colspan="6" class="empty-state">Error loading leads</td></tr>';
+            }
+        }
+        
+        // View conversation details
+        async function viewConversation(sessionId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/ai/conversations/${sessionId}`);
+                const messages = await response.json();
+                
+                const content = document.getElementById('conversation-detail-content');
+                content.innerHTML = `
+                    <div class="conversation-view">
+                        <h3>Session: ${sessionId}</h3>
+                        ${messages.map(msg => `
+                            <div class="message ${msg.user_message ? 'message-user' : 'message-ai'}">
+                                <div class="message-label">${msg.user_message ? 'User' : 'AI Assistant'}</div>
+                                <div class="message-content">${msg.user_message || msg.ai_response}</div>
+                                <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                                    ${new Date(msg.created_at).toLocaleString()}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                document.getElementById('conversation-modal').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading conversation:', error);
+                alert('Error loading conversation details');
+            }
+        }
+        
+        // View lead details
+        async function viewLead(sessionId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/ai/leads/${sessionId}`);
+                const lead = await response.json();
+                
+                const content = document.getElementById('lead-detail-content');
+                content.innerHTML = `
+                    <div class="lead-info">
+                        <h3>Lead Information</h3>
+                        <div class="lead-info-grid">
+                            <div class="lead-info-item">
+                                <label>Session ID</label>
+                                <div class="value">${lead.session_id}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Name</label>
+                                <div class="value">${lead.name || 'Not provided'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Email</label>
+                                <div class="value">${lead.email || 'Not provided'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Phone</label>
+                                <div class="value">${lead.phone || 'Not provided'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Company</label>
+                                <div class="value">${lead.company || 'Not provided'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Project Type</label>
+                                <div class="value">${lead.project_type || 'Not specified'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Budget Range</label>
+                                <div class="value">${lead.budget_range || 'Not specified'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Booking Status</label>
+                                <div class="value">
+                                    ${lead.booking_confirmed ? 
+                                        '<span class="badge badge-success">Booked</span>' : 
+                                        '<span class="badge badge-pending">Pending</span>'}
+                                </div>
+                            </div>
+                            <div class="lead-info-item" style="grid-column: 1 / -1;">
+                                <label>Requirements</label>
+                                <div class="value">${lead.requirements || 'Not provided'}</div>
+                            </div>
+                            <div class="lead-info-item" style="grid-column: 1 / -1;">
+                                <label>Design Preferences</label>
+                                <div class="value">${lead.design_preferences || 'Not provided'}</div>
+                            </div>
+                            <div class="lead-info-item">
+                                <label>Created At</label>
+                                <div class="value">${new Date(lead.created_at).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('lead-modal').style.display = 'block';
+            } catch (error) {
+                console.error('Error loading lead:', error);
+                alert('Error loading lead details');
+            }
+        }
+        
+        // Close modals
+        function closeConversationModal() {
+            document.getElementById('conversation-modal').style.display = 'none';
+        }
+        
+        function closeLeadModal() {
+            document.getElementById('lead-modal').style.display = 'none';
+        }
+        
+        // Close modals on outside click
+        document.getElementById('conversation-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'conversation-modal') {
+                closeConversationModal();
+            }
+        });
+        
+        document.getElementById('lead-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'lead-modal') {
+                closeLeadModal();
+            }
+        });
+        
+        // Load initial data (only if authenticated)
+        if (sessionStorage.getItem('admin_authenticated') === 'true') {
+            loadConversations();
+            refreshStats();
+        }
+        
+        // Refresh stats
+        async function refreshStats() {
+            try {
+                const [conversationsRes, leadsRes] = await Promise.all([
+                    fetch(`${API_BASE_URL}/api/ai/conversations`),
+                    fetch(`${API_BASE_URL}/api/ai/leads`)
+                ]);
+                
+                const conversations = await conversationsRes.json();
+                const leads = await leadsRes.json();
+                
+                // Count total messages
+                let totalMessages = 0;
+                for (const conv of conversations) {
+                    totalMessages += conv.message_count || 0;
+                }
+                
+                document.getElementById('stat-conversations').textContent = conversations.length;
+                document.getElementById('stat-leads').textContent = leads.length;
+                document.getElementById('stat-bookings').textContent = leads.filter(l => l.booking_confirmed).length;
+                document.getElementById('stat-messages').textContent = totalMessages;
+            } catch (error) {
+                console.error('Error refreshing stats:', error);
+            }
+        }
+        
+        refreshStats();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            refreshStats();
+            if (document.getElementById('tab-conversations').classList.contains('active')) {
+                loadConversations();
+            } else if (document.getElementById('tab-leads').classList.contains('active')) {
+                loadLeads();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>سلة المشتريات – بروموتِك ريفيرب®</title>
+<style>
+  :root{
+    --brand:#1f2937; --text:#111827; --muted:#6b7280; --border:#e5e7eb;
+    --primary:#1f8b4c; --primary-dark:#16663a; --accent:#f8fafc;
+  }
+  html,body{margin:0;font-family:"Segoe UI",Tahoma,Arial,"Noto Sans Arabic",sans-serif;color:var(--text);background:#fff}
+  .wrap{max-width:960px;margin:24px auto;padding:0 16px}
+  .brand{font-weight:700;text-align:center;color:var(--brand);font-size:28px;margin-bottom:20px}
+  .card{border:1px solid var(--border);border-radius:12px;padding:18px;box-shadow:0 1px 2px rgba(0,0,0,.03);background:#fff}
+  .section-title{font-weight:800;color:var(--brand);font-size:18px;margin:10px 0 12px;display:flex;align-items:center;gap:8px}
+  .grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  table{width:100%;border-collapse:collapse}
+  thead th{background:var(--accent);font-size:14px;text-align:right;color:#334155;border-bottom:1px solid var(--border);padding:10px}
+  tbody td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle}
+  tfoot td{padding:10px;font-weight:800}
+  .muted{color:var(--muted)}
+  .qty{display:inline-flex;align-items:center;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+  .qty button{border:0;background:#fff;padding:8px 10px;cursor:pointer}
+  .qty input{width:48px;text-align:center;border:0;outline:none;padding:8px 0}
+  .price,.right{text-align:left}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;font-weight:800;padding:12px 16px;border:1px solid transparent;cursor:pointer;text-decoration:none}
+  .btn.secondary{border-color:#cbd5e1;background:#fff;color:#111827}
+  .btn.secondary:hover{background:#f1f5f9}
+  .btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}
+  .btn.primary:hover{background:var(--primary-dark);border-color:var(--primary-dark)}
+  .summary-row{display:flex;justify-content:space-between;margin:8px 0}
+  .summary-row .label{color:#334155}
+  .summary{border-top:1px dashed var(--border);margin-top:10px;padding-top:10px}
+  .input{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font-size:14px;outline:none}
+  .input:focus{border-color:#9ca3af;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+  .del{background:#fff;border:1px solid #fecaca;color:#dc2626;border-radius:8px;padding:6px 8px;cursor:pointer}
+  .empty{padding:24px;text-align:center}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">بروموتِك ريفيرب®</div>
+
+    <div class="grid">
+      <!-- سلة المنتجات -->
+      <div class="card">
+        <div class="section-title">سلة المشتريات</div>
+        <div id="cartBox">
+          <table aria-live="polite">
+            <thead>
+              <tr>
+                <th>المنتج</th>
+                <th class="price">السعر</th>
+                <th>الكمية</th>
+                <th class="price">الإجمالي</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="cartBody">
+              <!-- عناصر افتراضية (يمكنك تعديلها/استبدالها بربط من المتجر) -->
+              <tr class="cart-item" data-name="iPhone 13 128GB Starlight" data-price="399.00">
+                <td>iPhone 13 128GB Starlight</td>
+                <td class="price">$399.00</td>
+                <td>
+                  <div class="qty">
+                    <button type="button" class="dec">−</button>
+                    <input type="number" min="1" value="1" />
+                    <button type="button" class="inc">+</button>
+                  </div>
+                </td>
+                <td class="price line-total">$399.00</td>
+                <td><button type="button" class="del">إزالة</button></td>
+              </tr>
+              <tr class="cart-item" data-name="AirPods (2nd Gen)" data-price="89.00">
+                <td>AirPods (2nd Gen)</td>
+                <td class="price">$89.00</td>
+                <td>
+                  <div class="qty">
+                    <button type="button" class="dec">−</button>
+                    <input type="number" min="1" value="1" />
+                    <button type="button" class="inc">+</button>
+                  </div>
+                </td>
+                <td class="price line-total">$89.00</td>
+                <td><button type="button" class="del">إزالة</button></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5" class="muted">يمكنك تعديل الكمية أو إزالة المنتجات قبل إتمام الشراء.</td>
+              </tr>
+            </tfoot>
+          </table>
+          <div id="emptyMsg" class="empty muted" style="display:none">سلتك فارغة.</div>
+        </div>
+      </div>
+
+      <!-- تفاصيل الشحن والملخص -->
+      <div class="card">
+        <div class="section-title">تفاصيل الشحن</div>
+        <div style="display:grid;gap:10px">
+          <input class="input" id="shipName" placeholder="الاسم الكامل" />
+          <input class="input" id="shipAddress" placeholder="العنوان" />
+          <input class="input" id="shipCity" placeholder="المدينة" />
+          <input class="input" id="shipPostal" placeholder="الرمز البريدي" />
+          <input class="input" id="shipCountry" placeholder="الدولة" />
+        </div>
+
+        <div class="section-title" style="margin-top:14px;">الملخص</div>
+        <div class="summary">
+          <div class="summary-row"><div class="label">المجموع الفرعي</div><div id="subtotal">$0.00</div></div>
+          <!-- إن كان لديك ضريبة/شحن مدفوع/خصم يمكن إضافتها هنا -->
+          <div class="summary-row" style="font-weight:800;font-size:18px;">
+            <div class="label">الإجمالي</div><div id="total">$0.00</div>
+          </div>
+        </div>
+
+        <div class="actions" style="margin-top:14px;">
+          <a href="store-arabic.html" class="btn secondary">متابعة التسوق</a>
+          <button id="checkoutBtn" class="btn primary" type="button">متابعة الدفع</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // إعدادات عامة
+  const CURRENCY = 'USD';
+  const SUMMARY_KEY = 'promotech_checkout_summary_v1';
+
+  // أدوات
+  const money = (n) => (CURRENCY==='USD'?'$':'') + (Number(n)||0).toFixed(2);
+
+  function computeTotals(){
+    const rows = [...document.querySelectorAll('.cart-item')];
+    let subtotal = 0;
+
+    rows.forEach(row=>{
+      const price = Number(row.dataset.price || 0);
+      const qtyInput = row.querySelector('input[type="number"]');
+      const qty = Math.max(1, Number(qtyInput.value || 1));
+      const line = price * qty;
+      subtotal += line;
+      const lineCell = row.querySelector('.line-total');
+      if (lineCell) lineCell.textContent = money(line);
+    });
+
+    document.getElementById('subtotal').textContent = money(subtotal);
+    document.getElementById('total').textContent = money(subtotal); // أضف الضرائب/الشحن إن وُجد
+    // إظهار/إخفاء رسالة السلة الفارغة
+    document.getElementById('emptyMsg').style.display = rows.length ? 'none' : 'block';
+  }
+
+  function bindRow(row){
+    const dec = row.querySelector('.dec');
+    const inc = row.querySelector('.inc');
+    const input = row.querySelector('input[type="number"]');
+    const del = row.querySelector('.del');
+
+    if (dec) dec.addEventListener('click', ()=>{ input.value = Math.max(1, Number(input.value)-1); computeTotals(); });
+    if (inc) inc.addEventListener('click', ()=>{ input.value = Math.max(1, Number(input.value)+1); computeTotals(); });
+    if (input) input.addEventListener('input', ()=>{ if (Number(input.value) < 1) input.value = 1; computeTotals(); });
+    if (del) del.addEventListener('click', ()=>{ row.remove(); computeTotals(); });
+  }
+
+  // ربط جميع الصفوف الحالية
+  document.querySelectorAll('.cart-item').forEach(bindRow);
+  computeTotals();
+
+  // متابعة الدفع
+  document.getElementById('checkoutBtn').addEventListener('click', ()=>{
+    const rows = [...document.querySelectorAll('.cart-item')];
+
+    if (!rows.length){
+      alert('سلتك فارغة.');
+      return;
+    }
+
+    // جمع العناصر
+    const items = rows.map(row=>{
+      const name = row.dataset.name || 'منتج';
+      const price = Number(row.dataset.price || 0);
+      const qty = Math.max(1, Number(row.querySelector('input[type="number"]').value || 1));
+      return {
+        name,
+        price,
+        qty,
+        lineTotal: price * qty
+      };
+    });
+
+    // الإجماليات
+    const subtotalText = document.getElementById('subtotal').textContent.replace('$','');
+    const totalText    = document.getElementById('total').textContent.replace('$','');
+    const subtotal = Number(subtotalText)||0;
+    const total = Number(totalText)||0;
+
+    // بيانات الشحن
+    const shippingName    = document.getElementById('shipName').value.trim();
+    const shippingAddress = document.getElementById('shipAddress').value.trim();
+    const shippingCity    = document.getElementById('shipCity').value.trim();
+    const shippingPostal  = document.getElementById('shipPostal').value.trim();
+    const shippingCountry = document.getElementById('shipCountry').value.trim();
+
+    // حفظ الملخص في localStorage
+    const summary = {
+      items,
+      currency: CURRENCY,
+      subtotal,
+      total,
+      shippingName,
+      shippingAddress,
+      shippingCity,
+      shippingPostal,
+      shippingCountry
+    };
+    try{
+      localStorage.setItem(SUMMARY_KEY, JSON.stringify(summary));
+    }catch(e){/* تجاهل أخطاء التخزين */ }
+
+    // بناء URL مع المعلمات (نسخ احتياطي)
+    const params = new URLSearchParams({
+      amount: total.toFixed(2),
+      currency: CURRENCY,
+      shipName: shippingName || '',
+      shipAddress: shippingAddress || '',
+      shipCity: shippingCity || '',
+      shipPostal: shippingPostal || '',
+      shipCountry: shippingCountry || ''
+    });
+
+    // الانتقال إلى صفحة الدفع العربية
+    window.location.href = 'checkout-arabic.html?' + params.toString();
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,358 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Cedrus Capital — Checkout / Execute Payment</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<style>
+    :root{
+      --brand:#facc15;
+      --brand2:#fde047;
+      --ink:#0b1730;
+    }
+    body{background:#0b1730;color:#e8f1ff}
+    .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px}
+    .pill{border-radius:9999px}
+    .tab-active{ border-bottom: 3px solid var(--brand); color: var(--brand); }
+    .hidden{ display:none }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    .btn-yellow{ background: linear-gradient(135deg,var(--brand),var(--brand2)); color:#000; font-weight:800; }
+    .btn-outline{ border:1px solid rgba(255,255,255,.2); }
+  
+/* Back button like login's: yellow outline + pulse */
+.pill-outline-yellow{ 
+  border:2px solid var(--brand); 
+  color: var(--brand); 
+  background: transparent; 
+  border-radius:9999px; 
+  font-weight:700; 
+}
+.pill-outline-yellow:hover{ background: rgba(250,204,21,.08); }
+@keyframes pulseGlow{
+  0%{ box-shadow: 0 0 0 0 rgba(250,204,21,.45); }
+  70%{ box-shadow: 0 0 0 12px rgba(250,204,21,0); }
+  100%{ box-shadow: 0 0 0 0 rgba(250,204,21,0); }
+}
+.pulse{ animation: pulseGlow 1.8s infinite; }
+</style>
+<style id="mobile-overrides">
+/* ===================== Mobile-first overrides (Payment) ===================== */
+@media (max-width: 640px){
+  .max-w-5xl{ max-width: 100%; }
+  .px-4{ padding-left: 14px !important; padding-right: 14px !important; }
+  .pt-6{ padding-top: 12px !important; } .pb-3{ padding-bottom: 10px !important; }
+
+  /* Header brand scale */
+  .text-xl{ font-size: 1.1rem; }
+
+  /* Cards spacing */
+  .card{ border-radius: 14px !important; }
+  .card.p-5{ padding:14px !important; }
+
+  /* Summary grid -> single column */
+  .grid{ grid-template-columns: 1fr !important; }
+
+  /* Tabs: larger tap targets */
+  nav button{ padding-bottom: 12px !important; font-size: 1rem !important; }
+
+  /* Buttons */
+  .pill{ border-radius: 9999px; }
+  .btn-yellow{ padding: 10px 16px !important; }
+  .btn-outline{ padding: 10px 16px !important; }
+
+  /* QR image size */
+  #usdtQR, #btcQR{ width: 200px !important; height: 200px !important; }
+}
+</style></head>
+<body class="text-gray-100">
+<!-- Topbar -->
+<div class="max-w-5xl mx-auto px-4 pt-6 pb-3">
+<div class="flex items-center justify-between">
+<a class="inline-flex items-center px-4 py-2 pill-outline-yellow pulse transition transform hover:scale-[1.01]" href="dashboard.html">
+<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+        Back to Dashboard
+      </a>
+<div class="wrap nav">
+<div class="brand">
+<svg aria-hidden="true" fill="none" viewbox="0 0 64 64">
+<defs><lineargradient id="g" x1="0" x2="64" y1="0" y2="64"><stop stop-color="#facc15"></stop><stop offset="1" stop-color="#fde047"></stop></lineargradient></defs>
+<path d="M32 6c7 8 12 10 20 14-6 0-10 2-14 5 6 2 11 4 18 6-9 1-16 3-24 8-8-5-15-7-24-8 7-2 12-4 18-6-4-3-8-5-14-5 8-4 13-6 20-14z" fill="url(#g)"></path>
+<path d="M31 36h2v20h-2z" fill="#facc15"></path>
+</svg><span style="color:#facc15;">Cedrus Capital®</span></div>
+<nav aria-label="Primary" class="menu">
+<a href="index.html">Home</a>
+<a href="#values">Values</a>
+<a class="btn btn-ghost" href="https://wa.me/17473508060" style="color:#facc15">Contact</a>
+</nav>
+</div></div>
+</div>
+<div class="max-w-5xl mx-auto px-4 pb-10">
+<!-- Header -->
+<header class="mb-6">
+<h1 class="text-3xl font-extrabold">Checkout</h1>
+<p class="text-gray-300">Choose a payment method and follow the steps. (Replace addresses with your real wallets in production.)</p>
+</header>
+<!-- Order Summary -->
+<section class="card p-5 mb-6">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div>
+<h2 class="text-xl font-bold">Order Summary</h2>
+<p class="text-gray-300" id="orderDesc">Amount to pay</p>
+</div>
+<div class="text-right">
+<div class="text-sm text-gray-400">Amount Due</div>
+<div class="text-2xl font-extrabold"><span id="amount">0.00</span> <span id="currency">USD</span></div>
+</div>
+</div>
+<div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+<label class="block">
+<span class="text-sm text-gray-300">Plan</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10" id="planName" readonly="" type="text"/>
+</label>
+<label class="block">
+<span class="text-sm text-gray-300">Order ID</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10" id="orderId" type="text" value="CC-2025-0001"/>
+</label>
+<label class="block">
+<span class="text-sm text-gray-300">Amount (USD)</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10" id="amountInput" oninput="syncAmount(true)" step="0.01" type="number" value="0.00"/>
+</label>
+</div>
+<div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+<div>
+<span class="text-sm text-gray-300">Estimated Rewards</span>
+<div class="text-lg font-bold" id="estRewards">$0.00</div>
+</div>
+<div>
+<span class="text-sm text-gray-300">Total at Maturity</span>
+<div class="text-lg font-bold" id="estTotal">$0.00</div>
+</div>
+<div>
+<span class="text-sm text-gray-300">Maturity</span>
+<div class="text-lg font-bold" id="estMaturity">—</div>
+</div>
+</div>
+</section>
+<!-- Payment Tabs -->
+<nav class="flex gap-6 border-b border-white border-opacity-10 mb-6">
+<button class="pb-3 font-semibold tab-active" id="tab-usdt" onclick="showTab('usdt')">USDT</button>
+<button class="pb-3 font-semibold" id="tab-btc" onclick="showTab('btc')">₿ Bitcoin</button>
+<button class="pb-3 font-semibold" id="tab-card" onclick="showTab('card')">Credit Card</button>
+</nav>
+<!-- USDT Panel -->
+<section class="card p-5 mb-8" id="panel-usdt">
+<h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+<img alt="USDT" class="h-10 w-10" src="https://img.icons8.com/ios-filled/50/26e07f/tether--v1.png"/>Pay with USDT
+      </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block">
+<span class="text-sm text-gray-300">Network</span>
+<select class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10" id="usdtNetwork" onchange="updateUSDT()">
+<option selected="" value="TRC20">TRC20 (Tron)</option>
+<option value="ERC20">ERC20 (Ethereum)</option>
+<option value="BEP20">BEP20 (BSC)</option>
+</select>
+</label>
+<label class="block mt-3">
+<span class="text-sm text-gray-300">USDT Address</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10 mono" id="usdtAddress" oninput="updateUSDT()" type="text" value="T_your_TRC20_wallet_here"/>
+</label>
+<label class="block mt-3">
+<span class="text-sm text-gray-300">Amount in USDT (auto)</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10 mono" id="usdtAmount" placeholder="0.00" readonly="" type="text"/>
+</label>
+<div class="mt-4 flex gap-3">
+<button class="px-4 py-2 pill btn-outline hover:bg-white hover:bg-opacity-10" onclick="copyText('usdtAddress')">Copy Address</button>
+<button class="px-4 py-2 pill btn-yellow hover:opacity-90" id="usdtSentBtn" onclick="markIntent('USDT')">I Sent the Payment</button>
+</div>
+<p class="text-xs text-gray-400 mt-2">Make sure the network matches your wallet transfer network.</p>
+</div>
+<div class="text-center">
+<div class="inline-block bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl p-3">
+<img alt="USDT QR" class="w-48 h-48" id="usdtQR" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&amp;data="/>
+</div>
+<div class="text-sm text-gray-300 mt-2 mono break-all" id="usdtURI"></div>
+</div>
+</div>
+</section>
+<!-- BTC Panel -->
+<section class="card p-5 mb-8 hidden" id="panel-btc">
+<h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+<img alt="BTC" class="h-10 w-10" src="https://img.icons8.com/ios-filled/50/f7931a/bitcoin--v1.png"/>Pay with Bitcoin
+      </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<label class="block">
+<span class="text-sm text-gray-300">BTC Address</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10 mono" id="btcAddress" oninput="updateBTC()" type="text" value="bc1qtxn6kd6svdeptwzfx8y0vec2les9h62kgemh5t"/>
+</label>
+<label class="block mt-3">
+<span class="text-sm text-gray-300">Amount in BTC (auto)</span>
+<input class="mt-1 w-full pill px-3 py-2 bg-white bg-opacity-10 border border-white border-opacity-10 mono" id="btcAmount" placeholder="0.00000000" readonly="" type="text"/>
+</label>
+<div class="mt-4 flex gap-3">
+<button class="px-4 py-2 pill btn-outline hover:bg-white hover:bg-opacity-10" onclick="copyText('btcAddress')">Copy Address</button>
+<button class="px-4 py-2 pill btn-yellow hover:opacity-90" id="btcSentBtn" onclick="markIntent('BTC')">I Sent the Payment</button>
+</div>
+<p class="text-xs text-gray-400 mt-2">The QR encodes a bitcoin: URI for supported wallets.</p>
+</div>
+<div class="text-center">
+<div class="inline-block bg-white bg-opacity-10 border border-white border-opacity-10 rounded-xl p-3">
+<img alt="BTC QR" class="w-48 h-48" id="btcQR" src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&amp;data="/>
+</div>
+<div class="text-sm text-gray-300 mt-2 mono break-all" id="btcURI"></div>
+</div>
+</div>
+</section>
+<!-- CARD Panel -->
+<section class="card p-5 mb-8 hidden" id="panel-card">
+<h3 class="text-xl font-bold mb-4 flex items-center gap-3">
+<img alt="Visa" class="h-10 w-auto" src="https://img.icons8.com/color/96/000000/visa.png"/>
+<img alt="Mastercard" class="h-10 w-auto" src="https://img.icons8.com/color/96/000000/mastercard-logo.png"/>
+        Pay with Credit Card
+      </h3>
+<p class="text-gray-300 mb-4">This button will redirect to your payment processor. Replace the URL below with your live gateway link.</p>
+<div class="text-center">
+<a class="inline-block btn-yellow pill px-6 py-3 hover:opacity-90" href="cardpayment.html" id="cardPayLink" target="_blank">
+          Pay Securely
+        </a>
+</div>
+</section>
+<!-- Status / Help -->
+<section class="card p-5">
+<h4 class="text-lg font-bold mb-2">After Payment</h4>
+<p class="text-gray-300">Once you submit the transaction, click <span class="font-semibold text-yellow-300">“I Sent the Payment”</span>. We’ll verify on our side and email your receipt.</p>
+<div class="mt-3 text-sm text-yellow-300" id="status"></div>
+</section>
+</div>
+<script>
+    // --- Map your network to addresses ---
+    const USDT_ADDRESSES = {
+      TRC20: 'TYuTdjbScSnyzMTCZccfdriUrQKpxQMELT',
+      ERC20: '0x69Cf6Cca45273EC58a8aA1838e26268ea819807B',
+      BEP20: ''
+    };
+
+    // Tabs
+    function showTab(key){
+      ['usdt','btc','card'].forEach(k => {
+        document.getElementById('panel-'+k).classList.toggle('hidden', k !== key);
+        document.getElementById('tab-'+k).classList.toggle('tab-active', k === key);
+      });
+    }
+
+    // Copy utility
+    function copyText(elId){
+      const el = document.getElementById(elId);
+      el.select();
+      el.setSelectionRange(0, 99999);
+      document.execCommand('copy');
+      const s = document.getElementById('status');
+      s.textContent = 'Copied to clipboard: ' + el.value;
+    }
+
+    // Summary initialisation from URL (?tier & ?amount)
+    const TIERS = {
+      "15": { days: 15, ret: 0.10, min: 100, name: "Locked 15 Days" },
+      "30": { days: 30, ret: 0.25, min: 200, name: "Locked 30 Days" }
+    };
+    function initFromURL(){
+      const qs = new URLSearchParams(location.search);
+      const tier = (qs.get('tier')==='30'?'30':'15');
+      const t = TIERS[tier];
+      const amount = Math.max(0, Number(qs.get('amount')||0));
+      const min = t.min;
+      let usd = amount;
+      if (!usd || usd < min){ usd = min; }
+      // Summary
+      document.getElementById('planName').value = t.name + ' — ' + (t.ret*100).toFixed(0) + '%';
+      document.getElementById('amount').textContent = usd.toFixed(2);
+      document.getElementById('amountInput').value = usd.toFixed(2);
+      const rewards = usd * t.ret;
+      document.getElementById('estRewards').textContent = '$' + rewards.toFixed(2);
+      document.getElementById('estTotal').textContent = '$' + (usd + rewards).toFixed(2);
+      const d = new Date(); d.setDate(d.getDate()+t.days);
+      document.getElementById('estMaturity').textContent = d.toLocaleString(undefined, {year:'numeric',month:'short',day:'2-digit'});
+      // Trigger crypto calc
+      updateAllCrypto();
+    }
+
+    // Sync amount (when user edits USD field)
+    function syncAmount(userEdited){
+      const v = parseFloat(document.getElementById('amountInput').value || '0') || 0;
+      document.getElementById('amount').textContent = v.toFixed(2);
+      if(userEdited){ updateAllCrypto(); }
+    }
+
+    // Price fetch + populate BTC/USDT
+    async function updateAllCrypto(){
+      const usd = parseFloat(document.getElementById('amount').textContent || '0') || 0;
+      try{
+        const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,tether&vs_currencies=usd', {cache:'no-store'});
+        const data = await r.json();
+        const btcUSD = data.bitcoin && data.bitcoin.usd ? parseFloat(data.bitcoin.usd) : 0;
+        const usdtUSD = data.tether && data.tether.usd ? parseFloat(data.tether.usd) : 1;
+
+        // BTC
+        const btcAmount = btcUSD ? (usd / btcUSD) : 0;
+        document.getElementById('btcAmount').value = btcAmount ? btcAmount.toFixed(8) : '';
+        updateBTC();
+
+        // USDT
+        const usdtAmount = usdtUSD ? (usd / usdtUSD) : usd;
+        document.getElementById('usdtAmount').value = usdtAmount.toFixed(2);
+        updateUSDT();
+      }catch(e){
+        console.warn('Price fetch failed', e);
+        document.getElementById('btcAmount').value = '';
+        document.getElementById('usdtAmount').value = usd.toFixed(2);
+        updateBTC();
+        updateUSDT();
+      }
+    }
+
+    function updateBTC(){
+      const addr = (document.getElementById('btcAddress').value || '').trim();
+      const amt = (document.getElementById('btcAmount').value || '').trim();
+      const uri = amt ? ('bitcoin:' + addr + '?amount=' + amt) : ('bitcoin:' + addr);
+      document.getElementById('btcURI').textContent = uri;
+      document.getElementById('btcQR').src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(uri);
+    }
+
+    function updateUSDT(){
+      const netSel = document.getElementById('usdtNetwork');
+      const addrInput = document.getElementById('usdtAddress');
+      const uriEl = document.getElementById('usdtURI');
+      const qrImg = document.getElementById('usdtQR');
+
+      const network = netSel ? netSel.value : 'TRC20';
+      const mapped = USDT_ADDRESSES[network];
+      if (mapped && mapped.trim()) addrInput.value = mapped.trim();
+      const addr = (addrInput.value || '').trim();
+
+      // Encode just the address in QR for broad wallet compatibility.
+      uriEl.textContent = addr;
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=' + encodeURIComponent(addr);
+    }
+
+    function markIntent(method){
+      const id = document.getElementById('orderId').value || '(no id)';
+      const amt = document.getElementById('amount').textContent + ' ' + document.getElementById('currency').textContent;
+      document.getElementById('status').innerHTML = '✅ Payment intent recorded: <b>' + method + '</b> for <b>' + amt + '</b> (Order ' + id + ').';
+      setTimeout(function(){ window.location.href = 'thank-you-payment.html'; }, 400);
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', function(){
+      initFromURL();
+      showTab('usdt');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+# Environment variables (NEVER commit secrets)
+.env
+.env.local
+.env.*.local
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+data/
+tool-history.db*
+
+# Backups
+backups/
+*.backup
+*.bak
+
+# Logs
+*.log
+logs/
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+*.tmp

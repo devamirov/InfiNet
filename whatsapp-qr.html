@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp QR Code - InfiNet AI</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        #qrcode {
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            display: inline-block;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+        .status.ready {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.waiting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .instructions {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        .refresh-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .refresh-btn:hover {
+            background: #5568d3;
+        }
+        .refresh-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 WhatsApp QR Code</h1>
+        <p class="subtitle">Scan to connect InfiNet AI Assistant</p>
+        
+        <div id="qrcode"></div>
+        
+        <div id="status" class="status waiting">
+            <span class="loading">Loading QR code...</span>
+        </div>
+        
+        <button class="refresh-btn" onclick="loadQRCode()">🔄 Refresh QR Code</button>
+        
+        <div class="instructions">
+            <h3>📋 How to Connect:</h3>
+            <ol>
+                <li>Open WhatsApp on your phone (number: +17473508060)</li>
+                <li>Go to <strong>Settings</strong> → <strong>Linked Devices</strong></li>
+                <li>Tap <strong>Link a Device</strong></li>
+                <li>Scan this QR code with your phone</li>
+                <li>Wait for "Ready" status confirmation</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Wait for page to load, then try to load QR code
+        // If library doesn't load, we'll use fallback method
+        window.addEventListener('load', function() {
+            // Give libraries a moment to load
+            setTimeout(function() {
+                loadQRCode();
+            }, 500);
+        });
+        
+        function loadQRCode() {
+            const qrcodeDiv = document.getElementById('qrcode');
+            const statusDiv = document.getElementById('status');
+            const refreshBtn = document.querySelector('.refresh-btn');
+            
+            qrcodeDiv.innerHTML = '';
+            statusDiv.innerHTML = '<span class="loading">Loading QR code...</span>';
+            statusDiv.className = 'status waiting';
+            refreshBtn.disabled = true;
+            
+            fetch('https://infinet.services/api/whatsapp/qr')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP error! status: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('QR data received:', data);
+                    if (data.ready) {
+                        statusDiv.innerHTML = '✅ WhatsApp is connected and ready!';
+                        statusDiv.className = 'status ready';
+                        qrcodeDiv.innerHTML = '<p style="color: #28a745; font-size: 18px; font-weight: bold;">✓ Connected</p>';
+                        refreshBtn.disabled = false;
+                    } else if (data.qr) {
+                        // Generate QR code image
+                        qrcodeDiv.innerHTML = '';
+                        
+                        // Try multiple QR code generation methods
+                        if (typeof QRCode !== 'undefined' && QRCode.toCanvas) {
+                            // Method 1: Use QRCode.toCanvas (unpkg version)
+                            qrcodeDiv.innerHTML = '';
+                            const canvas = document.createElement('canvas');
+                            qrcodeDiv.appendChild(canvas);
+                            
+                            QRCode.toCanvas(canvas, data.qr, {
+                                width: 300,
+                                margin: 2,
+                                color: {
+                                    dark: '#000000',
+                                    light: '#FFFFFF'
+                                },
+                                errorCorrectionLevel: 'M'
+                            }, function (error) {
+                                if (error) {
+                                    console.error('QR Code generation error:', error);
+                                    // Fallback to image URL method
+                                    generateQRCodeFallback(data.qr);
+                                } else {
+                                    console.log('QR Code generated successfully');
+                                    statusDiv.innerHTML = '📱 Scan this QR code with WhatsApp';
+                                    statusDiv.className = 'status waiting';
+                                    refreshBtn.disabled = false;
+                                }
+                            });
+                        } else if (typeof QRCode !== 'undefined' && QRCode.toDataURL) {
+                            // Method 2: Use QRCode.toDataURL and create img
+                            QRCode.toDataURL(data.qr, {
+                                width: 300,
+                                margin: 2,
+                                color: {
+                                    dark: '#000000',
+                                    light: '#FFFFFF'
+                                }
+                            }, function (error, url) {
+                                if (error) {
+                                    console.error('QR Code generation error:', error);
+                                    generateQRCodeFallback(data.qr);
+                                } else {
+                                    qrcodeDiv.innerHTML = '<img src="' + url + '" alt="QR Code" style="max-width: 300px; height: auto;" />';
+                                    statusDiv.innerHTML = '📱 Scan this QR code with WhatsApp';
+                                    statusDiv.className = 'status waiting';
+                                    refreshBtn.disabled = false;
+                                }
+                            });
+                        } else {
+                            // Fallback: Use online QR code service
+                            generateQRCodeFallback(data.qr);
+                        }
+                        
+                        function generateQRCodeFallback(qrString) {
+                            // Use online QR code generator as fallback
+                            const qrImageUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(qrString);
+                            qrcodeDiv.innerHTML = '<img src="' + qrImageUrl + '" alt="QR Code" style="max-width: 300px; height: auto; border: 2px solid #ddd; border-radius: 10px;" />';
+                            statusDiv.innerHTML = '📱 Scan this QR code with WhatsApp';
+                            statusDiv.className = 'status waiting';
+                            refreshBtn.disabled = false;
+                        }
+                    } else {
+                        statusDiv.innerHTML = '⏳ WhatsApp is initializing... Please wait and refresh.';
+                        statusDiv.className = 'status waiting';
+                        refreshBtn.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching QR code:', error);
+                    statusDiv.innerHTML = '❌ Error loading QR code: ' + error.message;
+                    statusDiv.className = 'status error';
+                    refreshBtn.disabled = false;
+                });
+        }
+        
+        // QR code will load when page and library are ready (handled in loadQRCode function)
+        
+        // Auto-refresh every 30 seconds if not ready
+        setInterval(() => {
+            fetch('https://infinet.services/api/whatsapp/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.ready) {
+                        loadQRCode();
+                    } else {
+                        const statusDiv = document.getElementById('status');
+                        if (!statusDiv.classList.contains('ready')) {
+                            loadQRCode();
+                        }
+                    }
+                })
+                .catch(error => console.error('Status check error:', error));
+        }, 30000);
+    </script>
+</body>
+</html>
+

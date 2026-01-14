@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Cedrus Capital — USDT Staking</title>
+<meta content="Cedrus Capital: Earn passive income with USDT staking. Flexible or locked tiers, clear APY, instant dashboard access." name="description"/>
+<style>
+  /* ============== Core Theme ============== */
+  :root{
+    --bg-1:#070914;
+    --bg-2:#0b1730;
+    --cedar-1:#facc15;
+    --cedar-2:#fde047;
+    --ink:#e8f1ff;
+    --ink-2:#a8b7d6;
+    --line:rgba(255,255,255,.12);
+    --glass:rgba(255,255,255,.06);
+    --shadow:0 10px 40px rgba(0,0,0,.35);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:radial-gradient(1200px 700px at 90% -10%, rgba(250,204,21,.12), transparent 55%), linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--cedar-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+  .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(8px);border-radius:999px;padding:8px 12px;color:var(--ink-2);font-size:.9rem}
+  .btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,var(--cedar-1),var(--cedar-2));color:#012d1b;box-shadow:var(--shadow)}
+  .btn-ghost{border:1px solid var(--line);background:transparent;color:var(--ink)}
+  .muted{color:var(--ink-2)}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .card{background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-pad{padding:18px}
+  .tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--ink-2);font-size:.82rem}
+
+  /* Floating orbs */
+  .orb{position:absolute;filter:blur(30px);opacity:.35;z-index:0}
+  .orb.a{width:240px;height:240px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.15), transparent 60%);top:80px;left:-60px;animation:float 12s ease-in-out infinite}
+  .orb.b{width:300px;height:300px;background:radial-gradient(circle at 70% 50%, rgba(255,255,255,.1), transparent 60%);bottom:8vh;right:-40px;animation:float 14s ease-in-out infinite reverse}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:30;background:rgba(7,9,20,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}
+  .brand svg{width:30px;height:30px}
+  .menu{display:flex;align-items:center;gap:20px}
+  .menu a{color:var(--ink);opacity:.9}
+  .burger{display:none;border:1px solid var(--line);color:var(--ink);background:transparent;border-radius:12px;padding:8px 10px}
+  @media (max-width:980px){
+    .menu{display:none}
+    .burger{display:inline-block}
+    .nav-open .menu{display:flex;position:absolute;left:0;right:0;top:56px;background:rgba(7,9,20,.98);padding:14px;border-bottom:1px solid var(--line);flex-direction:column}
+  }
+
+  /* Hero */
+  .hero{position:relative;z-index:1;padding:56px 0 28px}
+  .hero .title{font-size:clamp(2rem,5.6vw,3.8rem);line-height:1.03;margin:14px 0 10px;font-weight:900;letter-spacing:.2px}
+  .spark{background:linear-gradient(90deg,#fff, var(--cedar-2) 60%, var(--cedar-1));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{font-size:1.08rem;max-width:62ch}
+  .hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .kpi{padding:16px;border-radius:14px;border:1px dashed var(--line);background:rgba(255,255,255,.02)}
+  .kpi b{font-size:1.2rem}
+
+  /* Showcase Card */
+  .show{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:28px}
+  .screen{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);min-height:320px}
+  .ticker{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);border-top:1px solid var(--line);display:flex;gap:24px;overflow:auto;padding:10px 12px;font-family:ui-monospace,Menlo,monospace}
+  .ticker span{white-space:nowrap}
+  .estimator .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  input, select, textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:12px;outline:none}
+  input:focus, select:focus, textarea:focus{border-color:var(--cedar-2)}
+
+  /* Staking Tiers */
+  .plans{margin-top:18px}
+  .plan{position:relative;overflow:hidden}
+  .plan .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .price{font-weight:900;font-size:1.8rem}
+  .plan.pop{outline:2px solid var(--cedar-2)}
+  .list{list-style:none;margin:10px 0 0;padding:0}
+  .list li{display:flex;gap:10px;align-items:flex-start;margin:8px 0;color:var(--ink-2)}
+  .list svg{min-width:18px;margin-top:2px}
+
+  /* Steps */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .step{padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .num{width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,var(--cedar-1),var(--cedar-2));display:inline-flex;align-items:center;justify-content:center;color:#00231a;font-weight:900}
+
+  /* Testimonials */
+  .slider{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .slides{display:flex;transition:transform .6s ease}
+  .slide{min-width:100%;padding:18px}
+  .dots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+  .dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.25)}
+  .dot.active{background:var(--cedar-2)}
+
+  /* Trust */
+  .trust{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+  .doc{padding:18px;border-radius:16px;border:1px dashed var(--cedar-2);background:rgba(0,0,0,.2)}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);margin-top:34px}
+  .foot{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px;padding:24px 0;color:var(--ink-2)}
+
+  /* Responsive */
+  @media (max-width:980px){
+    .grid-3,.grid-2{grid-template-columns:1fr}
+    .kpis{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:repeat(2,1fr)}
+    .show{grid-template-columns:1fr}
+    .trust{grid-template-columns:1fr}
+  }
+</style>
+<style id="flat-bg-fix">
+/* Force a single, uniform page background */
+html, body{
+  background:#0b1730 !important;         /* flat navy */
+  background-image:none !important;       /* remove radial/linear hazes */
+}
+
+/* Remove any section/stripe backgrounds */
+section, .hero, .plans, .show, .trust, .steps, .kpis, .slider, footer{
+  background:transparent !important;
+}
+section::before, section::after, .plans::before, .plans::after{
+  content:none !important;
+}
+
+/* Neutralize specific overlays */
+.ticker{ background:transparent !important; }
+.screen{ background:rgba(255,255,255,.04) !important; } /* subtle glass, no tints */
+
+/* Keep cards readable without adding page tint */
+.card, .step, .plan{
+  background:rgba(255,255,255,.03) !important;
+  background-image:none !important;
+}
+</style>
+<style>
+/* === Live pulse hover for plan cards and start buttons === */
+@keyframes livePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(250,204,21,.18); }
+  50%  { box-shadow: 0 0 0 8px rgba(250,204,21,.10); }
+  100% { box-shadow: 0 0 0 0 rgba(250,204,21,.00); }
+}
+
+/* Selected look applied to all plans */
+.plan.pop{
+  outline: 2px solid var(--cedar-2) !important;
+  box-shadow: 0 10px 30px rgba(250,204,21,.10);
+}
+
+/* Card hover = subtle lift + pulse */
+.plan:hover{
+  transform: translateY(-2px);
+  transition: transform .18s ease, box-shadow .22s ease;
+  animation: livePulse 1.6s ease-in-out infinite;
+}
+
+/* Start buttons inside plans pulse on hover */
+.plans .btn:hover,
+.plans .btn:focus-visible{
+  animation: livePulse 1.6s ease-in-out infinite;
+  outline: none;
+}
+</style><style>
+/* Smaller hero CTA buttons */
+.hero-cta .btn {
+  font-size: 0.9rem !important;
+  padding: 0.4rem 0.9rem !important;
+}
+</style><style>
+/* === Live pulse (no color/size change) === */
+@keyframes livePulse {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+    box-shadow: none;
+  }
+  50% {
+    transform: translateY(-1px) scale(1.02);
+    box-shadow: 0 0 0 8px rgba(250, 204, 21, .12); /* soft yellow aura */
+  }
+}
+.hero-cta .live-pulse {
+  will-change: transform, box-shadow;
+  animation: livePulse 2.0s ease-in-out infinite;
+  text-decoration: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-cta .live-pulse { animation: none; }
+}
+</style><style>
+/* === Live pulse for staking tier boxes (no style/size changes) === */
+.plans .plan.live-pulse {
+  will-change: transform, box-shadow;
+  animation: livePulse 2.0s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .plans .plan.live-pulse { animation: none; }
+}
+</style><style>
+/* Slide-in calculator panel under plans */
+#calc-panel { 
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height .35s ease, opacity .3s ease;
+}
+#calc-panel.open {
+  max-height: 900px; /* enough to show content */
+  opacity: 1;
+}
+/* Card visual consistency without altering theme */
+.calc-shell { border:1px solid var(--line); border-radius:16px; background: rgba(255,255,255,.06); }
+</style></head>
+<body>
+<!-- Floating glow orbs -->
+<div class="orb a"></div><div class="orb b"></div>
+<!-- Header -->
+<header>
+<div class="wrap nav" id="nav">
+<a aria-label="Cedrus Capital Home" class="brand" href="#">
+<!-- Cedar glyph -->
+<svg aria-hidden="true" fill="none" viewbox="0 0 64 64">
+<defs><lineargradient id="g" x1="0" x2="64" y1="0" y2="64"><stop stop-color="#facc15"></stop><stop offset="1" stop-color="#fde047"></stop></lineargradient></defs>
+<path d="M32 6c7 8 12 10 20 14-6 0-10 2-14 5 6 2 11 4 18 6-9 1-16 3-24 8-8-5-15-7-24-8 7-2 12-4 18-6-4-3-8-5-14-5 8-4 13-6 20-14z" fill="url(#g)"></path>
+<path d="M31 36h2v20h-2z" fill="#facc15"></path>
+</svg>
+<span>Cedrus Capital</span>
+</a>
+<nav aria-label="Primary" class="menu">
+<a href="#why">Why</a>
+<a href="#plans">Staking</a>
+<a href="#how">How</a>
+<a href="#contact">Contact</a>
+<!-- CHANGED -->
+<a class="btn btn-primary" href="login.html" style="text-decoration:none">Staking Dashboard</a>
+<!-- CHANGED -->
+<a class="btn btn-primary" href="login.html" style="text-decoration:none">Start Staking</a>
+</nav>
+<button aria-label="Toggle menu" class="burger" id="burger">☰</button>
+</div>
+</header>
+<!-- Hero -->
+<section class="hero">
+<div class="wrap">
+<div class="pill">🌟 New • Earn with USDT Staking — zero deposit fees</div>
+<h1 class="title">Earn <span class="spark">passive income</span> with <span class="spark">USDT</span> staking.</h1>
+<p class="lead muted">Pick a flexible or locked tier, deposit USDT, and earn daily rewards. Transparent APY, instant dashboard, withdraw when your term ends (or anytime on flexible).</p>
+<div class="hero-cta">
+<a class="btn btn-primary live-pulse" href="#plans">View Staking Tiers</a>
+<a class="btn btn-primary live-pulse" href="#contact">Staking Dashboard</a>
+<!-- CHANGED -->
+<a class="btn btn-primary live-pulse" href="login.html">Talk to an Advisor</a>
+</div>
+<div class="kpis">
+<div class="kpi"><b>Up to 15% APY</b><br/><span class="muted">On USDT staking</span></div>
+<div class="kpi"><b>Start from $50</b><br/><span class="muted">Low minimum</span></div>
+<div class="kpi"><b>Instant access</b><br/><span class="muted">Track rewards 24/7</span></div>
+</div>
+<div class="show">
+<div class="screen card">
+<!-- Staking dashboard preview (DEMO) -->
+<div class="card-pad">
+<div class="pill">Staking Dashboard (Demo)</div>
+<h3 style="margin:10px 0 0">USDT Rewards Overview</h3>
+<p class="muted" style="margin:6px 0 8px">Staked amount &amp; estimated rewards — demo illustration</p>
+<small class="muted" style="display:block;margin-bottom:10px">(Not live data)</small>
+<div class="grid-2">
+<div class="card card-pad">
+<div class="muted">Staked Amount</div>
+<div style="font-weight:900;font-size:1.6rem">$1,000</div>
+<div class="muted">Tier: Locked 180d (15% APY)</div>
+</div>
+<div class="card card-pad estimator">
+<div class="muted" style="margin-bottom:6px">Estimate Rewards</div>
+<div class="row">
+<input id="amt" min="50" placeholder="USDT amount" type="number" value="1000"/>
+<select id="apy">
+<option value="0.05">Flexible • 5% APY</option>
+<option selected="" value="0.10">Locked 90d • 10% APY</option>
+<option value="0.15">Locked 180d • 15% APY</option>
+</select>
+</div>
+<div class="row" style="margin-top:10px">
+<input id="mos" min="1" placeholder="Months" type="number" value="6"/>
+<input disabled="" id="comp" type="text" value="Daily"/>
+</div>
+<button class="btn btn-primary" id="calc" style="margin-top:10px">Estimate</button>
+<div class="muted" id="out" style="margin-top:8px"></div>
+</div>
+</div>
+</div>
+<div class="ticker">
+<span>USDT Peg ≈ $1.00</span><span>BTC ▲</span><span>ETH ▲/▼</span><span>Market: crypto staking focus</span>
+</div>
+</div>
+<div class="card card-pad">
+<h3 style="margin:0 0 8px">Why stake with us</h3>
+<div class="grid-3">
+<div><span class="tag">Clear APY</span><p class="muted">Transparent yields by tier — no hidden fees.</p></div>
+<div><span class="tag">Custody</span><p class="muted">Institutional-grade wallets &amp; controls.</p></div>
+<div><span class="tag">Flexible</span><p class="muted">Start small, withdraw anytime on flexible tier.</p></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Staking Tiers -->
+<section class="wrap plans" id="plans">
+<h2 style="margin:4px 0 10px">USDT Staking Tiers</h2>
+<p class="muted" style="margin:0 0 12px">Choose your lock period and APY. Rewards accrue daily; displayed APY is illustrative.</p>
+<div class="grid-3">
+<div class="card card-pad plan pop live-pulse">
+<div class="head"><span class="tag">Locked 7 Days</span><span class="price">~5% APY</span></div>
+<ul class="list">
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Min. 50$ / Low Yield</li>
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Daily accural</li>
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Auto-redeem at maturity</li>
+</ul>
+<!-- CHANGED -->
+<a class="btn btn-primary" href="login.html" style="margin-top:12px">Start Flexible</a>
+</div>
+<div class="card card-pad plan pop live-pulse">
+<div class="head"><span class="tag">Locked 14 Days</span><span class="price">~10% APY</span></div>
+<ul class="list">
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Min. 100$ / Higher yield</li>
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Daily accrual</li>
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Auto-redeem at maturity</li>
+</ul>
+<!-- CHANGED -->
+<a class="btn btn-primary" href="login.html" style="margin-top:12px">Start 90-Day Lock</a>
+</div>
+<div class="card card-pad plan pop live-pulse">
+<div class="head"><span class="tag">Locked 28 Days</span><span class="price">~15% APY</span></div>
+<ul class="list">
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Min. 200$ / Highest yield</li>
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Daily accrual</li>
+<li><svg height="18" viewbox="0 0 24 24" width="18"><path d="M5 12l4 4L19 6" fill="none" stroke="currentColor" stroke-width="2"></path></svg>Auto-redeem at maturity</li>
+</ul>
+<!-- CHANGED -->
+<a class="btn btn-primary" href="login.html" style="margin-top:12px">Start 180-Day Lock</a>
+</div>
+</div>
+</section><section aria-live="polite" class="wrap" id="calc-panel">
+<div class="card pad calc-shell" style="margin-top:16px; overflow:hidden">
+<div class="calc-header" style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+<div>
+<h3 style="margin:0">Staking Calculator</h3>
+<div class="muted" id="calc-selected">Select a plan to begin</div>
+</div>
+<button aria-label="Close calculator" class="btn btn-ghost" id="calc-close" style="min-width:110px">Close</button>
+</div>
+<div class="calc-body" style="margin-top:12px">
+<div class="grid-3">
+<div class="card pad">
+<label class="muted" for="calc-amount">Amount (USDT)</label>
+<input id="calc-amount" min="50" placeholder="Enter amount" step="1" type="number" value="1000"/>
+<div class="muted" style="margin-top:6px">Minimum $50</div>
+</div>
+<div class="card pad">
+<div class="grid-2" style="gap:10px">
+<div>
+<label class="muted" for="calc-plan">Plan</label>
+<select id="calc-plan">
+<option value="flex">Flexible (~5% APY)</option>
+<option value="90">Locked 90d (~10% APY)</option>
+<option value="180">Locked 180d (~15% APY)</option>
+</select>
+</div>
+<div>
+<label class="muted" for="calc-apy">APY</label>
+<input disabled="" id="calc-apy" type="text" value="5%"/>
+</div>
+</div>
+<div class="grid-2" style="gap:10px; margin-top:10px">
+<div>
+<label class="muted" for="calc-months">Months (Flexible)</label>
+<input id="calc-months" min="1" type="number" value="6"/>
+</div>
+<div>
+<label class="muted" for="calc-days">Days (Locked)</label>
+<input disabled="" id="calc-days" min="1" type="number" value="90"/>
+</div>
+</div>
+</div>
+<div class="card pad">
+<div class="muted">Estimate</div>
+<div id="calc-out" style="font-weight:900;font-size:1.2rem; margin:6px 0">$0.00 rewards</div>
+<div class="muted" id="calc-maturity">Maturity: —</div>
+<button class="btn btn-primary" id="calc-start" style="margin-top:10px">Start Staking (Login)</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- How it works -->
+<section class="wrap" id="how" style="margin-top:24px">
+<h2 style="margin:4px 0 10px">How staking works</h2>
+<div class="steps">
+<div class="step"><span class="num">1</span><h3 style="margin:8px 0">Create account</h3><p class="muted">Simple signup, secure KYC.</p></div>
+<div class="step"><span class="num">2</span><h3 style="margin:8px 0">Deposit USDT</h3><p class="muted">Send TRC20/ERC20/BEP20 (supported nets).</p></div>
+<div class="step"><span class="num">3</span><h3 style="margin:8px 0">Choose a tier</h3><p class="muted">Flexible or locked term with clear APY.</p></div>
+<div class="step"><span class="num">4</span><h3 style="margin:8px 0">Earn daily</h3><p class="muted">Track rewards in your dashboard.</p></div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="wrap" style="margin-top:24px">
+<h2 style="margin:4px 0 10px">What clients say</h2>
+<div class="slider" id="slider">
+<div class="slides" id="slides">
+<div class="slide">
+<p class="muted">“I started with $200 USDT on flexible. Payouts are smooth and the dashboard is clean.”</p>
+<b>— Rana A.</b>
+</div>
+<div class="slide">
+<p class="muted">“Locked 90 days gave me higher yield without overcomplicating it.”</p>
+<b>— Hadi K.</b>
+</div>
+<div class="slide">
+<p class="muted">“Clear APY and no hidden fees — finally a staking page that’s not shady.”</p>
+<b>— Maya S.</b>
+</div>
+</div>
+</div>
+<div class="dots" id="dots">
+<div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+</div>
+</section>
+<!-- Trust & Disclosures -->
+<section class="wrap" id="trust" style="margin-top:24px">
+<h2 style="margin:4px 0 10px">Trust &amp; Transparency</h2>
+<div class="trust">
+<div class="card card-pad">
+<h3 style="margin:0 0 6px">Security first</h3>
+<p class="muted">Rewards are variable and not guaranteed. Staking involves risk, including potential smart-contract or counterparty risk. Always do your own research.</p>
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+<span class="tag">Cold Wallet Practices</span><span class="tag">KYC/AML</span><span class="tag">2FA</span>
+</div>
+</div>
+<div class="doc">
+<pre style="white-space:pre-wrap;margin:0;font-family:ui-monospace,Menlo,monospace;color:var(--ink)">
+Cedrus Capital SAL
+Commercial Reg. (CRN): <your-crn-here>
+VAT: <your-vat>
+Registered Office: <your address,="" beirut,="" lebanon="">
+Incorporation Date: <dd mon="" yyyy="">
+Status: Active
+</dd></your></your-vat></your-crn-here></pre>
+<small class="muted">Replace placeholders with your official details.</small>
+</div>
+</div>
+</section>
+<!-- Contact -->
+<section class="wrap" id="contact" style="margin-top:24px;margin-bottom:16px">
+<h2 style="margin:4px 0 10px">Get started</h2>
+<div class="grid-2">
+<form action="lead.php" class="card card-pad" id="lead" method="POST" novalidate="">
+<div class="grid-2" style="gap:10px">
+<input name="name" placeholder="Full name*" required=""/>
+<input name="email" placeholder="Email*" required="" type="email"/>
+</div>
+<div class="grid-2" style="gap:10px;margin-top:10px">
+<input name="phone" placeholder="Phone (+961…)"/>
+<select name="plan">
+<option value="">Staking Tier (optional)</option>
+<option>Flexible (5% APY)</option>
+<option>Locked 90d (10% APY)</option>
+<option>Locked 180d (15% APY)</option>
+</select>
+</div>
+<textarea name="msg" placeholder="Any questions about staking?" rows="4" style="margin-top:10px"></textarea>
+<div class="muted" id="note" style="margin:6px 0"></div>
+<button class="btn btn-primary" type="submit">Request Callback</button>
+</form>
+<div class="card card-pad">
+<h3 style="margin:0 0 6px">Visit us</h3>
+<p class="muted">📍 Beirut, Lebanon<br/>✉️ hello@cedruscapital.example<br/>☎️ +961 [number]</p>
+<form action="newsletter.php" id="news" method="POST" novalidate="" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+<input name="email" placeholder="Join newsletter (email)" type="email"/>
+<button class="btn btn-ghost" type="submit">Subscribe</button>
+</form>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer>
+<div class="wrap foot">
+<div>
+<b>Cedrus Capital</b>
+<div class="muted">© <span id="year"></span> Cedrus Capital. All rights reserved.</div>
+</div>
+<div>
+<b>Legal</b>
+<div><a class="muted" href="#">Risk Disclosure</a></div>
+<div><a class="muted" href="#">Terms of Service</a></div>
+<div><a class="muted" href="#">Privacy Policy</a></div>
+</div>
+<div>
+<b>Follow</b>
+<div><a class="muted" href="#">Instagram</a></div>
+<div><a class="muted" href="#">Facebook</a></div>
+</div>
+</div>
+</footer>
+<script>
+  // Mobile nav
+  const burger = document.getElementById('burger');
+  burger?.addEventListener('click', ()=> document.body.classList.toggle('nav-open'));
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Rewards estimator (daily compounding approximation)
+  function estimate(){
+    const P = Math.max(0, parseFloat(document.getElementById('amt').value||0));
+    const apy = parseFloat(document.getElementById('apy').value||0.10);
+    const months = Math.max(1, parseInt(document.getElementById('mos').value||1,10));
+    const days = Math.round(months*30.4167); // avg month length
+
+    // Convert APY to daily rate (approx): (1+APY)^(1/365)-1
+    const rd = Math.pow(1+apy, 1/365) - 1;
+    const total = P * Math.pow(1+rd, days);
+    const rewards = total - P;
+
+    document.getElementById('out').innerHTML =
+      "Estimated rewards: <b style='color:var(--cedar-2)'>$"+ rewards.toFixed(2) +
+      "</b> in " + months + " mo — <span class='muted'>Illustrative only</span>";
+  }
+  document.getElementById('calc').addEventListener('click', estimate);
+
+  // Lead form basic validation
+  const lead = document.getElementById('lead');
+  lead.addEventListener('submit', function(e){
+    const note = document.getElementById('note');
+    const name = this.name.value.trim();
+    const email = this.email.value.trim();
+    if(!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      e.preventDefault(); note.textContent = "Please add your name and a valid email.";
+    } else { note.textContent = "Submitting…"; }
+  });
+
+  // Newsletter email check
+  document.getElementById('news').addEventListener('submit', function(e){
+    const email = this.email.value.trim();
+    if(email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+      e.preventDefault(); alert('Enter a valid email.');
+    }
+  });
+
+  // Tiny testimonial slider (auto-rotate)
+  const slides = document.getElementById('slides');
+  const dots = Array.from(document.getElementById('dots').children);
+  let idx = 0;
+  setInterval(()=>{
+    idx = (idx+1)%3;
+    slides.style.transform = `translateX(-${idx*100}%)`;
+    dots.forEach((d,i)=> d.classList.toggle('active', i===idx));
+  }, 4000);
+</script>
+<script>
+(function(){
+  const panel = document.getElementById('calc-panel');
+  const amountEl = document.getElementById('calc-amount');
+  const planEl = document.getElementById('calc-plan');
+  const apyEl = document.getElementById('calc-apy');
+  const monthsEl = document.getElementById('calc-months');
+  const daysEl = document.getElementById('calc-days');
+  const outEl = document.getElementById('calc-out');
+  const matEl = document.getElementById('calc-maturity');
+  const selEl = document.getElementById('calc-selected');
+  const closeBtn = document.getElementById('calc-close');
+  const startBtn = document.getElementById('calc-start');
+
+  if(!panel) return;
+
+  // Parse APY from plan label or use defaults
+  const DEFAULTS = { flex: 0.05, '90': 0.10, '180': 0.15 };
+  const DEFAULT_DAYS = { flex: 180, '90': 90, '180': 180 }; // fallback when switching
+
+  function setPlan(key, labelFromCard){
+    // Update dropdown and derived fields
+    planEl.value = key;
+    const apy = DEFAULTS[key] || 0.05;
+    apyEl.value = Math.round(apy*100) + '%';
+
+    if(key === 'flex'){
+      monthsEl.disabled = false;
+      daysEl.disabled = true;
+      daysEl.value = '';
+    } else {
+      monthsEl.disabled = true;
+      // infer days
+      daysEl.disabled = false;
+      daysEl.value = key === '90' ? 90 : 180;
+    }
+
+    selEl.textContent = 'Selected: ' + (labelFromCard || planEl.options[planEl.selectedIndex].text);
+    estimate();
+  }
+
+  function estimate(){
+    const P = Math.max(0, parseFloat(amountEl.value||0));
+    const key = planEl.value;
+    const apy = (parseFloat((apyEl.value||'0').replace('%',''))||0)/100;
+
+    let days = 0;
+    if(key === 'flex'){
+      const months = Math.max(1, parseInt(monthsEl.value||1,10));
+      days = Math.round(months*30.4167);
+    } else {
+      days = Math.max(1, parseInt(daysEl.value||DEFAULT_DAYS[key],10));
+    }
+
+    // daily rate
+    const rd = Math.pow(1+apy, 1/365) - 1;
+    const total = P * Math.pow(1+rd, days);
+    const rewards = total - P;
+
+    outEl.textContent = '$' + rewards.toFixed(2) + ' rewards';
+
+    // maturity date
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    const m = d.toLocaleString(undefined, {year:'numeric', month:'short', day:'2-digit'});
+    matEl.textContent = 'Maturity: ' + (key === 'flex' ? (days + ' days from deposit') : m);
+  }
+
+  // Events
+  [amountEl, planEl, monthsEl, daysEl].forEach(el => el && el.addEventListener('input', estimate));
+
+  // Plan card click wiring
+  function findPlanCards(){
+    const plansRoot = document.getElementById('plans') || document.querySelector('.plans');
+    if(!plansRoot) return [];
+    return Array.from(plansRoot.querySelectorAll('.plan'));
+  }
+
+  function openPanel(){ panel.classList.add('open'); estimate(); }
+  function closePanel(){ panel.classList.remove('open'); }
+
+  closeBtn && closeBtn.addEventListener('click', closePanel);
+  startBtn && startBtn.addEventListener('click', function(e){
+    e.preventDefault();
+    alert('Login/Signup coming soon. This is a front-end demo.');
+  });
+
+  const planCards = findPlanCards();
+  planCards.forEach(card => {
+    // get plan type via text
+    const price = card.querySelector('.price');
+    const head = card.querySelector('.head');
+    const txt = (price?.textContent || head?.textContent || '').toLowerCase();
+
+    let key = 'flex';
+    if(txt.includes('180')) key = '180';
+    else if(txt.includes('90')) key = '90';
+    else key = 'flex';
+
+    const label = head ? head.textContent.trim() : (key==='flex' ? 'Flexible (~5% APY)' : (key==='90' ? 'Locked 90d (~10% APY)' : 'Locked 180d (~15% APY)'));
+
+    // click on whole card opens panel with this plan
+    card.style.cursor = 'pointer';
+    card.addEventListener('click', function(e){
+      // avoid double-trigger when clicking nested link
+      if(e.target.closest('a')) return;
+      openPanel();
+      setPlan(key, label);
+      // visual selected outline handling
+      planCards.forEach(p => p.classList.remove('pop'));
+      card.classList.add('pop');
+    });
+
+    // also wire the start button if present
+    const start = card.querySelector('a.btn');
+    if(start){
+      start.addEventListener('click', function(e){
+        e.preventDefault();
+        openPanel();
+        setPlan(key, label);
+        planCards.forEach(p => p.classList.remove('pop'));
+        card.classList.add('pop');
+      });
+    }
+  });
+
+  // Initialize defaults
+  setPlan('flex');
+})();
+</script></body>
+</html>

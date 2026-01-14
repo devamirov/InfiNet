@@ -1,0 +1,18 @@
+.elementor-523 .elementor-element.elementor-element-2a58e335{--display:flex;--background-transition:0.3s;}.elementor-523 .elementor-element.elementor-element-362d17f{--swiper-slides-to-display:2;--arrow-prev-left-align:0%;--arrow-prev-translate-x:0px;--arrow-prev-left-position:-43px;--arrow-prev-top-align:50%;--arrow-prev-translate-y:-50%;--arrow-prev-top-position:0px;--arrow-next-right-align:0%;--arrow-next-translate-x:0%;--arrow-next-right-position:-43px;--arrow-next-top-align:50%;--arrow-next-translate-y:-50%;--arrow-next-top-position:0px;--swiper-slides-gap:24px;}.elementor-523 .elementor-element.elementor-element-362d17f .swiper-slide > .elementor-element{height:100%;}.elementor-523 .elementor-element.elementor-element-362d17f > .elementor-widget-container{margin:0px 0px 0px 0px;padding:0px 0px 30px 0px;}@media(max-width:1024px){.elementor-523 .elementor-element.elementor-element-362d17f{--swiper-slides-to-display:1;}}@media(max-width:767px){.elementor-523 .elementor-element.elementor-element-362d17f{--swiper-slides-to-display:1;}}/* Start custom CSS for loop-carousel, class: .elementor-element-362d17f */.e-font-icon-svg.e-eicon-chevron-right{
+    fill: black !important;
+}
+
+.e-font-icon-svg.e-eicon-chevron-left{
+    fill: black !important;
+}
+
+@media only screen and (max-width: 1024px) {
+ .e-font-icon-svg.e-eicon-chevron-right{
+        display:none !important;
+
+}
+
+.e-font-icon-svg.e-eicon-chevron-left{
+    display:none !important;
+}
+}/* End custom CSS */

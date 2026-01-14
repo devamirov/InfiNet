@@ -1,0 +1,1922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/jpeg" href="/ghost.JPG">
+    <link rel="shortcut icon" type="image/jpeg" href="/ghost.JPG">
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png?v=3">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=3">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=3">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon.png?v=3">
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="/ghost.JPG">
+    <link rel="icon" type="image/jpeg" sizes="16x16" href="/ghost.JPG">
+    <link rel="icon" type="image/x-icon" href="/ghost.JPG">
+    <link rel="manifest" href="/manifest.json">
+    <title>Terms of Service - InfiNet AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #121212;
+            --bg-tertiary: #1a1a1a;
+            --accent: #e5ff3a;
+            --accent-hover: #b8cc2e;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border: #333333;
+            --border-light: #222222;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+        }
+
+        html {
+            background-color: #000000;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto !important;
+                min-height: 100dvh;
+                overflow-y: auto !important;
+                overflow-x: hidden;
+                position: relative;
+                display: block;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: transform 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transform: translateX(-100%);
+        }
+
+        .sidebar.sidebar-open {
+            transform: translateX(0);
+        }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Sidebar Bot Handle */
+        .sidebar-handle {
+            position: absolute;
+            right: -45px;
+            top: 80px;
+            width: 60px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(229, 255, 58, 0.4));
+        }
+
+        .sidebar-handle svg {
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-handle:hover {
+            right: -50px;
+            filter: drop-shadow(0 6px 15px rgba(229, 255, 58, 0.7));
+            animation: botBounce 0.6s ease-in-out infinite;
+        }
+
+        .sidebar-handle:hover svg {
+            transform: scale(1.1);
+        }
+
+        .sidebar-handle:hover .bot-head {
+            animation: botPeek 0.8s ease-in-out infinite;
+        }
+
+        .sidebar-handle:hover .bot-hand-left {
+            animation: handWave 0.5s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        .sidebar-handle:hover .bot-hand-right {
+            animation: handWave 0.5s ease-in-out infinite 0.25s;
+            transform-origin: top center;
+        }
+
+        .sidebar-handle:hover .bot-eye {
+            animation: eyeBlink 2s ease-in-out infinite;
+        }
+
+        @keyframes botBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes botPeek {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(3px);
+            }
+        }
+
+        @keyframes handWave {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(15deg);
+            }
+        }
+
+        @keyframes eyeBlink {
+            0%, 90%, 100% {
+                transform: scaleY(1);
+            }
+            95% {
+                transform: scaleY(0.1);
+            }
+        }
+
+        .sidebar.sidebar-open .sidebar-handle {
+            right: -45px;
+        }
+
+        /* Sidebar Hint Text */
+        .sidebar-hint {
+            position: absolute;
+            right: -33px;
+            top: 165px;
+            font-size: 0.75rem;
+            color: #e5ff3a;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 102;
+            opacity: 0.9;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            animation: hintJump 1.2s ease-in-out infinite;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar.sidebar-open .sidebar-hint,
+        .sidebar-hint.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes hintJump {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar-hint {
+                font-size: 0.75rem;
+            }
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            transform: scale(1.5);
+            object-fit: cover;
+            object-position: center;
+            overflow: hidden;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.25rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 0;
+            margin-left: 3mm;
+            line-height: 1.3;
+        }
+
+        .sidebar-actions {
+            padding: 1rem;
+        }
+
+        .btn-go-uncensored {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-go-uncensored:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-conversations {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .conversation-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .conversation-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent);
+        }
+
+        .conversation-item-content {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-delete-btn {
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding: 0.25rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .conversation-item:hover .conversation-delete-btn {
+            opacity: 1;
+        }
+
+        .conversation-delete-btn:hover {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .conversation-delete-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .sidebar-info-cards {
+            padding: 0.4rem 0.5rem;
+            border-top: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-info-cards .info-card {
+            padding: 0.65rem 0.75rem;
+            margin: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            z-index: 1;
+        }
+
+        .sidebar-info-cards .info-card:hover,
+        .sidebar-info-cards .info-card.expanded-active {
+            z-index: 1001;
+        }
+
+        .sidebar-info-cards .info-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .sidebar-info-cards .info-card:active {
+            transform: scale(0.98);
+        }
+
+        .sidebar-info-cards .info-card h4 {
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            color: var(--accent);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-info-cards .info-card p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .sidebar-info-cards .info-card .lock-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            fill: currentColor;
+        }
+
+        .info-card-expanded {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: calc(100% + 0.5rem);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 0.625rem;
+            z-index: 1002;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            width: 200px;
+            max-width: calc(100vw - 2rem);
+        }
+
+        .sidebar-info-cards .info-card-expanded {
+            left: calc(100% + 0.5rem);
+        }
+
+        .info-card-expanded.show {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-card-expanded-header {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .info-card-expanded-header svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .info-card-expanded-header h5 {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .info-card-expanded p {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-footer a .sidebar-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            fill: currentColor;
+        }
+
+        .sidebar-footer a:hover {
+            color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        .sidebar-footer a.active {
+            color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        .theme-toggle {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .sidebar-socials {
+            padding: 0.75rem 1rem calc(3rem + 1cm);
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-socials .sidebar-cta-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5mm;
+        }
+
+        .sidebar-socials .sidebar-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.65rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e5ff3a;
+            background: #e5ff3a;
+            color: #000000;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .sidebar-socials .sidebar-cta:hover {
+            color: #000000;
+            border-color: #b8cc2e;
+            background: #b8cc2e;
+        }
+
+        .sidebar-socials .sidebar-cta svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .sidebar-socials .sidebar-link-text {
+            color: #e5ff3a;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar-socials .sidebar-link-text:hover {
+            opacity: 0.8;
+        }
+
+        .sidebar-socials .sidebar-links-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--bg-primary);
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-width: 0;
+            background: var(--bg-primary);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                height: auto !important;
+                min-height: 100dvh;
+                overflow: visible !important;
+                overflow: visible !important;
+                flex: none;
+                display: block;
+            }
+        }
+
+        .page-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 1.25rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            margin-top: 1cm;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .page-content h1 {
+            font-size: 2rem;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+            margin-top: 1cm;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .page-content .last-updated {
+            text-align: center;
+        }
+
+        .page-content h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .page-content h3 {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            margin-top: 1.25rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+
+        .page-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 0.85rem;
+            font-size: 0.9rem;
+            max-width: 900px;
+        }
+
+        .page-content ul,
+        .page-content ol {
+            color: var(--text-secondary);
+            margin-left: 1.75rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.7;
+        }
+
+        .page-content li {
+            margin-bottom: 0.4rem;
+        }
+
+        .page-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .page-content a:hover {
+            text-decoration: underline;
+        }
+
+        .last-updated {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            margin-bottom: 2rem;
+        }
+
+        /* Footer */
+        .chat-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding: 2rem 1.5rem;
+            position: relative;
+            background: transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+            transform: scale(1.05);
+        }
+
+        .footer-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .footer-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin: 0;
+            margin-top: 0.5rem;
+        }
+
+        .footer-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            object-fit: cover;
+            vertical-align: middle;
+            margin-left: -1mm;
+        }
+
+        @media (max-width: 768px) {
+            .chat-footer {
+                padding: 1.5rem 1rem;
+            }
+
+            .footer-link {
+                width: 36px;
+                height: 36px;
+            }
+
+            .footer-link svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .footer-logo {
+                width: 38px;
+                height: 38px;
+            }
+
+            .footer-text {
+                font-size: 0.75rem;
+            }
+
+            .footer-copyright {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.sidebar-open {
+                transform: translateX(0);
+            }
+
+            .page-content h1 {
+                font-size: 2rem;
+            }
+
+            .page-content h2 {
+                font-size: 1.5rem;
+            }
+
+            .page-content p,
+            .page-content h2,
+            .page-content h3,
+            .page-content ul,
+            .page-content ol {
+                margin-left: 5mm;
+                margin-right: 5mm;
+            }
+
+            .info-card-expanded {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 180px;
+                max-width: calc(100vw - 2rem);
+                max-height: 60vh;
+                overflow-y: auto;
+                padding: 0.625rem;
+                border-radius: 8px;
+            }
+
+            .info-card-expanded.show {
+                animation: fadeIn 0.2s ease;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* Light Mode Styles */
+        body.light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-muted: #666666;
+            --border: #d0d0d0;
+            --border-light: #e0e0e0;
+            --accent: #000000;
+            --accent-hover: #333333;
+        }
+
+        body.light-mode .sidebar {
+            background: #f8f8f8;
+        }
+
+        body.light-mode .sidebar-hint {
+            color: #000000;
+        }
+
+        body.light-mode .main-content {
+            background: var(--bg-primary);
+        }
+
+        body.light-mode .page-content {
+            background: var(--bg-primary);
+        }
+
+        body.light-mode h1,
+        body.light-mode h2,
+        body.light-mode h3,
+        body.light-mode a {
+            color: var(--accent) !important;
+        }
+
+        body.light-mode .sidebar-footer a {
+            color: var(--text-secondary);
+        }
+
+        body.light-mode .sidebar-footer a:hover {
+            color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        /* Install Instructions Modal */
+        .install-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .install-modal-overlay.show {
+            display: flex;
+        }
+
+        .install-modal-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+        }
+
+        .install-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .install-modal-close:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .install-modal-content h2 {
+            color: var(--accent);
+            margin: 0 0 1.5rem 0;
+            font-size: 1.5rem;
+        }
+
+        .install-instructions {
+            margin-bottom: 1.5rem;
+        }
+
+        .install-step {
+            margin-bottom: 1.5rem;
+        }
+
+        .install-step-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .install-step-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .install-step p {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .install-step ol {
+            color: var(--text-secondary);
+            padding-left: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .install-step ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        .share-icon-inline {
+            display: inline-flex;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 4px;
+            color: var(--accent);
+        }
+
+        .install-modal-close-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #e5ff3a;
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .install-modal-close-btn:hover {
+            background: #b8cc2e;
+        }
+
+        body.light-mode .install-modal-close-btn {
+            background: #e5ff3a;
+            color: #000000;
+            /* 3D Effect for Light Mode */
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: none !important;
+        }
+
+        body.light-mode .install-modal-close-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 100%);
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        body.light-mode .install-modal-close-btn:hover {
+            background: #b8cc2e;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.15),
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-mode .install-modal-close-btn:hover::before {
+            opacity: 0.8;
+        }
+
+        body.light-mode .install-modal-close-btn:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                0 1px 2px rgba(0, 0, 0, 0.06),
+                inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .install-modal-close-btn:active::before {
+            opacity: 0.6;
+        }
+
+        body.light-mode .install-modal-content {
+            background: #ffffff;
+            border-color: #e0e0e0;
+        }
+
+        body.light-mode .install-modal-close {
+            color: #000000;
+        }
+
+        body.light-mode .install-modal-close:hover {
+            background: #f0f0f0;
+        }
+
+        body.light-mode .install-modal-content h2 {
+            color: var(--accent);
+        }
+
+        body.light-mode .install-step p {
+            color: #000000;
+        }
+
+        body.light-mode .install-step ol {
+            color: #333333;
+        }
+
+        /* 3D Effects for Web Button in Light Mode */
+        body.light-mode .sidebar-socials .sidebar-cta {
+            /* 3D Effect for Light Mode */
+            box-shadow: 
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border: none !important;
+            padding: 0.65rem 1.5rem !important;
+            font-size: 0.9rem !important;
+        }
+
+        body.light-mode .sidebar-socials .sidebar-cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.05) 100%);
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        body.light-mode .sidebar-socials .sidebar-cta:hover {
+            color: #000000;
+            border: none !important;
+            background: #b8cc2e;
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 
+                0 8px 12px rgba(0, 0, 0, 0.15),
+                0 4px 6px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        body.light-mode .sidebar-socials .sidebar-cta:hover::before {
+            opacity: 0.8;
+        }
+
+        body.light-mode .sidebar-socials .sidebar-cta:active {
+            transform: translateY(0) scale(0.98);
+            box-shadow: 
+                0 2px 4px rgba(0, 0, 0, 0.1),
+                0 1px 2px rgba(0, 0, 0, 0.06),
+                inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .sidebar-socials .sidebar-cta:active::before {
+            opacity: 0.6;
+        }
+
+        body.light-mode .info-card {
+            background: var(--bg-tertiary);
+            border-color: var(--border);
+        }
+
+        body.light-mode .info-card:hover {
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar Hint -->
+        <div class="sidebar-hint" id="sidebar-hint">Menu</div>
+        <!-- Sidebar Handle -->
+        <div class="sidebar-handle" onclick="toggleSidebar()" title="Open sidebar">
+            <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bot Antennas -->
+                <g class="bot-antennas">
+                    <line x1="22" y1="8" x2="22" y2="12" stroke="#e5ff3a" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="22" cy="8" r="2" fill="#e5ff3a"/>
+                    <line x1="38" y1="8" x2="38" y2="12" stroke="#e5ff3a" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="38" cy="8" r="2" fill="#e5ff3a"/>
+                </g>
+                <!-- Bot Head (square, peeking from sidebar) -->
+                <g class="bot-head">
+                    <rect x="12" y="12" width="36" height="36" rx="3" fill="#e5ff3a" stroke="#121212" stroke-width="2"/>
+                    <circle cx="24" cy="24" r="3" fill="#121212" class="bot-eye"/>
+                    <circle cx="36" cy="24" r="3" fill="#121212" class="bot-eye"/>
+                    <rect x="26" y="32" width="8" height="2" rx="1" fill="#121212"/>
+                </g>
+                <!-- Bot Body (behind sidebar) -->
+                <rect x="15" y="48" width="30" height="25" rx="5" fill="#e5ff3a" stroke="#121212" stroke-width="2"/>
+                <rect x="20" y="53" width="20" height="15" rx="2" fill="#121212" opacity="0.3"/>
+                <!-- Right Hand (hanging on edge) -->
+                <g class="bot-hand-right">
+                    <rect x="52" y="58" width="8" height="20" rx="4" fill="#e5ff3a" stroke="#121212" stroke-width="2"/>
+                    <circle cx="56" cy="60" r="2" fill="#121212"/>
+                </g>
+            </svg>
+        </div>
+        <div class="sidebar-header">
+            <img src="/untrans.PNG" alt="Logo" onerror="this.style.display='none'">
+            <h1>Uncensored<br>InfiNet AI</h1>
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="btn-go-uncensored" onclick="goToChat()">Go Uncensored</button>
+        </div>
+
+        <div class="sidebar-conversations" id="conversations">
+            <!-- Conversations will be added here -->
+        </div>
+
+        <!-- Info Cards in Sidebar -->
+        <div class="sidebar-info-cards">
+            <div class="info-card" onmouseenter="showExpandedCard('privacy')" onmouseleave="hideExpandedCard('privacy')"
+                ontouchstart="toggleExpandedCard('privacy')" onclick="toggleExpandedCard('privacy')">
+                <h4>
+                    <svg class="lock-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                            fill="currentColor" />
+                    </svg>
+                    100% Private
+                </h4>
+                <p>Client-side stored conversations only</p>
+                <div class="info-card-expanded" id="privacy-expanded">
+                    <div class="info-card-expanded-header">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                                fill="currentColor" />
+                        </svg>
+                        <h5>100% Private</h5>
+                    </div>
+                    <p>All your conversations and generated content are entirely your property. We do not store your data—your privacy is our top priority.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+             <a href="/profile" id="sidebar-profile-link" onclick="handleProfileLinkClick(event)">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                        fill="currentColor" />
+                </svg>
+                <span id="sidebar-profile-text">Profile</span>
+            </a>
+            <a href="/pricing">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
+                        fill="currentColor" />
+                </svg>
+                Pricing
+            </a>
+            <a href="/features">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                        fill="currentColor" />
+                </svg>
+                Features
+            </a>
+            <a href="/doc">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"
+                        fill="currentColor" />
+                </svg>
+                Documentation
+            </a>
+            
+        </div>
+
+        <div class="sidebar-socials">
+            <div class="sidebar-cta-wrapper">
+                <a class="sidebar-cta" href="#" id="sidebar-web-btn" onclick="handleWebAppInstall(event)" title="Add to Home Screen">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"
+                            fill="currentColor" />
+                    </svg>
+                    Web App
+                </a>
+                <div class="sidebar-links-wrapper">
+                    <a href="/privacy" class="sidebar-link-text">Privacy</a>
+                    <span style="color: #e5ff3a; font-size: 0.75rem;">•</span>
+                    <a href="/terms" class="sidebar-link-text">Terms</a>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-content">
+            <div class="page-header">
+                <h1>Terms of Service</h1>
+                <p class="last-updated">Last updated: December 28, 2025</p>
+            </div>
+
+            <h2>1. Acceptance of Terms</h2>
+            <p>By accessing and using InfiNet AI ("the Service") at ai.infinet.services, you accept and agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use our Service.</p>
+
+            <h2>2. Description of Service</h2>
+            <p>InfiNet AI provides an AI-powered chat service that allows users to interact with artificial intelligence models. The Service includes conversation storage, user accounts, and AI model interactions.</p>
+
+            <h2>3. User Accounts</h2>
+            <h3>3.1 Account Creation</h3>
+            <p>To use certain features, you must create an account. You agree to:</p>
+            <ul>
+                <li>Provide accurate and complete information</li>
+                <li>Maintain the security of your account</li>
+                <li>Notify us immediately of any unauthorized access</li>
+                <li>Be responsible for all activities under your account</li>
+            </ul>
+
+            <h3>3.2 Account Termination</h3>
+            <p>We reserve the right to suspend or terminate your account if you violate these Terms or engage in harmful activities.</p>
+
+            <h2>4. Acceptable Use</h2>
+            <p>You agree NOT to:</p>
+            <ul>
+                <li>Use the Service for illegal purposes</li>
+                <li>Attempt to gain unauthorized access to our systems</li>
+                <li>Interfere with or disrupt the Service</li>
+                <li>Use the Service to generate harmful, abusive, or illegal content</li>
+                <li>Reverse engineer or attempt to extract AI models</li>
+                <li>Use automated systems to abuse the Service</li>
+                <li>Share your account credentials with others</li>
+            </ul>
+
+            <h2>5. Content and Intellectual Property</h2>
+            <h3>5.1 Your Content</h3>
+            <p>You retain ownership of the content you create using the Service. However, by using the Service, you grant us a license to store, process, and display your content as necessary to provide the Service.</p>
+
+            <h3>5.2 Our Content</h3>
+            <p>All content, features, and functionality of the Service are owned by InfiNet AI and are protected by copyright, trademark, and other intellectual property laws.</p>
+
+            <h2>6. AI Model Limitations</h2>
+            <p>The AI models provided through our Service:</p>
+            <ul>
+                <li>May produce inaccurate or incomplete information</li>
+                <li>Should not be used for critical decisions without verification</li>
+                <li>May generate content that does not reflect our views</li>
+                <li>Are provided "as is" without warranties</li>
+            </ul>
+
+            <h2>7. Service Availability</h2>
+            <p>We strive to maintain service availability but do not guarantee uninterrupted access. The Service may be unavailable due to:</p>
+            <ul>
+                <li>Maintenance and updates</li>
+                <li>Technical issues</li>
+                <li>Force majeure events</li>
+            </ul>
+
+            <h2>8. Limitation of Liability</h2>
+            <p>To the maximum extent permitted by law, InfiNet AI shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.</p>
+
+            <h2>9. Indemnification</h2>
+            <p>You agree to indemnify and hold harmless InfiNet AI from any claims, damages, or expenses arising from your use of the Service or violation of these Terms.</p>
+
+            <h2>10. Privacy</h2>
+            <p>Your use of the Service is also governed by our Privacy Policy. Please review our Privacy Policy to understand how we collect and use your information.</p>
+
+            <h2>11. Modifications to Terms</h2>
+            <p>We reserve the right to modify these Terms at any time. We will notify users of significant changes. Continued use of the Service after changes constitutes acceptance of the new Terms.</p>
+
+            <h2>12. Termination</h2>
+            <p>We may terminate or suspend your access to the Service immediately, without prior notice, for any breach of these Terms.</p>
+
+            <h2>13. Governing Law</h2>
+            <p>These Terms shall be governed by and construed in accordance with applicable laws, without regard to conflict of law provisions.</p>
+
+            <h2>14. Contact Information</h2>
+            <p>If you have questions about these Terms, please contact us at:</p>
+            <p>Email: <a href="mailto:admin@infinet.services">admin@infinet.services</a></p>
+            <p>Website: <a href="https://ai.infinet.services">ai.infinet.services</a></p>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="chat-footer">
+            <a href="https://infinet.services/" target="_blank" class="footer-link footer-link-left"
+                title="Visit InfiNet Services">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM18.92 8h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H4.26c.96-1.66 2.49-2.93 4.33-3.56C8.03 5.55 7.57 6.75 7.25 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.34.16-2h4.68c.09.66.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"
+                        fill="currentColor" />
+                </svg>
+            </a>
+            <div class="footer-center">
+                <p class="footer-text">Powered by <img src="logo.PNG" alt="InfiNet Logo" class="footer-logo"
+                        onerror="this.style.display='none'"></p>
+                <p class="footer-copyright">© 2026 InfiNet AI. All rights reserved.</p>
+            </div>
+            <a href="mailto:admin@infinet.services" class="footer-link footer-link-right" title="Contact Us">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                        fill="currentColor" />
+                </svg>
+            </a>
+        </footer>
+    </main>
+
+    <script>
+        // API Base URL
+        const API_BASE = window.location.origin;
+        
+        // Authentication State
+        let isAuthenticated = false;
+        let currentUser = null;
+        
+        // Check authentication
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${API_BASE}/api/user/me`, {
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const userData = await response.json();
+                    currentUser = {
+                        id: userData.id,
+                        email: userData.email,
+                        name: userData.displayName || userData.email.split('@')[0],
+                        displayName: userData.displayName
+                    };
+                    isAuthenticated = true;
+                    return true;
+                } else {
+                    isAuthenticated = false;
+                    currentUser = null;
+                    return false;
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                isAuthenticated = false;
+                currentUser = null;
+                return false;
+            }
+        }
+        
+        // Update sidebar profile link based on auth status
+        function updateSidebarProfileLink() {
+            const profileLink = document.getElementById('sidebar-profile-link');
+            const profileText = document.getElementById('sidebar-profile-text');
+            
+            if (!profileLink || !profileText) return;
+            
+            if (isAuthenticated && currentUser) {
+                profileLink.href = '/profile';
+                profileText.textContent = 'Profile';
+            } else {
+                profileLink.href = '/#auth';
+                profileText.textContent = 'Hop In';
+            }
+        }
+        
+        // Handle profile link click
+        function handleProfileLinkClick(event) {
+            if (!isAuthenticated || !currentUser) {
+                event.preventDefault();
+                // Redirect to index with auth hash
+                window.location.href = '/#auth';
+            }
+            // If authenticated, let the default link behavior work
+        }
+        
+        // Initialize auth check
+        (async function init() {
+            await checkAuth();
+            updateSidebarProfileLink();
+        })();
+        
+        function goToChat() {
+            window.location.href = '/';
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const hint = document.getElementById('sidebar-hint');
+
+            const isOpen = sidebar.classList.contains('sidebar-open');
+
+            if (isOpen) {
+                // Closing sidebar - close all expanded cards
+                sidebar.classList.remove('sidebar-open');
+                sidebar.classList.add('mobile-hidden');
+                overlay.classList.remove('show');
+                
+                // Show hint when sidebar closes
+                if (hint) {
+                    hint.classList.remove('hidden');
+                }
+            } else {
+                // Opening sidebar
+                sidebar.classList.remove('mobile-hidden');
+                sidebar.classList.add('sidebar-open');
+                overlay.classList.add('show');
+                
+                // Hide hint when sidebar opens
+                if (hint) {
+                    hint.classList.add('hidden');
+                }
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const hint = document.getElementById('sidebar-hint');
+
+            sidebar.classList.remove('sidebar-open');
+            sidebar.classList.add('mobile-hidden');
+            overlay.classList.remove('show');
+            
+            // Show hint when sidebar closes
+            if (hint) {
+                hint.classList.remove('hidden');
+            }
+        }
+
+        let activeExpandedCard = null;
+        function showExpandedCard(type) {
+            if ('ontouchstart' in window) return;
+            const expanded = document.getElementById(type + '-expanded');
+            if (expanded) {
+                expanded.classList.add('show');
+                activeExpandedCard = type;
+                const parentCard = expanded.closest('.info-card');
+                if (parentCard) parentCard.classList.add('expanded-active');
+            }
+        }
+        function hideExpandedCard(type) {
+            if ('ontouchstart' in window) return;
+            const expanded = document.getElementById(type + '-expanded');
+            if (expanded && activeExpandedCard === type) {
+                expanded.classList.remove('show');
+                activeExpandedCard = null;
+                const parentCard = expanded.closest('.info-card');
+                if (parentCard) parentCard.classList.remove('expanded-active');
+            }
+        }
+        function toggleExpandedCard(type) {
+            const expanded = document.getElementById(type + '-expanded');
+            if (expanded) {
+                if (activeExpandedCard && activeExpandedCard !== type) {
+                    const otherExpanded = document.getElementById(activeExpandedCard + '-expanded');
+                    if (otherExpanded) {
+                        otherExpanded.classList.remove('show');
+                        const otherParentCard = otherExpanded.closest('.info-card');
+                        if (otherParentCard) otherParentCard.classList.remove('expanded-active');
+                    }
+                }
+                const parentCard = expanded.closest('.info-card');
+                expanded.classList.toggle('show');
+                if (expanded.classList.contains('show')) {
+                    activeExpandedCard = type;
+                    if (parentCard) parentCard.classList.add('expanded-active');
+                } else {
+                    activeExpandedCard = null;
+                    if (parentCard) parentCard.classList.remove('expanded-active');
+                }
+            }
+        }
+
+        async function deleteConversation(convId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/conversations/${convId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete conversation');
+                }
+                
+                await loadConversations();
+            } catch (error) {
+                console.error('Error deleting conversation:', error);
+                // Fallback to localStorage
+                let conversations = JSON.parse(localStorage.getItem('conversations') || '[]');
+                conversations = conversations.filter(conv => conv.id !== convId);
+                localStorage.setItem('conversations', JSON.stringify(conversations));
+                loadConversations();
+            }
+        }
+
+        async function loadConversations() {
+            try {
+                const response = await fetch(`${API_BASE}/api/conversations`, {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load conversations');
+                }
+                
+                const data = await response.json();
+                const conversations = data.conversations || [];
+                const container = document.getElementById('conversations');
+                if (!container) return;
+                container.innerHTML = '';
+
+                if (conversations.length === 0) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.style.padding = '0';
+                    emptyDiv.style.color = 'var(--text-muted)';
+                    emptyDiv.style.fontSize = '0.85rem';
+                    emptyDiv.style.textAlign = 'center';
+                    emptyDiv.textContent = 'No conversations yet';
+                    container.appendChild(emptyDiv);
+                    return;
+                }
+
+                conversations.forEach(conv => {
+                    const item = document.createElement('div');
+                    item.className = 'conversation-item';
+                    // Use title if available, otherwise use first message content, otherwise "New Chat"
+                    let preview = 'New Chat';
+                    if (conv.title && conv.title !== 'New Chat' && conv.title.trim() !== '') {
+                        preview = conv.title;
+                    } else if (conv.messages && conv.messages.length > 0 && conv.messages[0].content) {
+                        preview = conv.messages[0].content.substring(0, 30) + '...';
+                    }
+
+                    const content = document.createElement('div');
+                    content.className = 'conversation-item-content';
+                    content.textContent = preview;
+                    content.onclick = () => {
+                        localStorage.setItem('selectedConversationId', conv.id);
+                        window.location.href = '/';
+                    };
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'conversation-delete-btn';
+                    deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/></svg>';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteConversation(conv.id);
+                    };
+                    deleteBtn.title = 'Delete conversation';
+
+                    item.appendChild(content);
+                    item.appendChild(deleteBtn);
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+                // Fallback to localStorage
+                const conversations = JSON.parse(localStorage.getItem('conversations') || '[]');
+                const container = document.getElementById('conversations');
+                if (!container) return;
+                container.innerHTML = '';
+                if (conversations.length === 0) {
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.style.padding = '0';
+                    emptyDiv.style.color = 'var(--text-muted)';
+                    emptyDiv.style.fontSize = '0.85rem';
+                    emptyDiv.style.textAlign = 'center';
+                    emptyDiv.textContent = 'No conversations yet';
+                    container.appendChild(emptyDiv);
+                    return;
+                }
+                conversations.forEach(conv => {
+                    const item = document.createElement('div');
+                    item.className = 'conversation-item';
+                    let preview = 'New Chat';
+                    if (conv.title && conv.title !== 'New Chat' && conv.title.trim() !== '') {
+                        preview = conv.title;
+                    } else if (conv.messages && conv.messages.length > 0 && conv.messages[0].content) {
+                        preview = conv.messages[0].content.substring(0, 30) + '...';
+                    }
+                    const content = document.createElement('div');
+                    content.className = 'conversation-item-content';
+                    content.textContent = preview;
+                    content.onclick = () => {
+                        localStorage.setItem('selectedConversationId', conv.id);
+                        window.location.href = '/';
+                    };
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'conversation-delete-btn';
+                    deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/></svg>';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteConversation(conv.id);
+                    };
+                    deleteBtn.title = 'Delete conversation';
+                    item.appendChild(content);
+                    item.appendChild(deleteBtn);
+                    container.appendChild(item);
+                });
+            }
+        }
+
+        // Initialize sidebar for mobile
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebar').classList.add('mobile-hidden');
+        }
+        window.addEventListener('resize', function () {
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.add('mobile-hidden');
+                document.getElementById('sidebar').classList.remove('sidebar-open');
+                document.getElementById('sidebar-overlay').classList.remove('show');
+            }
+        });
+
+        // Update theme-color meta tag
+        function updateThemeColor(isLight) {
+            let themeColorMeta = document.querySelector('meta[name="theme-color"]');
+            let appleStatusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+            
+            if (!themeColorMeta) {
+                themeColorMeta = document.createElement('meta');
+                themeColorMeta.setAttribute('name', 'theme-color');
+                document.head.appendChild(themeColorMeta);
+            }
+            
+            if (!appleStatusBarMeta) {
+                appleStatusBarMeta = document.createElement('meta');
+                appleStatusBarMeta.setAttribute('name', 'apple-mobile-web-app-status-bar-style');
+                document.head.appendChild(appleStatusBarMeta);
+            }
+            
+            if (isLight) {
+                themeColorMeta.setAttribute('content', '#ffffff');
+                appleStatusBarMeta.setAttribute('content', 'default');
+            } else {
+                themeColorMeta.setAttribute('content', '#000000');
+                appleStatusBarMeta.setAttribute('content', 'black');
+            }
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                updateThemeColor(true);
+            } else {
+                document.body.classList.remove('light-mode');
+                updateThemeColor(false);
+            }
+        }
+
+        // Load conversations on page load
+        loadConversations();
+        
+        // Load theme on page load
+        loadTheme();
+
+        // Web App Install Handler
+        let deferredPrompt = null;
+
+        function handleWebAppInstall(event) {
+            event.preventDefault();
+            
+            // Check if already installed
+            if (window.matchMedia('(display-mode: standalone)').matches || 
+                window.navigator.standalone === true) {
+                alert('This app is already installed on your device!');
+                return;
+            }
+
+            // Check if browser supports install prompt
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // Fallback for browsers that don't support beforeinstallprompt
+                // Show instructions based on device
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isAndroid = /Android/.test(navigator.userAgent);
+                
+                // Show install instructions modal
+                showInstallInstructions();
+            }
+        }
+
+        window.handleWebAppInstall = handleWebAppInstall;
+
+        function showInstallInstructions() {
+            const modal = document.getElementById('install-instructions-modal');
+            if (modal) {
+                modal.classList.add('show');
+            }
+        }
+
+        function closeInstallModal() {
+            const modal = document.getElementById('install-instructions-modal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            
+            // Update button text/title to indicate install is available
+            const webBtn = document.getElementById('sidebar-web-btn');
+            if (webBtn) {
+                webBtn.title = 'Add to Home Screen';
+            }
+        });
+
+        // Listen for app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            deferredPrompt = null;
+            
+            // Update button to show it's installed
+            const webBtn = document.getElementById('sidebar-web-btn');
+            if (webBtn) {
+                webBtn.title = 'App Installed';
+            }
+        });
+    </script>
+
+    <!-- Install Instructions Modal -->
+    <div id="install-instructions-modal" class="install-modal-overlay" onclick="closeInstallModal()">
+        <div class="install-modal-content" onclick="event.stopPropagation()">
+            <button class="install-modal-close" onclick="closeInstallModal()">&times;</button>
+            <h2>Install App</h2>
+            <div class="install-instructions">
+                <div class="install-step">
+                    <div class="install-step-icon">
+                        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                            <path d="M292.57,124.87v206.35c0,20.18-16.36,36.57-36.57,36.57c-20.18,0-36.57-16.39-36.57-36.57V124.87l-40.96,41.03
+                                c-14.32,14.29-37.5,14.29-51.78,0c-14.29-14.32-14.29-37.5,0.04-51.78L230.14,10.73c14.21-14.25,37.28-14.32,51.57-0.14l0.14,0.14
+                                l103.46,103.42c14.29,14.32,14.29,37.5,0,51.78c-14.32,14.29-37.5,14.29-51.78-0.04L292.57,124.87z M109.72,219.44
+                                c20.21,0,36.57,16.39,36.57,36.57c0,20.21-16.36,36.57-36.57,36.57H73.15v146.28h365.7V292.58h-36.57
+                                c-20.18,0-36.57-16.36-36.57-36.57c0-20.18,16.39-36.57,36.57-36.57h36.57c40.43,0,73.14,32.75,73.14,73.14v146.28
+                                c0,40.39-32.71,73.14-73.14,73.14H73.15c-40.39,0-73.14-32.75-73.14-73.14V292.58c0-40.39,32.75-73.14,73.14-73.14H109.72z"/>
+                        </svg>
+                    </div>
+                    <p><strong>iOS (Safari) & Chrome:</strong></p>
+                    <ol>
+                        <li>Tap the <span class="share-icon-inline">
+                            <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20">
+                                <path d="M292.57,124.87v206.35c0,20.18-16.36,36.57-36.57,36.57c-20.18,0-36.57-16.39-36.57-36.57V124.87l-40.96,41.03
+                                    c-14.32,14.29-37.5,14.29-51.78,0c-14.29-14.32-14.29-37.5,0.04-51.78L230.14,10.73c14.21-14.25,37.28-14.32,51.57-0.14l0.14,0.14
+                                    l103.46,103.42c14.29,14.32,14.29,37.5,0,51.78c-14.32,14.29-37.5,14.29-51.78-0.04L292.57,124.87z M109.72,219.44
+                                    c20.21,0,36.57,16.39,36.57,36.57c0,20.21-16.36,36.57-36.57,36.57H73.15v146.28h365.7V292.58h-36.57
+                                    c-20.18,0-36.57-16.36-36.57-36.57c0-20.18,16.39-36.57,36.57-36.57h36.57c40.43,0,73.14,32.75,73.14,73.14v146.28
+                                    c0,40.39-32.71,73.14-73.14,73.14H73.15c-40.39,0-73.14-32.75-73.14-73.14V292.58c0-40.39,32.75-73.14,73.14-73.14H109.72z"/>
+                            </svg>
+                        </span> Share button</li>
+                        <li>Select "Add to Home Screen"</li>
+                        <li>Tap "Add"</li>
+                    </ol>
+                </div>
+            </div>
+            <button class="install-modal-close-btn" onclick="closeInstallModal()">Got it</button>
+        </div>
+    </div>
+</body>
+
+</html>

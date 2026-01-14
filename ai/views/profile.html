@@ -1,0 +1,2743 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <script>
+        // Update theme-color immediately based on localStorage
+        (function() {
+            try {
+                const savedTheme = localStorage.getItem('theme');
+                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                const appleStatusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+                
+                if (savedTheme === 'light' && themeColorMeta && appleStatusBarMeta) {
+                    themeColorMeta.setAttribute('content', '#ffffff');
+                    appleStatusBarMeta.setAttribute('content', 'default');
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <title>Profile - InfiNet AI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #121212;
+            --bg-tertiary: #1a1a1a;
+            --accent: #e5ff3a;
+            --accent-hover: #b8cc2e;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border: #333333;
+            --border-light: #222222;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            width: 100%;
+        }
+
+        html {
+            background-color: #000000;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                height: auto !important;
+                min-height: 100dvh;
+                overflow-y: auto !important;
+                overflow-x: hidden;
+                position: relative;
+                display: block;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            border-right: none;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            transition: transform 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transform: translateX(-100%);
+        }
+
+        .sidebar.sidebar-open {
+            transform: translateX(0);
+        }
+
+        .sidebar.mobile-hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Sidebar Bot Handle */
+        .sidebar-handle {
+            position: absolute;
+            right: -45px;
+            top: 80px;
+            width: 60px;
+            height: 80px;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 4px 8px rgba(229, 255, 58, 0.4));
+        }
+
+        .sidebar-handle svg {
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-handle:hover {
+            right: -50px;
+            filter: drop-shadow(0 6px 15px rgba(229, 255, 58, 0.7));
+            animation: botBounce 0.6s ease-in-out infinite;
+        }
+
+        .sidebar-handle:hover svg {
+            transform: scale(1.1);
+        }
+
+        .sidebar-handle:hover .bot-head {
+            animation: botPeek 0.8s ease-in-out infinite;
+        }
+
+        .sidebar-handle:hover .bot-hand-right {
+            animation: handWave 0.5s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        .sidebar-handle:hover .bot-eye {
+            animation: eyeBlink 2s ease-in-out infinite;
+        }
+
+        @keyframes botBounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        @keyframes botPeek {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(3px);
+            }
+        }
+
+        @keyframes handWave {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            50% {
+                transform: rotate(15deg);
+            }
+        }
+
+        @keyframes eyeBlink {
+            0%, 90%, 100% {
+                transform: scaleY(1);
+            }
+            95% {
+                transform: scaleY(0.1);
+            }
+        }
+
+        .sidebar.sidebar-open .sidebar-handle {
+            right: -45px;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .sidebar-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.25rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .sidebar-actions {
+            padding: 1rem;
+        }
+
+        .btn-go-uncensored {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-go-uncensored:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .sidebar-conversations {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .conversation-item {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+        }
+
+        .conversation-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .conversation-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent);
+        }
+
+        .conversation-item-content {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-delete-btn {
+            opacity: 0;
+            transition: opacity 0.2s;
+            padding: 0.25rem;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .conversation-item:hover .conversation-delete-btn {
+            opacity: 1;
+        }
+
+        .conversation-delete-btn:hover {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+        }
+
+        .conversation-delete-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        .sidebar-info-cards {
+            padding: 0.4rem 0.5rem;
+            border-top: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-info-cards .info-card {
+            padding: 0.65rem 0.75rem;
+            margin: 0;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            z-index: 1;
+        }
+
+        .sidebar-info-cards .info-card:hover,
+        .sidebar-info-cards .info-card.expanded-active {
+            z-index: 1001;
+        }
+
+        .sidebar-info-cards .info-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .sidebar-info-cards .info-card:active {
+            transform: scale(0.98);
+        }
+
+        .sidebar-info-cards .info-card h4 {
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            color: var(--accent);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-info-cards .info-card p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .sidebar-info-cards .info-card .lock-icon {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            fill: currentColor;
+        }
+
+        .info-card-expanded {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: calc(100% + 0.5rem);
+            background: var(--bg-tertiary);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 0.625rem;
+            z-index: 1002;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            width: 200px;
+            max-width: calc(100vw - 2rem);
+        }
+
+        .sidebar-info-cards .info-card-expanded {
+            left: calc(100% + 0.5rem);
+        }
+
+        .info-card-expanded.show {
+            display: block;
+            animation: slideDown 0.2s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-card-expanded-header {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .info-card-expanded-header svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .info-card-expanded-header h5 {
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .info-card-expanded p {
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .sidebar-footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar-footer a .sidebar-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+            fill: currentColor;
+        }
+
+        .sidebar-footer a:hover {
+            color: var(--accent);
+            background: var(--bg-tertiary);
+        }
+
+        .sidebar-socials {
+            padding: 0.75rem 1rem calc(3rem + 1cm);
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .sidebar-socials .sidebar-cta-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5mm;
+        }
+
+        .sidebar-socials .sidebar-cta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.45rem 1.25rem;
+            border-radius: 8px;
+            border: 1px solid #e5ff3a;
+            background: #e5ff3a;
+            color: #000000;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .sidebar-socials .sidebar-cta:hover {
+            color: #000000;
+            border-color: #b8cc2e;
+            background: #b8cc2e;
+        }
+
+        .sidebar-socials .sidebar-cta svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            flex-shrink: 0;
+        }
+
+        .sidebar-socials .sidebar-link-text {
+            color: #e5ff3a;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: opacity 0.2s;
+        }
+
+        .sidebar-socials .sidebar-link-text:hover {
+            opacity: 0.8;
+        }
+
+        /* Light mode: make sidebar privacy/terms text black (profile page only) */
+        body.light-mode .sidebar-socials .sidebar-link-text {
+            color: #000000;
+        }
+
+        @media (max-width: 768px) {
+            .info-card-expanded {
+                position: absolute;
+                top: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 180px;
+                max-width: calc(100vw - 2rem);
+                max-height: 60vh;
+                overflow-y: auto;
+                padding: 0.625rem;
+                border-radius: 8px;
+            }
+
+            .info-card-expanded.show {
+                animation: fadeIn 0.2s ease;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--bg-primary);
+            overflow-y: auto;
+            overflow-x: hidden;
+            min-width: 0;
+            background: var(--bg-primary);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                height: auto !important;
+                min-height: 100dvh;
+                overflow: visible !important;
+                overflow: visible !important;
+                flex: none;
+                display: block;
+            }
+        }
+
+
+        .profile-content {
+            padding: 1.25rem 1.5rem;
+            max-width: 500px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .profile-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .profile-section:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 16px rgba(229, 255, 58, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .profile-section:hover::before {
+            opacity: 1;
+        }
+
+        .profile-section h2 {
+            color: var(--accent);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .appearance-section {
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            /* Remove card styling */
+            background: transparent !important;
+            border: none !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+        
+        .appearance-section:hover {
+            transform: none !important;
+            box-shadow: none !important;
+        }
+        
+        .appearance-section::before {
+            display: none !important;
+        }
+
+        .appearance-section h2 {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .appearance-section .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .appearance-section .form-group label {
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .theme-buttons-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+
+        .theme-button {
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            min-width: 120px;
+        }
+
+        .theme-button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .theme-button.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(229, 255, 58, 0.1);
+        }
+
+        .theme-button svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .profile-avatar-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+            margin-top: 5mm;
+            position: relative;
+        }
+
+        .profile-display-name {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+        }
+
+        /* Token Usage Section */
+        #token-usage-wrapper {
+            margin-bottom: 2rem;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .token-usage-title {
+            color: var(--accent);
+            text-align: center;
+            margin: 0 0 0.75rem 0;
+            font-size: 1.1rem;
+        }
+
+        .token-usage-section {
+            /* Card styling removed - keeping content only */
+            display: block;
+        }
+
+        .token-usage-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 0.6rem;
+        }
+
+        .token-usage-stats {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .token-usage-bar-container {
+            margin-bottom: 0.4rem;
+        }
+
+        .token-usage-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .token-usage-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .token-usage-numbers {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .theme-select-wrapper {
+            position: absolute;
+            right: calc(50% - 80px - 1cm);
+            top: 50%;
+            transform: translateX(50%) translateY(-50%);
+        }
+
+        .pricing-dropdown-wrapper {
+            position: relative;
+            margin-bottom: 1.5rem;
+            margin-top: 0.1mm;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pricing-dropdown-trigger {
+            width: auto;
+        }
+
+        .tokens-badge {
+            padding: 0.5rem 1rem;
+            background: rgba(229, 255, 58, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            color: var(--accent);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tokens-badge svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--accent);
+        }
+
+        .pricing-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem;
+            min-width: 200px;
+            display: none;
+            z-index: 500;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .pricing-dropdown-menu.show {
+            display: block;
+        }
+
+        .pricing-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem;
+            margin-bottom: 0.25rem;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .pricing-option:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .pricing-option:last-child {
+            margin-bottom: 0;
+        }
+
+        .pricing-option-text {
+            color: var(--text-primary);
+            font-size: 0.85rem;
+        }
+
+        .pricing-subscribe-btn {
+            padding: 0.15rem 0.35rem;
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pricing-subscribe-btn:hover {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .theme-select-simple {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            width: fit-content;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            text-align: center;
+        }
+
+        .theme-select-simple:hover {
+            color: var(--accent);
+        }
+
+        .theme-select-simple:focus {
+            color: var(--accent);
+        }
+
+        .theme-select-simple option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 3px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--accent);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .profile-avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(229, 255, 58, 0.3);
+        }
+
+        .profile-avatar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .profile-avatar:hover::before {
+            opacity: 1;
+        }
+
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e5ff3a'%3E%3Cpath d='M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 2;
+        }
+
+        .profile-avatar:hover::after {
+            opacity: 1;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: relative;
+            z-index: 0;
+        }
+
+        .profile-avatar span {
+            position: relative;
+            z-index: 0;
+        }
+
+        .form-group {
+            margin-bottom: 0.75rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.5rem 0.65rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(229, 255, 58, 0.1);
+        }
+
+        #new-password::placeholder {
+            color: #ff4444;
+            opacity: 0.8;
+        }
+
+        #profile-email {
+            background: rgba(229, 255, 58, 0.1);
+            border: none;
+        }
+
+        #profile-email:focus {
+            background: rgba(229, 255, 58, 0.15);
+            border: none;
+            box-shadow: none;
+            outline: none;
+        }
+
+        .btn-primary {
+            padding: 0.5rem 1rem;
+            background: var(--accent);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 8px rgba(229, 255, 58, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(229, 255, 58, 0.4);
+        }
+
+        .btn-danger {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background: rgba(255, 68, 68, 0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255, 68, 68, 0.2);
+        }
+
+        .btn-logout-centered {
+            padding: 0.75rem 2rem;
+            font-size: 1rem;
+        }
+
+        .avatar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .avatar-option {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            background: var(--bg-tertiary);
+            color: var(--accent);
+        }
+
+        .avatar-option:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .avatar-option.selected {
+            border-color: var(--accent);
+            background: rgba(229, 255, 58, 0.1);
+        }
+
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 280px;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.sidebar-open {
+                transform: translateX(0);
+            }
+
+            .sidebar.mobile-hidden {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .profile-content {
+                padding: 1rem;
+            }
+
+        }
+
+        body.light-mode {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f8f8;
+            --bg-tertiary: #e8e8e8;
+            --text-primary: #000000;
+            --text-secondary: #333333;
+            --text-muted: #666666;
+            --border: #d0d0d0;
+            --border-light: #e0e0e0;
+            --accent: #000000;
+            --accent-hover: #333333;
+        }
+
+
+        body.light-mode .tokens-badge {
+            border-color: var(--accent);
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* Footer */
+        .chat-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 3rem auto 0;
+            padding: 2rem 1.5rem;
+            position: relative;
+            background: transparent;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .footer-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: transparent;
+            text-decoration: none;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+            border-color: var(--accent);
+            background: var(--bg-tertiary);
+            transform: scale(1.05);
+        }
+
+        .footer-link svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .footer-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-copyright {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin: 0;
+            margin-top: 0.5rem;
+        }
+
+        .footer-logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 6px;
+            object-fit: cover;
+            vertical-align: middle;
+            margin-left: -1mm;
+        }
+
+
+        @media (max-width: 768px) {
+            .chat-footer {
+                padding: 1.5rem 1rem;
+            }
+
+            .footer-link {
+                width: 36px;
+                height: 36px;
+            }
+
+            .footer-link svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .footer-logo {
+                width: 38px;
+                height: 38px;
+            }
+
+            .footer-text {
+                font-size: 0.75rem;
+            }
+
+            .footer-copyright {
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="window.closeSidebar ? window.closeSidebar() : (typeof closeSidebar === 'function' ? closeSidebar() : null)"></div>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar Handle -->
+        <div class="sidebar-handle" onclick="window.toggleSidebar ? window.toggleSidebar() : (typeof toggleSidebar === 'function' ? toggleSidebar() : alert('Sidebar toggle not available'))" title="Open sidebar">
+            <svg viewBox="0 0 60 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- Bot Antennas -->
+                <g class="bot-antennas">
+                    <line x1="22" y1="8" x2="22" y2="12" stroke="#e5ff3a" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="22" cy="8" r="2" fill="#e5ff3a"/>
+                    <line x1="38" y1="8" x2="38" y2="12" stroke="#e5ff3a" stroke-width="2" stroke-linecap="round"/>
+                    <circle cx="38" cy="8" r="2" fill="#e5ff3a"/>
+                </g>
+                <!-- Bot Head (square, peeking from sidebar) -->
+                <g class="bot-head">
+                    <rect x="12" y="12" width="36" height="36" rx="3" fill="#e5ff3a" stroke="#121212" stroke-width="2"/>
+                    <circle cx="24" cy="24" r="3" fill="#121212" class="bot-eye"/>
+                    <circle cx="36" cy="24" r="3" fill="#121212" class="bot-eye"/>
+                    <rect x="26" y="32" width="8" height="2" rx="1" fill="#121212"/>
+                </g>
+                <!-- Bot Body (behind sidebar) -->
+                <rect x="15" y="48" width="30" height="25" rx="5" fill="#e5ff3a" stroke="#121212" stroke-width="2"/>
+                <rect x="20" y="53" width="20" height="15" rx="2" fill="#121212" opacity="0.3"/>
+                <!-- Right Hand (hanging on edge) -->
+                <g class="bot-hand-right">
+                    <rect x="52" y="58" width="8" height="20" rx="4" fill="#e5ff3a" stroke="#121212" stroke-width="2"/>
+                    <circle cx="56" cy="60" r="2" fill="#121212"/>
+                </g>
+            </svg>
+        </div>
+        <div class="sidebar-header">
+            <img src="ghost.JPG" alt="Logo" onerror="this.style.display='none'">
+            <h1>Uncensored InfiNet AI</h1>
+        </div>
+
+        <div class="sidebar-actions">
+            <button class="btn-go-uncensored" onclick="goToChat()">Go Uncensored</button>
+        </div>
+
+        <div class="sidebar-conversations" id="conversations">
+            <!-- Conversations will be added here -->
+        </div>
+
+        <!-- Info Cards in Sidebar -->
+        <div class="sidebar-info-cards">
+            <div class="info-card" onmouseenter="showExpandedCard('privacy')" onmouseleave="hideExpandedCard('privacy')"
+                ontouchstart="toggleExpandedCard('privacy')" onclick="toggleExpandedCard('privacy')">
+                <h4>
+                    <svg class="lock-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                            fill="currentColor" />
+                    </svg>
+                    100% Private
+                </h4>
+                <p>Chats & images deleted automatically</p>
+                <div class="info-card-expanded" id="privacy-expanded">
+                    <div class="info-card-expanded-header">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"
+                                fill="currentColor" />
+                        </svg>
+                        <h5>100% Private</h5>
+                    </div>
+                    <p>All your conversations and generated images are automatically and permanently deleted after 24
+                        hours. We don't store your data - your privacy is our top priority.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="/profile" id="sidebar-profile-link" onclick="handleProfileLinkClick(event)">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                        fill="currentColor" />
+                </svg>
+                <span id="sidebar-profile-text">Profile</span>
+            </a>
+            <a href="/pricing">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
+                        fill="currentColor" />
+                </svg>
+                Pricing
+            </a>
+            <a href="/features">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                        fill="currentColor" />
+                </svg>
+                Features
+            </a>
+            <a href="/doc">
+                <svg class="sidebar-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"
+                        fill="currentColor" />
+                </svg>
+                Documentation
+            </a>
+        </div>
+
+        <div class="sidebar-socials">
+            <div class="sidebar-cta-wrapper">
+                <a class="sidebar-cta" href="#" id="sidebar-apk-btn" title="APK (Coming Soon)">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5506 0 .9993.4486.9993.9993.0001.5511-.4486.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4486-.9993.9993-.9993c.5506 0 .9993.4486.9993.9993 0 .5511-.4486.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1349 1.0989L4.8429 5.4467a.4161.4161 0 00-.5676-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.186.8533 13.2177.8533 15.7404v.9225c0 .2768.2232.5.5.5h22.2934c.2768 0 .5-.2232.5-.5v-.9225c0-2.5227-1.8356-4.5536-4.2668-5.419"
+                            fill="currentColor" />
+                    </svg>
+                    APK
+                </a>
+                <a href="/privacy" class="sidebar-link-text">Policy</a>
+            </div>
+            <div class="sidebar-cta-wrapper">
+                <a class="sidebar-cta" href="#" id="sidebar-web-btn" onclick="handleWebAppInstall(event)" title="Add to Home Screen">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H4v-4h11v4zm0-5H4V9h11v4zm5 5h-4V9h4v9z"
+                            fill="currentColor" />
+                    </svg>
+                    Web
+                </a>
+                <a href="/terms" class="sidebar-link-text">Terms</a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="profile-content">
+            <!-- Profile Picture -->
+            <div class="profile-avatar-container">
+                <div class="profile-avatar" id="profile-avatar"
+                    onclick="document.getElementById('avatar-upload').click()">
+                    <span id="avatar-initial">U</span>
+                </div>
+                <input type="file" id="avatar-upload" accept="image/*" style="display: none;"
+                    onchange="window.handleAvatarUpload ? window.handleAvatarUpload(event) : (typeof handleAvatarUpload === 'function' ? handleAvatarUpload(event) : alert('Avatar upload function not available'))">
+                <div class="profile-display-name" id="profile-display-name"></div>
+            </div>
+
+            <!-- Pricing Button -->
+            <div class="pricing-dropdown-wrapper">
+                <button class="pricing-dropdown-trigger btn-primary" onclick="window.togglePricingDropdown ? window.togglePricingDropdown() : (typeof togglePricingDropdown === 'function' ? togglePricingDropdown() : alert('Pricing dropdown not available'))">Pricing</button>
+                <div class="tokens-badge" id="profile-tokens-badge">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M20 6H17.82C17.93 5.69 18 5.35 18 5C18 3.34 16.66 2 15 2C13.95 2 13.04 2.54 12.5 3.35L12 4.02L11.5 3.34C10.96 2.54 10.05 2 9 2C7.34 2 6 3.34 6 5C6 5.35 6.07 5.69 6.18 6H4C2.89 6 2.01 6.89 2.01 8L2 19C2 20.11 2.89 21 4 21H20C21.11 21 22 20.11 22 19V8C22 6.89 21.11 6 20 6ZM15 4C15.55 4 16 4.45 16 5C16 5.55 15.55 6 15 6C14.45 6 14 5.55 14 5C14 4.45 14.45 4 15 4ZM9 4C9.55 4 10 4.45 10 5C10 5.55 9.55 6 9 6C8.45 6 8 5.55 8 5C8 4.45 8.45 4 9 4ZM20 19H4V17H20V19ZM20 15H4V8H20V15Z"
+                            fill="currentColor" />
+                    </svg>
+                    <span id="profile-tokens-badge-text">Free 10000 Tokens</span>
+                </div>
+                <div class="pricing-dropdown-menu" id="pricing-dropdown-menu">
+                     <div class="pricing-option">
+                        <span class="pricing-option-text">Lite $9</span>
+                        <button class="pricing-subscribe-btn" onclick="window.subscribePlan ? window.subscribePlan('proplus') : (typeof subscribePlan === 'function' ? subscribePlan('proplus') : alert('Subscribe function not available'))">Subscribe</button>
+                    </div>
+                    <div class="pricing-option">
+                        <span class="pricing-option-text">Pro $29</span>
+                        <button class="pricing-subscribe-btn" onclick="window.subscribePlan ? window.subscribePlan('pro') : (typeof subscribePlan === 'function' ? subscribePlan('pro') : alert('Subscribe function not available'))">Subscribe</button>
+                    </div>
+                    <div class="pricing-option">
+                        <span class="pricing-option-text">Ultra $59</span>
+                        <button class="pricing-subscribe-btn" onclick="window.subscribePlan ? window.subscribePlan('proplus') : (typeof subscribePlan === 'function' ? subscribePlan('proplus') : alert('Subscribe function not available'))">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Token Usage Display -->
+            <div id="token-usage-wrapper" style="display: none;">
+                <h2 class="token-usage-title">Token Usage</h2>
+                <div id="token-usage-section" class="token-usage-section">
+                    <div class="token-usage-header">
+                        <div class="token-usage-stats">
+                            <span id="token-percentage">0%</span> Used •
+                            <span id="token-remaining">Remaining Credits</span>
+                        </div>
+                    </div>
+                    <div class="token-usage-bar-container">
+                        <div class="token-usage-bar">
+                            <div id="token-usage-bar-fill" class="token-usage-bar-fill"></div>
+                        </div>
+                    </div>
+                    <div class="token-usage-numbers">
+                        <span id="token-used">0</span> / <span id="token-total">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div class="profile-section">
+                <h2>Account Information</h2>
+                <div class="form-group">
+                    <label for="profile-email">Email</label>
+                    <input type="email" id="profile-email" value="" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="profile-name">Display Name</label>
+                    <input type="text" id="profile-name" value="">
+                </div>
+                <button class="btn-primary" onclick="window.updateProfile ? window.updateProfile() : (typeof updateProfile === 'function' ? updateProfile() : alert('Save function not available'))">Save Changes</button>
+            </div>
+
+            <!-- Change Password -->
+            <div class="profile-section">
+                <h2>Change Password</h2>
+                <div class="form-group">
+                    <label for="current-password">Current Password</label>
+                    <input type="password" id="current-password">
+                </div>
+                <div class="form-group">
+                    <label for="new-password">New Password</label>
+                    <input type="password" id="new-password" placeholder="Min 8 chars, 1 special or uppercase">
+                </div>
+                <div class="form-group">
+                    <label for="confirm-new-password">Confirm New Password</label>
+                    <input type="password" id="confirm-new-password">
+                </div>
+                <button class="btn-primary" onclick="window.changePassword ? window.changePassword() : (typeof changePassword === 'function' ? changePassword() : alert('Change password function not available'))">Update Password</button>
+            </div>
+
+            <!-- Avatar Selection -->
+            <div class="profile-section">
+                <h2>Choose Character</h2>
+                <div class="avatar-grid" id="avatar-grid">
+                    <!-- Avatars will be added here -->
+                </div>
+                <button class="btn-primary" id="save-avatar-btn" onclick="window.saveAvatar ? window.saveAvatar() : (typeof saveAvatar === 'function' ? saveAvatar() : alert('Save avatar function not available'))" style="margin-top: 1rem; width: 100%;">Save Avatar</button>
+            </div>
+
+            <!-- Appearance Settings -->
+            <div class="profile-section appearance-section">
+                <h2>Appearance</h2>
+                <div class="form-group">
+                    <label>Theme</label>
+                    <div class="theme-buttons-container">
+                        <button class="theme-button" id="theme-dark" onclick="setTheme('dark')" title="Dark Mode">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36 10.14 10.14 0 1 0 22 14.05 1 1 0 0 0 21.64 13Z" fill="currentColor"/>
+                            </svg>
+                            <span>Dark</span>
+                        </button>
+                        <button class="theme-button" id="theme-light" onclick="setTheme('light')" title="Light Mode">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                                <path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>
+                            </svg>
+                            <span>Light</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div style="display: flex; justify-content: center; margin-top: 2rem;">
+                <button class="btn-danger btn-logout-centered" onclick="window.handleLogout ? window.handleLogout() : (typeof handleLogout === 'function' ? handleLogout() : alert('Logout function not available'))">Logout</button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="chat-footer">
+            <a href="https://infinet.services/" target="_blank" class="footer-link footer-link-left"
+                title="Visit InfiNet Services">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM18.92 8h-2.95c-.32-1.25-.78-2.45-1.38-3.56 1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96zM4.26 14C4.1 13.36 4 12.69 4 12s.1-1.36.26-2h3.38c-.08.66-.14 1.32-.14 2 0 .68.06 1.34.14 2H4.26zm.82 2h2.95c.32 1.25.78 2.45 1.38 3.56-1.84-.63-3.37-1.9-4.33-3.56zm2.95-8H4.26c.96-1.66 2.49-2.93 4.33-3.56C8.03 5.55 7.57 6.75 7.25 8zM12 19.96c-.83-1.2-1.48-2.53-1.91-3.96h3.82c-.43 1.43-1.08 2.76-1.91 3.96zM14.34 14H9.66c-.09-.66-.16-1.32-.16-2 0-.68.07-1.34.16-2h4.68c.09.66.16 1.32.16 2 0 .68-.07 1.34-.16 2zm.25 5.56c.6-1.11 1.06-2.31 1.38-3.56h2.95c-.96 1.65-2.49 2.93-4.33 3.56zM16.36 14c.08-.66.14-1.32.14-2 0-.68-.06-1.34-.14-2h3.38c.16.64.26 1.31.26 2s-.1 1.36-.26 2h-3.38z"
+                        fill="currentColor" />
+                </svg>
+            </a>
+            <div class="footer-center">
+                <p class="footer-text">Powered by <img src="logo.PNG" alt="InfiNet Logo" class="footer-logo"
+                        onerror="this.style.display='none'"></p>
+                <p class="footer-copyright">© 2025 InfiNet AI. All rights reserved.</p>
+            </div>
+            <a href="mailto:admin@infinet.services" class="footer-link footer-link-right" title="Contact Us">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"
+                        fill="currentColor" />
+                </svg>
+            </a>
+        </footer>
+    </main>
+
+    <script>
+        // API Base URL
+        const API_BASE = window.location.origin;
+        
+        // Authentication State
+        let isAuthenticated = false;
+        let currentUser = null;
+        
+        // Functions will be made globally accessible after they're defined below
+
+        // Update sidebar profile link based on auth status
+        function updateSidebarProfileLink() {
+            const profileLink = document.getElementById('sidebar-profile-link');
+            const profileText = document.getElementById('sidebar-profile-text');
+            
+            if (!profileLink || !profileText) return;
+            
+            if (isAuthenticated && currentUser) {
+                profileLink.href = '/profile';
+                profileText.textContent = 'Profile';
+            } else {
+                profileLink.href = '/#auth';
+                profileText.textContent = 'Hop In';
+            }
+        }
+        
+        // Handle profile link click
+        function handleProfileLinkClick(event) {
+            if (!isAuthenticated || !currentUser) {
+                event.preventDefault();
+                // Redirect to index with auth hash
+                window.location.href = '/#auth';
+            }
+            // If authenticated, let the default link behavior work
+        }
+
+        // Check Authentication and Load User Data
+        async function initProfile() {
+            try {
+                console.log('Initializing profile page...');
+                const response = await fetch(`${API_BASE}/api/user/me`, {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    console.error('Failed to authenticate:', response.status, response.statusText);
+                    // Not authenticated - redirect to home
+                    window.location.href = '/';
+                    return;
+                }
+                
+                const userData = await response.json();
+                console.log('User data loaded from API:', userData);
+                
+                // Map API response to frontend format
+                currentUser = {
+                    id: userData.id,
+                    email: userData.email,
+                    name: userData.displayName || userData.email.split('@')[0],
+                    displayName: userData.displayName || null, // Keep null if not set, don't fallback here
+                    avatar: userData.profilePicture || null, // Map profilePicture to avatar
+                    profile_picture: userData.profilePicture || null,
+                    avatarEmoji: userData.avatarEmoji || null,
+                    plan: userData.plan || 'free',
+                    emailVerified: userData.emailVerified || false,
+                    googleId: userData.googleId || null // Check if signed in with Google
+                };
+                
+                console.log('Current user set:', { 
+                    displayName: currentUser.displayName, 
+                    name: currentUser.name,
+                    profilePicture: currentUser.profile_picture ? 'present' : 'null'
+                });
+                
+                // Set selected avatar if user has one (check profile_picture)
+                if (currentUser.profile_picture && !currentUser.profile_picture.startsWith('data:')) {
+                    selectedAvatarUrl = currentUser.profile_picture;
+                }
+                
+                // Hide password change section if user signed in with Google
+                const passwordSection = document.querySelector('.profile-section');
+                if (currentUser.googleId) {
+                    // Find the password section (it's the second profile-section)
+                    const allSections = document.querySelectorAll('.profile-section');
+                    if (allSections.length >= 2) {
+                        const passwordSectionElement = allSections[1]; // Second section is password
+                        if (passwordSectionElement && passwordSectionElement.querySelector('#current-password')) {
+                            passwordSectionElement.style.display = 'none';
+                            console.log('Password section hidden for Google user');
+                        }
+                    }
+                }
+                
+                isAuthenticated = true;
+                
+                // Update sidebar profile link
+                updateSidebarProfileLink();
+                
+                // Load User Data into form - wait for DOM to be ready
+                const emailField = document.getElementById('profile-email');
+                const nameField = document.getElementById('profile-name');
+                
+                if (emailField) {
+                    emailField.value = currentUser.email || '';
+                    console.log('Email field updated:', emailField.value);
+                } else {
+                    console.error('Email field not found!');
+                }
+                
+                if (nameField) {
+                    // Use displayName if it exists, otherwise fallback to name or email
+                    const nameValue = currentUser.displayName || currentUser.name || currentUser.email.split('@')[0] || '';
+                    nameField.value = nameValue;
+                    console.log('Name field updated:', { value: nameValue, displayName: currentUser.displayName, name: currentUser.name });
+                } else {
+                    console.error('Name field not found!');
+                }
+
+                // Update display name under profile picture
+                updateDisplayName();
+
+                // Update avatar display
+                updateAvatarDisplay();
+                
+                // Regenerate avatars to highlight current selection
+                const avatarGrid = document.getElementById('avatar-grid');
+                if (avatarGrid) {
+                    avatarGrid.innerHTML = '';
+                    generateAvatars();
+                }
+                
+                // Load token usage
+                await loadTokenUsage();
+                
+                // Update tokens badge
+                await updateProfileTokensBadge();
+                
+                console.log('Profile initialization complete');
+            } catch (error) {
+                console.error('Failed to load user data:', error);
+                alert('Failed to load profile data. Please try again.');
+                // Don't redirect immediately, let user see the error
+            }
+        }
+
+        function updateAvatarDisplay() {
+            const avatar = document.getElementById('profile-avatar');
+            if (!avatar) {
+                console.warn('Avatar element not found');
+                return;
+            }
+            
+            const avatarUrl = currentUser?.avatar || currentUser?.profile_picture;
+            console.log('Updating avatar display:', { avatarUrl, currentUser });
+            
+            if (avatarUrl) {
+                // Show profile picture
+                avatar.innerHTML = `<img src="${avatarUrl}" alt="Profile" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else if (currentUser?.avatarEmoji) {
+                // Show emoji avatar
+                avatar.innerHTML = `<span style="font-size: 2rem;">${currentUser.avatarEmoji}</span>`;
+            } else {
+                // Show initial letter
+                const userName = currentUser?.displayName || currentUser?.name || (currentUser?.email ? currentUser.email.split('@')[0] : 'U');
+                const initial = userName.charAt(0).toUpperCase();
+                avatar.innerHTML = `<span id="avatar-initial" style="font-size: 2rem; font-weight: 600; color: var(--accent); display: flex; align-items: center; justify-content: center; width: 100%; height: 100%;">${initial}</span>`;
+            }
+        }
+
+        function updateDisplayName() {
+            const displayNameElement = document.getElementById('profile-display-name');
+            if (!displayNameElement) {
+                console.warn('Display name element not found');
+                return;
+            }
+            
+            // Use displayName if set, otherwise fallback to name or email
+            const displayName = currentUser?.displayName || currentUser?.name || (currentUser?.email ? currentUser.email.split('@')[0] : '');
+            console.log('Updating display name:', { displayName, currentUser });
+            displayNameElement.textContent = displayName || '';
+        }
+
+        // Update tokens badge in profile page
+        async function updateProfileTokensBadge() {
+            const badgeText = document.getElementById('profile-tokens-badge-text');
+            if (!badgeText) return;
+
+            try {
+                let response;
+                if (isAuthenticated && currentUser) {
+                    response = await fetch(`${API_BASE}/api/user/tokens`, {
+                        credentials: 'include'
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/api/tokens/ip`, {
+                        credentials: 'include'
+                    });
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const tokensRemaining = data.tokens || 0;
+                    const plan = data.plan || 'free';
+                    // Show "Free" prefix only for free plan
+                    if (plan === 'free') {
+                        badgeText.textContent = `Free ${tokensRemaining.toLocaleString()} Tokens`;
+                    } else {
+                        badgeText.textContent = `${tokensRemaining.toLocaleString()} Tokens`;
+                    }
+                } else {
+                    badgeText.textContent = 'Free 10000 Tokens';
+                }
+            } catch (error) {
+                console.error('Error updating tokens badge:', error);
+                badgeText.textContent = 'Free 10000 Tokens';
+            }
+        }
+
+        // Load token usage (for both authenticated and non-authenticated users)
+        async function loadTokenUsage() {
+            try {
+                let response;
+                if (isAuthenticated && currentUser) {
+                    response = await fetch(`${API_BASE}/api/user/tokens`, {
+                        credentials: 'include'
+                    });
+                } else {
+                    response = await fetch(`${API_BASE}/api/tokens/ip`, {
+                        credentials: 'include'
+                    });
+                }
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const tokensRemaining = data.tokens || 0;
+                    const tokensTotal = data.tokensAllocated || 0;
+                    const tokensUsed = tokensTotal - tokensRemaining;
+                    const percentage = tokensTotal > 0 ? Math.round((tokensUsed / tokensTotal) * 100) : 0;
+
+                    const percentageEl = document.getElementById('token-percentage');
+                    const usedEl = document.getElementById('token-used');
+                    const totalEl = document.getElementById('token-total');
+                    const remainingEl = document.getElementById('token-remaining');
+                    const barFillEl = document.getElementById('token-usage-bar-fill');
+                    const wrapperEl = document.getElementById('token-usage-wrapper');
+
+                    if (percentageEl) percentageEl.textContent = percentage + '%';
+                    if (usedEl) usedEl.textContent = tokensUsed.toLocaleString();
+                    if (totalEl) totalEl.textContent = tokensTotal.toLocaleString();
+                    if (remainingEl) remainingEl.textContent = `Remaining Credits: ${tokensRemaining.toLocaleString()}`;
+                    if (barFillEl) barFillEl.style.width = percentage + '%';
+                    if (wrapperEl) wrapperEl.style.display = 'block';
+                    
+                    // Update tokens badge
+                    await updateProfileTokensBadge();
+                } else {
+                    const tokenWrapper = document.getElementById('token-usage-wrapper');
+                    if (tokenWrapper) {
+                        tokenWrapper.style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading token usage:', error);
+                const tokenWrapper = document.getElementById('token-usage-wrapper');
+                if (tokenWrapper) {
+                    tokenWrapper.style.display = 'none';
+                }
+            }
+        }
+        
+        // Initialize on page load - wait for DOM to be ready
+        // Use setTimeout to ensure all elements are loaded
+        setTimeout(() => {
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initProfile);
+            } else {
+                // DOM is already ready
+                initProfile();
+            }
+        }, 100);
+
+        // Sidebar Toggle (make it accessible globally)
+        function toggleSidebar() {
+            console.log('Toggle sidebar called');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            const isOpen = sidebar.classList.contains('sidebar-open');
+
+            if (isOpen) {
+                sidebar.classList.remove('sidebar-open');
+                sidebar.classList.add('mobile-hidden');
+                overlay.classList.remove('show');
+            } else {
+                sidebar.classList.remove('mobile-hidden');
+                sidebar.classList.add('sidebar-open');
+                overlay.classList.add('show');
+            }
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            sidebar.classList.remove('sidebar-open');
+            sidebar.classList.add('mobile-hidden');
+            overlay.classList.remove('show');
+        }
+
+        function goToChat() {
+            window.location.href = '/';
+        }
+
+        // Chat History Functions
+        async function deleteConversation(convId) {
+            try {
+                const response = await fetch(`${API_BASE}/api/conversations/${convId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to delete conversation');
+                }
+                
+                await loadConversations();
+            } catch (error) {
+                console.error('Error deleting conversation:', error);
+                alert('Failed to delete conversation');
+            }
+        }
+
+        async function loadConversations() {
+            try {
+                const response = await fetch(`${API_BASE}/api/conversations`, {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load conversations');
+                }
+                
+                const data = await response.json();
+                const conversations = data.conversations || [];
+                const container = document.getElementById('conversations');
+                container.innerHTML = '';
+
+                if (conversations.length === 0) {
+                    // Keep same padding structure - container already has padding: 0.5rem
+                    const emptyDiv = document.createElement('div');
+                    emptyDiv.style.padding = '0';
+                    emptyDiv.style.color = 'var(--text-muted)';
+                    emptyDiv.style.fontSize = '0.85rem';
+                    emptyDiv.style.textAlign = 'center';
+                    emptyDiv.textContent = 'No conversations yet';
+                    container.appendChild(emptyDiv);
+                    return;
+                }
+
+                conversations.forEach(conv => {
+                    const item = document.createElement('div');
+                    item.className = 'conversation-item';
+                    // Use title if available, otherwise use first message content, otherwise "New Chat"
+                    let preview = 'New Chat';
+                    if (conv.title && conv.title !== 'New Chat' && conv.title.trim() !== '') {
+                        preview = conv.title;
+                    } else if (conv.messages && conv.messages.length > 0 && conv.messages[0].content) {
+                        preview = conv.messages[0].content.substring(0, 30) + '...';
+                    }
+
+                    const content = document.createElement('div');
+                    content.className = 'conversation-item-content';
+                    content.textContent = preview;
+                    content.onclick = () => {
+                        // Store conversation ID and redirect to index
+                        localStorage.setItem('selectedConversationId', conv.id);
+                        window.location.href = '/';
+                    };
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'conversation-delete-btn';
+                    deleteBtn.innerHTML = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"/></svg>';
+                    deleteBtn.onclick = (e) => {
+                        e.stopPropagation();
+                        deleteConversation(conv.id);
+                    };
+                    deleteBtn.title = 'Delete conversation';
+
+                    item.appendChild(content);
+                    item.appendChild(deleteBtn);
+                    container.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading conversations:', error);
+                const container = document.getElementById('conversations');
+                if (container) {
+                    container.innerHTML = '<div style="padding: 1rem; color: var(--text-muted); text-align: center;">Failed to load conversations</div>';
+                }
+            }
+        }
+
+        // Compress and resize image
+        function compressImage(file, maxWidth = 200, maxHeight = 200, quality = 0.8) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Calculate new dimensions
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = (height * maxWidth) / width;
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = (width * maxHeight) / height;
+                                height = maxHeight;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Convert to base64 with compression
+                        const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                        resolve(compressedBase64);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Avatar Upload (make it accessible globally)
+        async function handleAvatarUpload(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            // Check file size (max 5MB before compression)
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image size must be less than 5MB');
+                return;
+            }
+
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('Please select an image file');
+                return;
+            }
+
+            try {
+                // Show loading message
+                const loadingMsg = alert('Processing image...');
+                
+                // Compress and resize image
+                const compressedImage = await compressImage(file, 200, 200, 0.7);
+                
+                // Check compressed size (should be much smaller now)
+                const sizeInMB = (compressedImage.length * 3 / 4) / (1024 * 1024);
+                console.log('Compressed image size:', sizeInMB.toFixed(2), 'MB');
+                
+                if (sizeInMB > 1) {
+                    // If still too large, compress more aggressively
+                    const moreCompressed = await compressImage(file, 150, 150, 0.6);
+                    const newSizeInMB = (moreCompressed.length * 3 / 4) / (1024 * 1024);
+                    console.log('Re-compressed image size:', newSizeInMB.toFixed(2), 'MB');
+                    
+                    if (newSizeInMB > 1) {
+                        alert('Image is too large even after compression. Please try a smaller image.');
+                        return;
+                    }
+                    
+                    await uploadProfilePicture(moreCompressed);
+                } else {
+                    await uploadProfilePicture(compressedImage);
+                }
+            } catch (error) {
+                console.error('Error processing image:', error);
+                alert('Failed to process image: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        async function uploadProfilePicture(profilePicture) {
+            try {
+                console.log('Uploading profile picture...');
+                const response = await fetch(`${API_BASE}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ profilePicture: profilePicture || null })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('API Error:', errorData, 'Status:', response.status);
+                    throw new Error(errorData.error || `Failed to update profile picture (${response.status})`);
+                }
+                
+                const updatedUser = await response.json();
+                console.log('Profile picture updated successfully:', { profilePicture: updatedUser.profilePicture ? 'present' : 'null' });
+                
+                // Update local currentUser
+                currentUser.avatar = updatedUser.profilePicture || null;
+                currentUser.profile_picture = updatedUser.profilePicture || null;
+                currentUser.avatarEmoji = null;
+                
+                updateAvatarDisplay();
+                updateDisplayName();
+                alert('Profile picture updated successfully!');
+            } catch (error) {
+                console.error('Error updating avatar:', error);
+                alert('Failed to update profile picture: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        // Generate Avatar Options
+        function generateAvatars() {
+            const avatarGrid = document.getElementById('avatar-grid');
+            // 4 hacking/anonymous, 4 devils, 4 skulls - using catchy themed avatars from multiple sources
+            const avatars = [
+                // Hacking/Anonymous (4) - dark mysterious avatars
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=hacker1&backgroundColor=000000&clotheColor=262e33&skinColor=8b4513',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=anonymous1&backgroundColor=1a1a1a&clotheColor=1f2937&skinColor=8b4513',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=hacker2&backgroundColor=000000&clotheColor=262e33&skinColor=8b4513',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=anonymous2&backgroundColor=1a1a1a&clotheColor=1f2937&skinColor=8b4513',
+                // Devils (4) - red/dark themed
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=devil1&backgroundColor=8b0000&clotheColor=dc143c&skinColor=8b4513',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=devil2&backgroundColor=dc143c&clotheColor=8b0000&skinColor=8b4513',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=devil3&backgroundColor=8b0000&clotheColor=ff0000&skinColor=8b4513',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=devil4&backgroundColor=dc143c&clotheColor=8b0000&skinColor=8b4513',
+                // Skulls (4) - dark/spooky themed
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=skull1&backgroundColor=2f2f2f&clotheColor=1a1a1a&skinColor=fdbcb4',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=skull2&backgroundColor=1a1a1a&clotheColor=2f2f2f&skinColor=fdbcb4',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=skull3&backgroundColor=2f2f2f&clotheColor=1a1a1a&skinColor=fdbcb4',
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=skull4&backgroundColor=1a1a1a&clotheColor=2f2f2f&skinColor=fdbcb4'
+            ];
+
+            avatars.forEach((avatarUrl, index) => {
+                const avatarOption = document.createElement('div');
+                avatarOption.className = 'avatar-option';
+                
+                // Create img element instead of text
+                const img = document.createElement('img');
+                img.src = avatarUrl;
+                img.alt = 'Avatar';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '50%';
+                avatarOption.appendChild(img);
+                
+                avatarOption.onclick = (e) => selectAvatar(avatarUrl, e);
+                
+                // Highlight if this is the current user's avatar
+                if (currentUser && (currentUser.profile_picture === avatarUrl || currentUser.avatar === avatarUrl)) {
+                    avatarOption.classList.add('selected');
+                    selectedAvatarUrl = avatarUrl;
+                }
+                
+                avatarGrid.appendChild(avatarOption);
+            });
+        }
+
+        let selectedAvatarUrl = null;
+
+        function selectAvatar(avatarUrl, event) {
+            document.querySelectorAll('.avatar-option').forEach(opt => opt.classList.remove('selected'));
+            if (event && event.target) {
+                // Find the parent avatar-option div
+                const avatarOption = event.target.closest('.avatar-option') || event.target.parentElement;
+                if (avatarOption) {
+                    avatarOption.classList.add('selected');
+                }
+            }
+            selectedAvatarUrl = avatarUrl;
+        }
+
+        // Save Avatar to API
+        async function saveAvatar() {
+            if (!selectedAvatarUrl) {
+                alert('Please select an avatar first');
+                return;
+            }
+
+            if (!currentUser) {
+                alert('You must be logged in to save an avatar');
+                return;
+            }
+
+            try {
+                console.log('Saving avatar:', selectedAvatarUrl);
+                const response = await fetch(`${API_BASE}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ profilePicture: selectedAvatarUrl || null })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('API Error:', errorData);
+                    throw new Error(errorData.error || 'Failed to save avatar');
+                }
+                
+                const updatedUser = await response.json();
+                console.log('Avatar saved successfully:', { profilePicture: updatedUser.profilePicture ? 'present' : 'null' });
+                
+                // Update local currentUser
+                currentUser.profile_picture = updatedUser.profilePicture || null;
+                currentUser.avatar = updatedUser.profilePicture || null;
+                currentUser.avatarEmoji = null;
+                
+                updateAvatarDisplay();
+                updateDisplayName();
+                alert('Avatar saved successfully!');
+                
+                // Notify index page to update if it's open
+                if (window.opener) {
+                    window.opener.postMessage({ type: 'userUpdated', user: currentUser }, '*');
+                }
+            } catch (error) {
+                console.error('Error saving avatar:', error);
+                alert('Failed to save avatar: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        // Update theme-color meta tag
+        function updateThemeColor(isLight) {
+            let themeColorMeta = document.querySelector('meta[name="theme-color"]');
+            let appleStatusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
+            
+            if (!themeColorMeta) {
+                themeColorMeta = document.createElement('meta');
+                themeColorMeta.setAttribute('name', 'theme-color');
+                document.head.appendChild(themeColorMeta);
+            }
+            
+            if (!appleStatusBarMeta) {
+                appleStatusBarMeta = document.createElement('meta');
+                appleStatusBarMeta.setAttribute('name', 'apple-mobile-web-app-status-bar-style');
+                document.head.appendChild(appleStatusBarMeta);
+            }
+            
+            if (isLight) {
+                themeColorMeta.setAttribute('content', '#ffffff');
+                appleStatusBarMeta.setAttribute('content', 'default');
+            } else {
+                themeColorMeta.setAttribute('content', '#000000');
+                appleStatusBarMeta.setAttribute('content', 'black');
+            }
+        }
+
+        // Set theme function (replaces toggleTheme)
+        function setTheme(theme) {
+            const body = document.body;
+            const darkButton = document.getElementById('theme-dark');
+            const lightButton = document.getElementById('theme-light');
+            const themeIconSidebar = document.getElementById('theme-icon-sidebar');
+
+            const moonIcon = '<path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36 10.14 10.14 0 1 0 22 14.05 1 1 0 0 0 21.64 13Z" fill="currentColor"/>';
+            const sunIcon = '<circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>';
+
+            if (theme === 'light') {
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                // Update button states
+                if (darkButton) darkButton.classList.remove('active');
+                if (lightButton) lightButton.classList.add('active');
+                // Update sidebar icon if exists
+                if (themeIconSidebar) themeIconSidebar.innerHTML = sunIcon;
+                updateThemeColor(true);
+            } else {
+                body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+                // Update button states
+                if (darkButton) darkButton.classList.add('active');
+                if (lightButton) lightButton.classList.remove('active');
+                // Update sidebar icon if exists
+                if (themeIconSidebar) themeIconSidebar.innerHTML = moonIcon;
+                updateThemeColor(false);
+            }
+        }
+
+        // Keep toggleTheme for backward compatibility (calls setTheme)
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.classList.contains('light-mode') ? 'light' : 'dark';
+            setTheme(currentTheme === 'light' ? 'dark' : 'light');
+        }
+
+        // Load saved theme on page load
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const darkButton = document.getElementById('theme-dark');
+            const lightButton = document.getElementById('theme-light');
+            const themeIconSidebar = document.getElementById('theme-icon-sidebar');
+
+            const moonIcon = '<path d="M21.64 13a1 1 0 0 0-1.05-.14 8.05 8.05 0 0 1-3.37.73 8.15 8.15 0 0 1-8.14-8.1 8.59 8.59 0 0 1 .25-2A1 1 0 0 0 8 2.36 10.14 10.14 0 1 0 22 14.05 1 1 0 0 0 21.64 13Z" fill="currentColor"/>';
+            const sunIcon = '<circle cx="12" cy="12" r="5" fill="currentColor"/><path d="M12 1V3M12 21V23M4.22 4.22L5.64 5.64M18.36 18.36L19.78 19.78M1 12H3M21 12H23M4.22 19.78L5.64 18.36M18.36 5.64L19.78 4.22" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/>';
+
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                // Update button states
+                if (darkButton) darkButton.classList.remove('active');
+                if (lightButton) lightButton.classList.add('active');
+                // Update sidebar icon if exists
+                if (themeIconSidebar) themeIconSidebar.innerHTML = sunIcon;
+                updateThemeColor(true);
+            } else {
+                document.body.classList.remove('light-mode');
+                // Update button states
+                if (darkButton) darkButton.classList.add('active');
+                if (lightButton) lightButton.classList.remove('active');
+                // Update sidebar icon if exists
+                if (themeIconSidebar) themeIconSidebar.innerHTML = moonIcon;
+                updateThemeColor(false);
+            }
+        }
+
+        // Load theme when page loads
+        loadTheme();
+
+        // Pricing Dropdown
+        function togglePricingDropdown() {
+            const menu = document.getElementById('pricing-dropdown-menu');
+            menu.classList.toggle('show');
+        }
+
+        function subscribePlan(plan) {
+            alert(`Subscribing to ${plan} plan...`);
+            // Add your subscription logic here
+            const menu = document.getElementById('pricing-dropdown-menu');
+            menu.classList.remove('show');
+        }
+
+        // Close pricing dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const pricingWrapper = document.querySelector('.pricing-dropdown-wrapper');
+            const pricingMenu = document.getElementById('pricing-dropdown-menu');
+            if (pricingWrapper && pricingMenu && !pricingWrapper.contains(event.target)) {
+                pricingMenu.classList.remove('show');
+            }
+        });
+
+        // Update Profile
+        async function updateProfile() {
+            const name = document.getElementById('profile-name').value;
+            if (!name || name.trim() === '') {
+                alert('Name cannot be empty');
+                return;
+            }
+            
+            try {
+                console.log('Updating profile with displayName:', name.trim());
+                const response = await fetch(`${API_BASE}/api/user/profile`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ displayName: name.trim() })
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('Profile update failed:', errorData);
+                    throw new Error(errorData.error || 'Failed to update profile');
+                }
+                
+                const updatedUser = await response.json();
+                console.log('Profile update response:', updatedUser);
+                
+                // Update local currentUser
+                // Handle null/empty displayName properly
+                const newDisplayName = updatedUser.displayName || null;
+                currentUser.displayName = newDisplayName;
+                currentUser.name = newDisplayName || currentUser.email.split('@')[0];
+                
+                console.log('Profile updated locally:', { displayName: newDisplayName, name: currentUser.name });
+                
+                // Update display name under profile picture
+                updateDisplayName();
+                
+                alert('Profile updated successfully!');
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert('Failed to update profile: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        // Change Password (make it accessible globally)
+        async function changePassword() {
+            const current = document.getElementById('current-password').value;
+            const newPass = document.getElementById('new-password').value;
+            const confirm = document.getElementById('confirm-new-password').value;
+
+            if (!current || !newPass || !confirm) {
+                alert('Please fill in all password fields');
+                return;
+            }
+
+            if (newPass.length < 8) {
+                alert('Password must be at least 8 characters long');
+                return;
+            }
+
+            const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(newPass);
+            const hasUpperCase = /[A-Z]/.test(newPass);
+            if (!hasSpecial && !hasUpperCase) {
+                alert('Password must contain at least one special character or uppercase letter');
+                return;
+            }
+
+            if (newPass !== confirm) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/api/user/change-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        currentPassword: current,
+                        newPassword: newPass
+                    })
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to change password');
+                }
+                
+                // Clear password fields
+                document.getElementById('current-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-new-password').value = '';
+                
+                alert('Password updated successfully!');
+            } catch (error) {
+                console.error('Error changing password:', error);
+                alert(error.message || 'Failed to change password');
+            }
+        }
+
+        // Logout (make it accessible globally)
+        async function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/api/logout`, {
+                        method: 'POST',
+                        credentials: 'include'
+                    });
+                    
+                    // Redirect regardless of response
+                    window.location.href = '/';
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    // Still redirect on error
+                    window.location.href = '/';
+                }
+            }
+        }
+
+        // Expanded Card Functions
+        let activeExpandedCard = null;
+
+        function showExpandedCard(type) {
+            // Only show on hover for desktop (not touch devices)
+            if ('ontouchstart' in window) {
+                return; // Don't show on hover for mobile
+            }
+            const expanded = document.getElementById(type + '-expanded');
+            if (expanded) {
+                expanded.classList.add('show');
+                activeExpandedCard = type;
+                // Add class to parent card for z-index
+                const parentCard = expanded.closest('.info-card');
+                if (parentCard) {
+                    parentCard.classList.add('expanded-active');
+                }
+            }
+        }
+
+        function hideExpandedCard(type) {
+            // Only hide on mouse leave for desktop (not touch devices)
+            if ('ontouchstart' in window) {
+                return; // Don't hide on mouse leave for mobile
+            }
+            const expanded = document.getElementById(type + '-expanded');
+            if (expanded && activeExpandedCard === type) {
+                expanded.classList.remove('show');
+                activeExpandedCard = null;
+                // Remove class from parent card
+                const parentCard = expanded.closest('.info-card');
+                if (parentCard) {
+                    parentCard.classList.remove('expanded-active');
+                }
+            }
+        }
+
+        function toggleExpandedCard(type) {
+            const expanded = document.getElementById(type + '-expanded');
+            if (expanded) {
+                // Close other expanded cards
+                if (activeExpandedCard && activeExpandedCard !== type) {
+                    const otherExpanded = document.getElementById(activeExpandedCard + '-expanded');
+                    if (otherExpanded) {
+                        otherExpanded.classList.remove('show');
+                        const otherParentCard = otherExpanded.closest('.info-card');
+                        if (otherParentCard) {
+                            otherParentCard.classList.remove('expanded-active');
+                        }
+                    }
+                }
+
+                // Toggle current card
+                const parentCard = expanded.closest('.info-card');
+                expanded.classList.toggle('show');
+                if (expanded.classList.contains('show')) {
+                    activeExpandedCard = type;
+                    if (parentCard) {
+                        parentCard.classList.add('expanded-active');
+                    }
+                } else {
+                    activeExpandedCard = null;
+                    if (parentCard) {
+                        parentCard.classList.remove('expanded-active');
+                    }
+                }
+            }
+        }
+
+        // Close expanded card when clicking outside (mobile)
+        document.addEventListener('click', function (event) {
+            if ('ontouchstart' in window && activeExpandedCard) {
+                const card = event.target.closest('.info-card');
+                const expanded = event.target.closest('.info-card-expanded');
+
+                if (!card && !expanded) {
+                    const expandedEl = document.getElementById(activeExpandedCard + '-expanded');
+                    if (expandedEl) {
+                        expandedEl.classList.remove('show');
+                        const parentCard = expandedEl.closest('.info-card');
+                        if (parentCard) {
+                            parentCard.classList.remove('expanded-active');
+                        }
+                        activeExpandedCard = null;
+                    }
+                }
+            }
+        });
+
+        // Initialize
+        generateAvatars();
+        loadConversations();
+
+        // Initialize sidebar - always hidden by default
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) {
+            sidebar.classList.add('mobile-hidden');
+        }
+
+        // Close sidebar when clicking outside
+        window.addEventListener('click', function (event) {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarHandle = sidebar ? sidebar.querySelector('.sidebar-handle') : null;
+
+            // Check if sidebar is open
+            if (sidebar && sidebar.classList.contains('sidebar-open')) {
+                // If click is on the handle, let toggleSidebar handle it
+                if (sidebarHandle && sidebarHandle.contains(event.target)) {
+                    return;
+                }
+
+                // If click is inside sidebar, don't close
+                if (sidebar.contains(event.target)) {
+                    return;
+                }
+
+                // Otherwise, close the sidebar
+                closeSidebar();
+            }
+        });
+
+        // Mobile browser UI hiding - hide bottom tab on scroll
+        (function () {
+            function isMobile() {
+                return window.innerWidth <= 768;
+            }
+
+            // Set body height to full viewport to enable browser UI hiding
+            function setFullHeight() {
+                if (!isMobile()) return;
+                const vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+                document.body.style.height = `${window.innerHeight}px`;
+            }
+
+            setFullHeight();
+            window.addEventListener('resize', setFullHeight);
+            window.addEventListener('orientationchange', function () {
+                setTimeout(setFullHeight, 100);
+            });
+
+            // Hide browser UI on scroll (mobile only)
+            let lastScrollTop = 0;
+            let ticking = false;
+
+            function hideBrowserUIOnScroll() {
+                if (!isMobile()) return;
+
+                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+
+                // Hide browser UI when scrolling down
+                if (currentScroll > lastScrollTop && currentScroll > 10) {
+                    // Trigger browser UI hiding by scrolling slightly
+                    window.scrollTo({
+                        top: currentScroll + 1,
+                        behavior: 'auto'
+                    });
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: currentScroll,
+                            behavior: 'auto'
+                        });
+                    }, 1);
+                }
+
+                lastScrollTop = currentScroll;
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', function () {
+                if (!isMobile()) return;
+                if (!ticking) {
+                    window.requestAnimationFrame(hideBrowserUIOnScroll);
+                    ticking = true;
+                }
+            }, { passive: true });
+
+            // Also hide on touchmove (when user is actively scrolling)
+            let touchScrollTimer;
+            document.addEventListener('touchmove', function () {
+                if (!isMobile()) return;
+                clearTimeout(touchScrollTimer);
+                touchScrollTimer = setTimeout(function () {
+                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    window.scrollTo({
+                        top: currentScroll + 1,
+                        behavior: 'auto'
+                    });
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: currentScroll,
+                            behavior: 'auto'
+                        });
+                    }, 1);
+                }, 150);
+            }, { passive: true });
+        })();
+        
+        // Make functions globally accessible for onclick handlers (after all functions are defined)
+        // Assign immediately - functions are already defined above
+        window.updateProfile = updateProfile;
+        window.changePassword = changePassword;
+        window.handleAvatarUpload = handleAvatarUpload;
+        window.handleLogout = handleLogout;
+        window.toggleSidebar = toggleSidebar;
+        window.closeSidebar = closeSidebar;
+        window.goToChat = goToChat;
+        window.toggleTheme = toggleTheme;
+        window.setTheme = setTheme;
+        window.togglePricingDropdown = togglePricingDropdown;
+        window.subscribePlan = subscribePlan;
+        window.toggleExpandedCard = toggleExpandedCard;
+        window.saveAvatar = saveAvatar;
+        window.handleProfileLinkClick = handleProfileLinkClick;
+
+        // Web App Install Handler
+        let deferredPrompt = null;
+
+        function handleWebAppInstall(event) {
+            event.preventDefault();
+            
+            // Check if already installed
+            if (window.matchMedia('(display-mode: standalone)').matches || 
+                window.navigator.standalone === true) {
+                alert('This app is already installed on your device!');
+                return;
+            }
+
+            // Check if browser supports install prompt
+            if (deferredPrompt) {
+                // Show the install prompt
+                deferredPrompt.prompt();
+                
+                // Wait for the user to respond to the prompt
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted the install prompt');
+                    } else {
+                        console.log('User dismissed the install prompt');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                // Fallback for browsers that don't support beforeinstallprompt
+                // Show instructions based on device
+                const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+                const isAndroid = /Android/.test(navigator.userAgent);
+                
+                if (isIOS) {
+                    alert('To install this app:\n1. Tap the Share button\n2. Select "Add to Home Screen"\n3. Tap "Add"');
+                } else if (isAndroid) {
+                    alert('To install this app:\n1. Tap the menu (3 dots) in your browser\n2. Select "Add to Home Screen" or "Install App"\n3. Tap "Add" or "Install"');
+                } else {
+                    alert('To install this app:\n1. Look for the install icon in your browser\'s address bar\n2. Click it and follow the prompts\n\nOr use your browser\'s menu to find "Install" or "Add to Home Screen"');
+                }
+            }
+        }
+
+        window.handleWebAppInstall = handleWebAppInstall;
+
+        // Listen for the beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent the mini-infobar from appearing on mobile
+            e.preventDefault();
+            // Stash the event so it can be triggered later
+            deferredPrompt = e;
+            
+            // Update button text/title to indicate install is available
+            const webBtn = document.getElementById('sidebar-web-btn');
+            if (webBtn) {
+                webBtn.title = 'Add to Home Screen';
+            }
+        });
+
+        // Listen for app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            deferredPrompt = null;
+            
+            // Update button to show it's installed
+            const webBtn = document.getElementById('sidebar-web-btn');
+            if (webBtn) {
+                webBtn.title = 'App Installed';
+            }
+        });
+        
+        console.log('Profile page functions initialized:', {
+            updateProfile: typeof window.updateProfile,
+            changePassword: typeof window.changePassword,
+            handleAvatarUpload: typeof window.handleAvatarUpload,
+            handleLogout: typeof window.handleLogout
+        });
+    </script>
+</body>
+
+</html>

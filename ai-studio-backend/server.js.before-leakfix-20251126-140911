@@ -1,0 +1,426 @@
+const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const OpenAI = require('openai');
+require('dotenv').config();
+
+const app = express();
+const PORT = process.env.PORT || 3002;
+
+// Initialize AI services
+// Main Gemini API (for chat and prompt)
+const genAI = process.env.GEMINI_API_KEY 
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY) 
+  : null;
+
+// Separate Gemini API for Blog generation
+const genAIBlog = process.env.GEMINI_API_KEY_BLOG 
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY_BLOG) 
+  : null;
+
+// Separate Gemini API for Social generation
+const genAISocial = process.env.GEMINI_API_KEY_SOCIAL 
+  ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY_SOCIAL) 
+  : null;
+
+const openai = process.env.OPENAI_API_KEY 
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) 
+  : null;
+
+// Middleware
+const corsOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',').map(origin => origin.trim())
+  : ['http://localhost:8081', 'exp://localhost:8081'];
+
+// More permissive CORS for mobile app
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    // Allow all origins for now (can be restricted later)
+    callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
+}));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'AI Studio Backend is running',
+    services: {
+      gemini: genAI ? 'Configured ✓' : 'Not configured ✗',
+      geminiBlog: genAIBlog ? 'Configured ✓' : 'Not configured ✗',
+      geminiSocial: genAISocial ? 'Configured ✓' : 'Not configured ✗',
+      openai: openai ? 'Configured ✓' : 'Not configured ✗'
+    }
+  });
+});
+
+// ============================================
+// AI CHAT ENDPOINT (Gemini)
+// ============================================
+app.post('/api/ai/chat', async (req, res) => {
+  console.log('📨 Received chat request:', { message: req.body.message?.substring(0, 50), hasHistory: req.body.conversationHistory?.length > 0 });
+  const { message, conversationHistory = [] } = req.body;
+
+  if (!message) {
+    console.log('❌ Missing message in request');
+    return res.status(400).json({ error: 'Message is required' });
+  }
+
+  if (!genAI) {
+    console.log('❌ Gemini API not configured');
+    return res.status(500).json({ error: 'Gemini API not configured. Please set GEMINI_API_KEY in .env file' });
+  }
+
+  try {
+    console.log('🤖 Calling Gemini API...');
+    // Use gemini-2.5-flash (stable version)
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+    // Build conversation context
+    let conversationContext = '';
+    if (conversationHistory.length > 0) {
+      conversationHistory.forEach((msg) => {
+        conversationContext += `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}\n\n`;
+      });
+    }
+    conversationContext += `User: ${message}\n\nAssistant:`;
+
+    // Generate response with timeout (30 seconds)
+    const generatePromise = model.generateContent(conversationContext);
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => {
+        console.log('⏱️ Gemini API timeout after 30 seconds');
+        reject(new Error('Gemini API request timeout after 30 seconds'));
+      }, 30000);
+    });
+
+    // Race between generation and timeout
+    const result = await Promise.race([generatePromise, timeoutPromise]);
+    const response = await result.response;
+    const aiResponse = response.text();
+    console.log('✅ Gemini API response received:', aiResponse.substring(0, 50));
+
+    res.json({
+      response: aiResponse,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('AI Chat Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to process AI request', 
+      message: error.message || 'Unknown error occurred'
+    });
+  }
+});
+
+// ============================================
+// IMAGE GENERATION ENDPOINT (DALL-E)
+// ============================================
+app.post('/api/ai/image', async (req, res) => {
+  const { prompt, size = '1024x1024', quality = 'standard', n = 1 } = req.body;
+
+  if (!prompt) {
+    return res.status(400).json({ error: 'Prompt is required' });
+  }
+
+  if (!openai) {
+    return res.status(500).json({ error: 'OpenAI API not configured. Please set OPENAI_API_KEY in .env file' });
+  }
+
+  try {
+    // Validate size
+    const validSizes = ['256x256', '512x512', '1024x1024', '1792x1024', '1024x1792'];
+    if (!validSizes.includes(size)) {
+      return res.status(400).json({ error: `Invalid size. Must be one of: ${validSizes.join(', ')}` });
+    }
+
+    // Validate quality (only for 1024x1024)
+    const validQuality = ['standard', 'hd'];
+    if (size === '1024x1024' && !validQuality.includes(quality)) {
+      return res.status(400).json({ error: `Invalid quality. Must be one of: ${validQuality.join(', ')}` });
+    }
+
+    // Generate image using DALL-E 3
+    const response = await openai.images.generate({
+      model: 'dall-e-3',
+      prompt: prompt,
+      n: 1, // DALL-E 3 only supports n=1
+      size: size,
+      quality: size === '1024x1024' ? quality : undefined,
+      response_format: 'url'
+    });
+
+    const imageUrl = response.data[0].url;
+
+    res.json({
+      imageUrl: imageUrl,
+      prompt: prompt,
+      size: size,
+      quality: quality,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Image Generation Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to generate image', 
+      message: error.message 
+    });
+  }
+});
+
+// ============================================
+// CREATOR - BLOG GENERATION (Gemini)
+// ============================================
+app.post('/api/ai/blog', async (req, res) => {
+  const { topic, tone = 'professional', length = 'medium', style = 'article' } = req.body;
+
+  if (!topic) {
+    return res.status(400).json({ error: 'Topic is required' });
+  }
+
+  if (!genAIBlog) {
+    return res.status(500).json({ error: 'Gemini API for Blog not configured. Please set GEMINI_API_KEY_BLOG in .env file' });
+  }
+
+  try {
+    const model = genAIBlog.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+    const prompt = `Write a ${length} ${style} blog post about "${topic}" in a ${tone} tone. 
+    Include an engaging title, introduction, main content with key points, and a conclusion. 
+    Make it informative and well-structured.`;
+
+    // Generate with timeout (30 seconds)
+    const generatePromise = model.generateContent(prompt);
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Gemini API request timeout after 30 seconds')), 30000);
+    });
+
+    const result = await Promise.race([generatePromise, timeoutPromise]);
+    const response = await result.response;
+    const content = response.text();
+
+    res.json({
+      content: content,
+      topic: topic,
+      tone: tone,
+      length: length,
+      style: style,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Blog Generation Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to generate blog content', 
+      message: error.message 
+    });
+  }
+});
+
+// ============================================
+// CREATOR - SOCIAL MEDIA CONTENT (Gemini)
+// ============================================
+app.post('/api/ai/social', async (req, res) => {
+  const { topic, platform = 'general', tone = 'engaging', hashtags = true } = req.body;
+
+  if (!topic) {
+    return res.status(400).json({ error: 'Topic is required' });
+  }
+
+  if (!genAISocial) {
+    return res.status(500).json({ error: 'Gemini API for Social not configured. Please set GEMINI_API_KEY_SOCIAL in .env file' });
+  }
+
+  try {
+    const model = genAISocial.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+    const platformGuidelines = {
+      twitter: 'Keep it under 280 characters, use 1-2 hashtags',
+      instagram: 'Write engaging caption with 5-10 relevant hashtags',
+      linkedin: 'Professional tone, 1-3 hashtags, longer form content',
+      facebook: 'Friendly and engaging, 2-5 hashtags',
+      general: 'Engaging social media post with relevant hashtags'
+    };
+
+    const guidelines = platformGuidelines[platform] || platformGuidelines.general;
+
+    const prompt = `Create a ${tone} social media post for ${platform} about "${topic}". 
+    ${guidelines}. 
+    ${hashtags ? 'Include relevant hashtags at the end.' : 'Do not include hashtags.'}
+    Make it engaging and shareable.`;
+
+    // Generate with timeout (30 seconds)
+    const generatePromise = model.generateContent(prompt);
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Gemini API request timeout after 30 seconds')), 30000);
+    });
+
+    const result = await Promise.race([generatePromise, timeoutPromise]);
+    const response = await result.response;
+    const content = response.text();
+
+    res.json({
+      content: content,
+      topic: topic,
+      platform: platform,
+      tone: tone,
+      hashtags: hashtags,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Social Content Generation Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to generate social content', 
+      message: error.message 
+    });
+  }
+});
+
+// ============================================
+// CREATOR - PROMPT GENERATION (Gemini)
+// ============================================
+app.post('/api/ai/prompt', async (req, res) => {
+  const { purpose, context, style = 'detailed' } = req.body;
+
+  if (!purpose) {
+    return res.status(400).json({ error: 'Purpose is required' });
+  }
+
+  if (!genAI) {
+    return res.status(500).json({ error: 'Gemini API not configured' });
+  }
+
+  try {
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+
+    // Parse context to extract type, tone, and other details
+    let promptType = 'practical';
+    let promptTone = 'clear';
+    let includeConstraints = false;
+    let includePerspective = false;
+    let includeStyle = false;
+
+    if (context) {
+      if (context.includes('Type:')) {
+        const typeMatch = context.match(/Type:\s*(\w+)/i);
+        if (typeMatch) promptType = typeMatch[1].toLowerCase();
+      }
+      if (context.includes('Tone:')) {
+        const toneMatch = context.match(/Tone:\s*(\w+)/i);
+        if (toneMatch) promptTone = toneMatch[1].toLowerCase();
+      }
+      includeConstraints = context.includes('constraints');
+      includePerspective = context.includes('perspective');
+      includeStyle = context.includes('style');
+    }
+
+    // Extract the actual subject from purpose (remove "Generate a X AI prompt for: ")
+    const subjectMatch = purpose.match(/for:\s*(.+)$/i) || purpose.match(/about:\s*(.+)$/i) || [null, purpose];
+    const subject = subjectMatch[1]?.trim() || purpose;
+
+    // Build a direct, usable prompt based on type and tone
+    let directPrompt = '';
+    
+    if (promptType === 'creative') {
+      directPrompt = `Create a creative and imaginative ${subject}. Use a ${promptTone} tone. `;
+      if (includeStyle) directPrompt += 'Include vivid descriptions and engaging storytelling. ';
+      if (includePerspective) directPrompt += 'Write from a unique and inspiring perspective. ';
+    } else if (promptType === 'practical') {
+      directPrompt = `Create a practical, step-by-step guide for ${subject}. Use a ${promptTone} tone. `;
+      if (includeStyle) directPrompt += 'Use clear, actionable language with numbered steps. ';
+      if (includePerspective) directPrompt += 'Write from an expert, helpful perspective. ';
+    } else if (promptType === 'strategic') {
+      directPrompt = `Create a strategic analysis and plan for ${subject}. Use a ${promptTone} tone. `;
+      if (includeStyle) directPrompt += 'Include strategic insights, recommendations, and actionable steps. ';
+      if (includePerspective) directPrompt += 'Write from a strategic, forward-thinking perspective. ';
+    } else if (promptType === 'fun') {
+      directPrompt = `Create a fun and engaging ${subject}. Use a ${promptTone} tone. `;
+      if (includeStyle) directPrompt += 'Make it entertaining and enjoyable to read. ';
+      if (includePerspective) directPrompt += 'Write from a lighthearted, approachable perspective. ';
+    } else {
+      directPrompt = `Create content about ${subject}. Use a ${promptTone} tone. `;
+    }
+
+    if (includeConstraints) {
+      directPrompt += 'Include specific constraints and requirements. ';
+    }
+
+    directPrompt += 'Provide a comprehensive, well-structured response that is ready to use.';
+
+    // Generate the prompt using Gemini
+    const generationPrompt = `You are a prompt engineering expert. Create a direct, clear, and effective AI prompt that a user can copy and paste into any AI model (like ChatGPT, Claude, Gemini, etc.) to get the desired output.
+
+User's Request: ${directPrompt}
+
+Generate ONLY the final prompt text that the user should use. Do NOT include any explanations, meta-commentary, or instructions about the prompt itself. Just output the clean, ready-to-use prompt that will work with any AI model.`;
+
+    // Add timeout for Gemini API call (30 seconds)
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Gemini API request timeout after 30 seconds')), 30000);
+    });
+
+    const generatePromise = model.generateContent(generationPrompt);
+    const result = await Promise.race([generatePromise, timeoutPromise]);
+    const response = await result.response;
+    const generatedPrompt = response.text();
+
+    res.json({
+      prompt: generatedPrompt,
+      purpose: purpose,
+      context: context || null,
+      style: style,
+      timestamp: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Prompt Generation Error:', error);
+    res.status(500).json({ 
+      error: 'Failed to generate prompt', 
+      message: error.message 
+    });
+  }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!', message: err.message });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Endpoint not found' });
+});
+
+// Start server
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 AI Studio Backend is running on port ${PORT}`);
+  console.log(`🌐 Server accessible on all interfaces (0.0.0.0:${PORT})`);
+  console.log(`🤖 Gemini AI: ${genAI ? 'Configured ✓' : 'Not configured ✗'}`);
+  console.log(`🎨 OpenAI (DALL-E): ${openai ? 'Configured ✓' : 'Not configured ✗'}`);
+  console.log(`\n📋 Available endpoints:`);
+  console.log(`   GET  /api/health - Health check`);
+  console.log(`   POST /api/ai/chat - AI chat messaging (Gemini)`);
+  console.log(`   POST /api/ai/image - Image generation (DALL-E)`);
+  console.log(`   POST /api/ai/blog - Blog content generation (Gemini)`);
+  console.log(`   POST /api/ai/social - Social media content (Gemini)`);
+  console.log(`   POST /api/ai/prompt - Prompt generation (Gemini)`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  console.log('\n🛑 Shutting down AI Studio Backend...');
+  process.exit(0);
+});

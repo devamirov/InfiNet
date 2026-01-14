@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfiNet AI - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #e5ff3a;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .section {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+
+        .section h2 {
+            color: #e5ff3a;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cccccc;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #e5ff3a;
+        }
+
+        button {
+            background: #e5ff3a;
+            color: #000000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #b8cc2e;
+        }
+
+        button.danger {
+            background: #ff4444;
+            color: #ffffff;
+        }
+
+        button.danger:hover {
+            background: #cc0000;
+        }
+
+        button.secondary {
+            background: #333;
+            color: #ffffff;
+        }
+
+        button.secondary:hover {
+            background: #444;
+        }
+
+        .models-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .model-card {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .model-info {
+            flex: 1;
+        }
+
+        .model-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #e5ff3a;
+            margin-bottom: 8px;
+        }
+
+        .model-details {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .model-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .status-active {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .status-inactive {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .model-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-key-display {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+            margin-top: 10px;
+            color: #e5ff3a;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .message.success {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .message.error {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>InfiNet AI - Admin Panel</h1>
+
+        <div id="message" class="message hidden"></div>
+
+        <!-- Add New Model Section -->
+        <div class="section">
+            <h2>Add New Model</h2>
+            <form id="addModelForm">
+                <div class="form-group">
+                    <label for="modelName">Model Name (Ollama model identifier)</label>
+                    <input type="text" id="modelName" name="modelName" required 
+                           placeholder="e.g., hf.co/DavidAU/Qwen3-4B-Gemini-TripleX-High-Reasoning-Thinking-Heretic-Uncensored-GGUF:Q8_0">
+                </div>
+                <div class="form-group">
+                    <label for="displayName">Display Name (Optional)</label>
+                    <input type="text" id="displayName" name="displayName" 
+                           placeholder="e.g., Qwen3-4B Uncensored">
+                </div>
+                <button type="submit">Add Model & Generate API Key</button>
+            </form>
+        </div>
+
+        <!-- Models List Section -->
+        <div class="section">
+            <h2>Manage Models</h2>
+            <div id="modelsList" class="models-list">
+                <p>Loading models...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let authHeader = null;
+
+        // Basic Auth
+        function setAuth() {
+            const username = 'admin';
+            // Password should be set via environment variable or server-side configuration
+            // This is a placeholder - replace with actual secure password management
+            const password = 'YOUR_ADMIN_PASSWORD'; // Set via environment variable
+            authHeader = 'Basic ' + btoa(username + ':' + password);
+        }
+
+        function showMessage(text, type = 'success') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.classList.remove('hidden');
+            setTimeout(() => {
+                messageEl.classList.add('hidden');
+            }, 5000);
+        }
+
+        async function loadModels() {
+            try {
+                setAuth();
+                const response = await fetch(`${API_BASE}/api/admin/models`, {
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load models');
+                }
+
+                const data = await response.json();
+                displayModels(data.models);
+            } catch (error) {
+                console.error('Error loading models:', error);
+                document.getElementById('modelsList').innerHTML = '<p style="color: #ff4444;">Error loading models</p>';
+            }
+        }
+
+        function displayModels(models) {
+            const container = document.getElementById('modelsList');
+            
+            if (models.length === 0) {
+                container.innerHTML = '<p style="color: #888;">No models found</p>';
+                return;
+            }
+
+            container.innerHTML = models.map(model => `
+                <div class="model-card">
+                    <div class="model-info">
+                        <div class="model-name">${model.displayName || model.id}</div>
+                        <div class="model-details">Model: ${model.modelName}</div>
+                        <div class="model-details">ID: ${model.id}</div>
+                        <div class="api-key-display">API Key: ${model.apiKey}</div>
+                        <span class="model-status ${model.active ? 'status-active' : 'status-inactive'}">
+                            ${model.active ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div class="model-actions">
+                        <button class="secondary" onclick="regenerateKey('${model.id}')">Regenerate Key</button>
+                        <button class="${model.active ? 'danger' : 'secondary'}" 
+                                onclick="toggleModel('${model.id}', ${!model.active})">
+                            ${model.active ? 'Deactivate' : 'Activate'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function regenerateKey(modelId) {
+            if (!confirm('Are you sure you want to regenerate the API key? The old key will stop working.')) {
+                return;
+            }
+
+            try {
+                setAuth();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}/regenerate-key`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to regenerate key');
+                }
+
+                const data = await response.json();
+                showMessage(`New API Key: ${data.apiKey}`, 'success');
+                loadModels();
+            } catch (error) {
+                showMessage('Error regenerating key', 'error');
+            }
+        }
+
+        async function toggleModel(modelId, active) {
+            try {
+                setAuth();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ active })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update model');
+                }
+
+                showMessage(`Model ${active ? 'activated' : 'deactivated'} successfully`, 'success');
+                loadModels();
+            } catch (error) {
+                showMessage('Error updating model', 'error');
+            }
+        }
+
+        document.getElementById('addModelForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const modelName = formData.get('modelName');
+            const displayName = formData.get('displayName');
+
+            try {
+                setAuth();
+                const response = await fetch(`${API_BASE}/api/admin/models`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        modelName: modelName,
+                        displayName: displayName || modelName
+                    })
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to add model');
+                }
+
+                const data = await response.json();
+                showMessage(`Model added! API Key: ${data.apiKey}`, 'success');
+                e.target.reset();
+                loadModels();
+            } catch (error) {
+                showMessage(error.message || 'Error adding model', 'error');
+            }
+        });
+
+        // Load models on page load
+        loadModels();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

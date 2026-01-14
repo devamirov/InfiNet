@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>About Us — Cedrus Capital</title>
+<meta content="Meet Cedrus Capital: a Dubai-based team of elite crypto traders and Web3 devs. 10+ years, audited smart contracts, transparent returns." name="description"/>
+<style>
+  :root{
+    --bg:#0b1730;
+    --panel:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.12);
+    --ink:#e8f1ff;
+    --muted:#a8b7d6;
+    --cedar-1:#facc15;
+    --cedar-2:#fde047;
+    --radius:18px;
+    --shadow: 0 10px 40px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--cedar-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+  .btn{display:inline-flex;align-items:center;gap:10px;border-radius:999px;padding:12px 18px;border:1px solid transparent;font-weight:800;cursor:pointer;white-space:nowrap;transition:transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease}
+  .btn-primary{background:linear-gradient(135deg,var(--cedar-1),var(--cedar-2));color:#0b2a1f;box-shadow:var(--shadow)}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn:hover,.btn:focus-visible{transform:translateY(-1px);box-shadow:0 0 0 2px rgba(250,204,21,.28), 0 8px 26px rgba(250,204,21,.18), var(--shadow);outline:none}
+  .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--panel);backdrop-filter:blur(8px);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:.9rem}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .pad{padding:18px}
+  .muted{color:var(--muted)}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  @media (max-width:980px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:20;background:rgba(11,23,48,.75);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900}
+  .brand svg{width:28px;height:28px}
+  .menu{display:flex;gap:18px;align-items:center}
+  .menu a{color:var(--ink);opacity:.95}
+
+  /* Hero */
+  .hero{padding:54px 0 18px}
+  .title{font-size:clamp(2rem,5.4vw,3.6rem);line-height:1.05;margin:8px 0 6px;font-weight:900}
+  .spark{background:linear-gradient(90deg,#fff,var(--cedar-2) 60%,var(--cedar-1));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{max-width:72ch;font-size:1.06rem}
+
+  /* Live pulse */
+  @keyframes livePulse {
+    0%,100%{transform:translateY(0) scale(1); box-shadow:none}
+    50%{transform:translateY(-1px) scale(1.02); box-shadow:0 0 0 10px rgba(250,204,21,.12)}
+  }
+  .live{animation:livePulse 2.0s ease-in-out infinite;will-change:transform,box-shadow}
+  @media (prefers-reduced-motion: reduce){ .live{animation:none} }
+
+  /* Metrics */
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px}
+  .metric{padding:16px;border-radius:16px;border:1px dashed var(--line);background:rgba(255,255,255,.02);text-align:center}
+  .metric b{font-size:1.6rem}
+
+  /* Sections */
+  section h2{margin:6px 0 10px}
+  .list{list-style:none;margin:10px 0 0;padding:0}
+  .list li{display:flex;gap:10px;align-items:flex-start;margin:8px 0;color:var(--muted)}
+
+  /* Team */
+  .team-card{overflow:hidden;display:flex;flex-direction:column}
+  .avatar{width:100%;aspect-ratio:1/1;border-radius:14px;object-fit:cover;border:1px solid var(--line);background:#111}
+  .role{color:var(--muted);font-size:.92rem}
+  .links{display:flex;gap:10px;margin-top:8px;flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--ink);font-size:.86rem}
+  .chip:hover{border-color:var(--cedar-1)}
+
+  /* Values */
+  .values{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .value{padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+
+  /* CTA footer */
+  .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  footer{border-top:1px solid var(--line);margin-top:34px}
+  .foot{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px;padding:24px 0;color:var(--muted)}
+
+  /* ======== Mobile-only refinements (keep desktop layout) ======== */
+  @media (max-width: 768px){
+    .wrap{padding:0 14px}
+    .hero{padding:36px 0 12px}
+    .title{font-size:clamp(1.8rem,8vw,2.4rem)}
+    .sub{font-size:1rem}
+    .metrics{grid-template-columns:1fr 1fr}
+    .metric b{font-size:1.4rem}
+    .btn{padding:14px 18px;font-size:1rem}
+    .cta .btn{width:100%;justify-content:center}
+    .pill{font-size:.88rem;padding:7px 10px}
+    .grid-2,.grid-3,.grid-4,.values{grid-template-columns:1fr}
+    .card.pad{padding:16px}
+    .links .chip{padding:8px 12px;font-size:.95rem}
+    .foot{grid-template-columns:1fr;gap:6px}
+  }
+</style>
+<style>
+/* Button text black for yellow (primary) buttons */
+.btn-primary {
+  background: linear-gradient(135deg,var(--cedar-1),var(--cedar-2));
+  color: black !important;
+  text-decoration: none !important;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  color: black !important;
+  text-decoration: none !important;
+}
+/* Remove underline from ghost buttons too */
+.btn-ghost {
+  text-decoration: none !important;
+}
+.btn-ghost:hover,
+.btn-ghost:focus,
+.btn-ghost:active {
+  text-decoration: none !important;
+}
+</style><style>
+/* Force Contact button text yellow */
+a.btn-primary[href*="Contact"],
+a.btn-ghost[href*="Contact"] {
+  color: #facc15 !important;
+  text-decoration: none !important;
+}
+a.btn-primary[href*="Contact"]:hover,
+a.btn-primary[href*="Contact"]:focus,
+a.btn-primary[href*="Contact"]:active,
+a.btn-ghost[href*="Contact"]:hover,
+a.btn-ghost[href*="Contact"]:focus,
+a.btn-ghost[href*="Contact"]:active {
+  color: #facc15 !important;
+  text-decoration: none !important;
+}
+</style></head>
+<body>
+<header>
+<div class="wrap nav">
+<div class="brand">
+<svg aria-hidden="true" fill="none" viewbox="0 0 64 64">
+<defs><lineargradient id="g" x1="0" x2="64" y1="0" y2="64"><stop stop-color="#facc15"></stop><stop offset="1" stop-color="#fde047"></stop></lineargradient></defs>
+<path d="M32 6c7 8 12 10 20 14-6 0-10 2-14 5 6 2 11 4 18 6-9 1-16 3-24 8-8-5-15-7-24-8 7-2 12-4 18-6-4-3-8-5-14-5 8-4 13-6 20-14z" fill="url(#g)"></path>
+<path d="M31 36h2v20h-2z" fill="#facc15"></path>
+</svg><span style="color:#facc15;">Cedrus Capital®</span></div>
+<nav aria-label="Primary" class="menu">
+<a href="index.html">Home</a>
+<a href="#values">Values</a>
+<a class="btn btn-ghost" href="https://wa.me/17473508060" style="color:#facc15">Contact</a>
+</nav>
+</div>
+</header>
+<!-- Hero -->
+<section class="hero">
+<div class="wrap">
+<div class="pill">🇦🇪 Dubai Based • 🇱🇧 Lebanese &amp; 🇺🇸 American founders • 10+ years</div>
+<h1 class="title">We build <span class="spark">trust</span> into crypto investing.</h1>
+<p class="sub muted">We’re a team of three Lebanese and one Spanish <b>crypto traders &amp; Web3 smart‑contract developers</b>. Based in Dubai, we’ve spent a decade shipping audited code, designing risk‑managed strategies, and helping clients grow their USDT the disciplined way.</p>
+<div class="cta">
+<a class="btn btn-primary" href="staking.html">Explore Staking Plans</a>
+<a class="btn btn-ghost" href="#team">Meet the Team</a>
+</div>
+<div class="metrics">
+<div class="metric card"><b>10+ yrs</b><br/><span class="muted">combined crypto experience</span></div>
+<div class="metric card"><b>Dubai</b><br/><span class="muted">HQ • Global clients</span></div>
+<div class="metric card"><b>Audited</b><br/><span class="muted">smart contracts</span></div>
+<div class="metric card"><b>24/7</b><br/><span class="muted">client support</span></div>
+</div>
+</div>
+</section>
+<!-- Who we are -->
+<section class="wrap" id="who">
+<h2>Who we are</h2>
+<div class="grid-2">
+<div class="card pad">
+<h3 style="margin:0 0 6px">Builders. Traders. Risk managers.</h3>
+<ul class="list">
+<li>Seasoned <b>algorithmic traders</b> and <b>Web3 engineers</b> who ship clean, audited code.</li>
+<li><b>Dubai-based</b> with roots in Lebanon &amp; Spain, operating across MENA &amp; EU timezones.</li>
+<li>Focused on <b>transparent, fixed-term USDT returns</b> and capital protection.</li>
+<li>Battle-tested playbooks for market swings, liquidity crunches, and smart‑contract risks.</li>
+</ul>
+<div class="cta">
+<a class="btn btn-ghost" href="login.html">Client Dashboard</a>
+<a class="btn btn-primary" href="staking.html">Start Staking</a>
+</div>
+</div>
+<div class="card pad">
+<h3 style="margin:0 0 6px">Why clients choose us</h3>
+<ul class="list">
+<li>Clear terms: <b>14 days = 10%</b>, <b>28 days = 30%</b> (fixed, not daily compounding).</li>
+<li>On-chain discipline: multi‑sig, cold storage, and contract audits.</li>
+<li>Human support: real people, real answers, instant chat &amp; weekly updates.</li>
+<li>Skin in the game: we stake alongside our clients.</li>
+</ul>
+<div class="pill">No hype. No memes. Just math, code, and execution.</div>
+</div>
+</div>
+</section>
+<!-- Our approach -->
+<section class="wrap" id="approach" style="margin-top:20px">
+<h2>How we work</h2>
+<div class="grid-3">
+<div class="card pad">
+<b>1) Research</b><br/><span class="muted">Market structure, liquidity, L2 ecosystem signals, and counter‑party risk.</span>
+</div>
+<div class="card pad">
+<b>2) Build</b><br/><span class="muted">Smart contracts, bots, and guardrails audited before going live.</span>
+</div>
+<div class="card pad">
+<b>3) Execute</b><br/><span class="muted">Disciplined position sizing with fixed‑term client plans.</span>
+</div>
+</div>
+</section>
+<!-- Team -->
+<section class="wrap" id="team" style="margin-top:20px">
+<h2>Meet the core team</h2>
+<p class="muted">Four founders: <b>3 Lebanese</b> &amp; <b>1 American</b>, all Dubai‑based. Add your real names, photos, and profile links here.</p>
+<div class="grid-4">
+<!-- Team Member 1 -->
+<div class="card pad team-card">
+<img alt="" class="avatar" src="tarek.jpg"/>
+<h3 style="margin:10px 0 0">CEO Karim Halabi</h3>
+<div class="role">Leader &amp; Vision</div>
+<div class="links">
+<a class="chip" href="https://linkedin.com/in/yourprofile1" rel="noopener" target="_blank">Telegram</a>
+<a class="chip" href="https://x.com/yourprofile1" rel="noopener" target="_blank">X / Twitter</a>
+<a class="chip" href="mailto:founder1@yourdomain">Email</a>
+</div>
+</div>
+<!-- Team Member 2 -->
+<div class="card pad team-card">
+<img alt="" class="avatar" src="nour.jpg"/>
+<h3 style="margin:10px 0 0">CFO Nour Abou Saab</h3>
+<div class="role">Operations &amp; Financial risk management</div>
+<div class="links">
+<a class="chip" href="https://linkedin.com/in/yourprofile2" rel="noopener" target="_blank">Telegram</a>
+<a class="chip" href="https://github.com/yourprofile2" rel="noopener" target="_blank">X / Twitter</a>
+<a class="chip" href="mailto:founder2@yourdomain">Email</a>
+</div>
+</div>
+<!-- Team Member 3 -->
+<div class="card pad team-card">
+<img alt="" class="avatar" src="rami.jpg"/>
+<h3 style="margin:10px 0 0">CMO Rami Ayoub</h3>
+<div class="role">Growth &amp; Outreach</div>
+<div class="links">
+<a class="chip" href="https://linkedin.com/in/yourprofile3" rel="noopener" target="_blank">Telegram</a>
+<a class="chip" href="https://x.com/yourprofile3" rel="noopener" target="_blank">X / Twitter</a>
+<a class="chip" href="mailto:founder3@yourdomain">Email</a>
+</div>
+</div>
+<!-- Team Member 4 -->
+<div class="card pad team-card">
+<img alt="" class="avatar" src="csabi.jpg"/>
+<h3 style="margin:10px 0 0">CTO Csabi Collins</h3>
+<div class="role">Blockchain Architect &amp; Security</div>
+<div class="links">
+<a class="chip" href="https://linkedin.com/in/yourprofile4" rel="noopener" target="_blank">Telegram</a>
+<a class="chip" href="https://github.com/yourprofile4" rel="noopener" target="_blank">GitHub</a>
+<a class="chip" href="mailto:founder4@yourdomain">Email</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Values / Trust -->
+<section class="wrap" id="values" style="margin-top:20px">
+<h2>What we believe</h2>
+<div class="values">
+<div class="value">
+<b>Transparency first</b>
+<p class="muted">Clear terms, live dashboards, and on‑chain receipts. No hidden fine print.</p>
+</div>
+<div class="value">
+<b>Security by design</b>
+<p class="muted">Audit before scale. Cold storage, multi‑sig, and separation of duties.</p>
+</div>
+<div class="value">
+<b>Aligned incentives</b>
+<p class="muted">We co‑invest with our clients and succeed only when you do.</p>
+</div>
+</div>
+</section>
+<!-- Call to Action -->
+<section class="wrap" id="contact" style="margin-top:24px">
+<div class="card pad">
+<h2 style="margin:6px 0 4px">Ready to get started?</h2>
+<p class="muted">Book a quick call or open the dashboard to explore our 14‑day and 28‑day fixed‑return plans.</p>
+<div class="cta">
+<a class="btn btn-primary" href="login.html">Open Dashboard</a>
+<a class="btn btn-ghost" href="https://wa.me/17473508060">Talk to an Advisor</a>
+</div>
+<div class="pill" style="margin-top:12px">Reminder: Crypto carries risk. We operate with strict risk controls, but never invest more than you can afford to lose.</div>
+</div>
+</section>
+<footer>
+<div class="wrap foot">
+<div>
+<b>Cedrus Capital®</b>
+<div class="muted">© <span id="year"></span> Cedrus Capital®. All rights reserved.</div>
+</div>
+<div>
+<b>Legal</b>
+<div><a class="muted" href="#">Risk Disclosure</a></div>
+<div><a class="muted" href="#">Terms of Service</a></div>
+<div><a class="muted" href="#">Privacy Policy</a></div>
+</div>
+<div>
+<b>Follow</b>
+<div><a class="muted" href="#">Instagram</a></div>
+<div><a class="muted" href="#">Facebook</a></div>
+<div><a class="muted" href="https://wa.me/17473508060">WhatsApp</a></div>
+</div>
+</div>
+</footer>
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  // Smooth scroll for anchors
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', function(e){
+      const id = this.getAttribute('href').slice(1);
+      const t = document.getElementById(id);
+      if(t){ e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+</script>
+</body>
+</html>

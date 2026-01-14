@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InfiNet AI - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #e5ff3a;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .section {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+
+        .section h2 {
+            color: #e5ff3a;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #cccccc;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #e5ff3a;
+        }
+
+        button {
+            background: #e5ff3a;
+            color: #000000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #b8cc2e;
+        }
+
+        button.danger {
+            background: #ff4444;
+            color: #ffffff;
+        }
+
+        button.danger:hover {
+            background: #cc0000;
+        }
+
+        button.secondary {
+            background: #333;
+            color: #ffffff;
+        }
+
+        button.secondary:hover {
+            background: #444;
+        }
+
+        button.restart {
+            background: #ff8800;
+            color: #ffffff;
+        }
+
+        button.restart:hover {
+            background: #ff6600;
+        }
+
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions h1 {
+            margin-bottom: 0;
+        }
+
+        .models-list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .model-card {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .model-info {
+            flex: 1;
+        }
+
+        .model-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #e5ff3a;
+            margin-bottom: 8px;
+        }
+
+        .model-details {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .model-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-top: 8px;
+        }
+
+        .status-active {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .status-inactive {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .model-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .api-key-display {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 0.9em;
+            word-break: break-all;
+            margin-top: 10px;
+            color: #e5ff3a;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .message.success {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .message.error {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        .message.warning {
+            background: #ffaa00;
+            color: #000;
+        }
+
+        .api-key-masked {
+            opacity: 0.8;
+        }
+
+        .api-key-revealed {
+            border-color: #ff4444;
+            background: #1a0a0a;
+        }
+
+        .api-key-revealed code {
+            background: #2a0a0a;
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-actions">
+            <h1>InfiNet AI - Admin Panel</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="restart" id="restartServerBtn" onclick="restartServer()">🔄 Restart AI Server</button>
+            </div>
+        </div>
+
+        <div id="message" class="message hidden"></div>
+
+        <!-- Add New Model Section -->
+        <div class="section">
+            <h2>Add New Model</h2>
+            <form id="addModelForm">
+                <div class="form-group">
+                    <label for="modelName">Model Name (Ollama model identifier)</label>
+                    <input type="text" id="modelName" name="modelName" required 
+                           placeholder="e.g., hf.co/DavidAU/Qwen3-4B-Gemini-TripleX-High-Reasoning-Thinking-Heretic-Uncensored-GGUF:Q8_0">
+                </div>
+                <div class="form-group">
+                    <label for="displayName">Display Name (Optional)</label>
+                    <input type="text" id="displayName" name="displayName" 
+                           placeholder="e.g., Qwen3-4B Uncensored">
+                </div>
+                <button type="submit">Add Model & Generate API Key</button>
+            </form>
+        </div>
+
+        <!-- Models List Section -->
+        <div class="section">
+            <h2>Manage Models</h2>
+            <div id="modelsList" class="models-list">
+                <p>Loading models...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // Basic Auth - Get credentials from sessionStorage or prompt user
+        // Note: Use the same credentials you entered in the browser's Basic Auth prompt
+        async function getAuthHeader() {
+            let username = sessionStorage.getItem('adminUsername') || 'InfiNetUn##00$$';
+            let password = sessionStorage.getItem('adminPassword');
+            
+            if (!password) {
+                // Prompt user for password (should match what they entered in browser prompt)
+                password = prompt('Enter admin password (same as browser prompt):');
+                if (!password) {
+                    throw new Error('Password required');
+                }
+                sessionStorage.setItem('adminUsername', username);
+                sessionStorage.setItem('adminPassword', password);
+            }
+            
+            return 'Basic ' + btoa(username + ':' + password);
+        }
+        
+        // Helper to handle 401 errors and re-prompt for credentials
+        async function handleAuthError(error, retryFn) {
+            if (error.status === 401) {
+                // Clear stored credentials and re-prompt
+                sessionStorage.removeItem('adminPassword');
+                const password = prompt('Invalid credentials. Enter admin password:');
+                if (password) {
+                    sessionStorage.setItem('adminPassword', password);
+                    return retryFn();
+                }
+            }
+            throw error;
+        }
+
+        function showMessage(text, type = 'success') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.classList.remove('hidden');
+            setTimeout(() => {
+                messageEl.classList.add('hidden');
+            }, 5000);
+        }
+
+        async function loadModels() {
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models`, {
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, loadModels);
+                    }
+                    throw new Error('Failed to load models');
+                }
+
+                const data = await response.json();
+                displayModels(data.models);
+            } catch (error) {
+                console.error('Error loading models:', error);
+                document.getElementById('modelsList').innerHTML = '<p style="color: #ff4444;">Error loading models</p>';
+            }
+        }
+
+        // Store revealed keys temporarily (in memory only, cleared on page reload)
+        const revealedKeys = {};
+
+        function displayModels(models) {
+            const container = document.getElementById('modelsList');
+            
+            if (models.length === 0) {
+                container.innerHTML = '<p style="color: #888;">No models found</p>';
+                return;
+            }
+
+            container.innerHTML = models.map(model => {
+                // Check if key has been revealed for this model
+                const isRevealed = revealedKeys[model.id] !== undefined;
+                const displayKey = isRevealed ? revealedKeys[model.id] : model.apiKey;
+                const keyDisplayClass = isRevealed ? 'api-key-revealed' : 'api-key-masked';
+                
+                return `
+                <div class="model-card">
+                    <div class="model-info">
+                        <div class="model-name">${model.displayName || model.id}</div>
+                        <div class="model-details">Model: ${model.modelName}</div>
+                        <div class="model-details">ID: ${model.id}</div>
+                        <div class="api-key-display ${keyDisplayClass}">
+                            <span>API Key: </span>
+                            <code style="font-family: monospace; background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">${displayKey}</code>
+                            ${isRevealed ? '<span style="color: #ff4444; font-size: 0.9em; margin-left: 8px;">⚠️ Revealed</span>' : ''}
+                        </div>
+                        <span class="model-status ${model.active ? 'status-active' : 'status-inactive'}">
+                            ${model.active ? 'Active' : 'Inactive'}
+                        </span>
+                    </div>
+                    <div class="model-actions">
+                        ${!isRevealed ? `<button class="secondary" onclick="revealKey('${model.id}')">Reveal Key</button>` : ''}
+                        <button class="secondary" onclick="regenerateKey('${model.id}')">Regenerate Key</button>
+                        <button class="${model.active ? 'danger' : 'secondary'}" 
+                                onclick="toggleModel('${model.id}', ${!model.active})">
+                            ${model.active ? 'Deactivate' : 'Activate'}
+                        </button>
+                        ${!model.active ? `<button class="danger" onclick="deleteModel('${model.id}')" style="margin-left: 10px;">Delete</button>` : ''}
+                        ${model.active ? `
+                            ${model.assignedTo !== 'model1' ? `<button class="secondary" onclick="assignModel('${model.id}', 'model1')" style="margin-left: 10px;">Assign to Coder</button>` : ''}
+                            ${model.assignedTo !== 'model2' ? `<button class="secondary" onclick="assignModel('${model.id}', 'model2')" style="margin-left: 10px;">Assign to Thinker</button>` : ''}
+                            ${model.assignedTo ? `<button class="danger" onclick="unassignModel('${model.id}')" style="margin-left: 10px;">Unassign</button>` : ''}
+                        ` : ''}
+                    </div>
+                    ${model.assignedTo ? `<div style="color: #00ff00; font-size: 0.9em; margin-top: 8px;">✓ Assigned to ${model.assignedTo === 'model1' ? 'Coder' : 'Thinker'} slot</div>` : ''}
+                </div>
+            `;
+            }).join('');
+        }
+
+        async function revealKey(modelId) {
+            if (!confirm('⚠️ SECURITY WARNING: Revealing API keys exposes sensitive credentials. Only reveal if absolutely necessary. Continue?')) {
+                return;
+            }
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}/reveal-key`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => revealKey(modelId));
+                    }
+                    throw new Error('Failed to reveal key');
+                }
+
+                const data = await response.json();
+                // Store revealed key temporarily
+                revealedKeys[modelId] = data.apiKey;
+                
+                // Reload models to show revealed key
+                loadModels();
+                
+                // Show warning message
+                showMessage('⚠️ API Key revealed. This key is sensitive - do not share it!', 'warning');
+            } catch (error) {
+                showMessage('Error revealing key', 'error');
+            }
+        }
+
+        async function regenerateKey(modelId) {
+            if (!confirm('Are you sure you want to regenerate the API key? The old key will stop working.')) {
+                return;
+            }
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}/regenerate-key`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => regenerateKey(modelId));
+                    }
+                    throw new Error('Failed to regenerate key');
+                }
+
+                const data = await response.json();
+                showMessage(`New API Key: ${data.apiKey}`, 'success');
+                loadModels();
+            } catch (error) {
+                showMessage('Error regenerating key', 'error');
+            }
+        }
+
+        async function toggleModel(modelId, active) {
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ active })
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => toggleModel(modelId, active));
+                    }
+                    throw new Error('Failed to update model');
+                }
+
+                showMessage(`Model ${active ? 'activated' : 'deactivated'} successfully`, 'success');
+                loadModels();
+            } catch (error) {
+                showMessage('Error updating model', 'error');
+            }
+        }
+
+        async function deleteModel(modelId) {
+            if (!confirm('⚠️ WARNING: This will permanently delete the model and its API key from the system. This action cannot be undone. Are you sure?')) {
+                return;
+            }
+
+            // Double confirmation for safety
+            if (!confirm('⚠️ FINAL CONFIRMATION: Delete this model permanently? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => deleteModel(modelId));
+                    }
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to delete model');
+                }
+
+                const data = await response.json();
+                showMessage('Model deleted permanently', 'success');
+                loadModels();
+            } catch (error) {
+                showMessage(error.message || 'Error deleting model', 'error');
+            }
+        }
+
+        async function assignModel(modelId, slot) {
+            const slotName = slot === 'model1' ? 'Coder' : 'Thinker';
+            if (!confirm(`Assign this model to the ${slotName} slot? This will replace the current ${slotName} model in the chat interface.`)) {
+                return;
+            }
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}/assign/${slot}`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => assignModel(modelId, slot));
+                    }
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to assign model');
+                }
+
+                const data = await response.json();
+                showMessage(`Model assigned to ${slotName} slot successfully`, 'success');
+                loadModels();
+            } catch (error) {
+                showMessage(error.message || 'Error assigning model', 'error');
+            }
+        }
+
+        async function unassignModel(modelId) {
+            if (!confirm('Unassign this model from its slot? The chat will fall back to the default model.')) {
+                return;
+            }
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models/${modelId}/unassign`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => unassignModel(modelId));
+                    }
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to unassign model');
+                }
+
+                const data = await response.json();
+                showMessage('Model unassigned successfully', 'success');
+                loadModels();
+            } catch (error) {
+                showMessage(error.message || 'Error unassigning model', 'error');
+            }
+        }
+
+        async function restartServer() {
+            if (!confirm('Are you sure you want to restart the AI server? This will temporarily interrupt all AI services.')) {
+                return;
+            }
+
+            const restartBtn = document.getElementById('restartServerBtn');
+            const originalText = restartBtn.textContent;
+            restartBtn.disabled = true;
+            restartBtn.textContent = '🔄 Restarting...';
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/restart-server`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        return handleAuthError({ status: 401 }, () => restartServer());
+                    }
+                    const errorData = await response.json().catch(() => ({ error: 'Failed to restart server' }));
+                    throw new Error(errorData.error || 'Failed to restart server');
+                }
+
+                const data = await response.json();
+                showMessage(data.message || 'Server restart initiated successfully', 'success');
+                
+                // Wait a bit then reload the page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            } catch (error) {
+                console.error('Restart error:', error);
+                showMessage('Error restarting server: ' + error.message, 'error');
+                restartBtn.disabled = false;
+                restartBtn.textContent = originalText;
+            }
+        }
+
+        document.getElementById('addModelForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const modelName = formData.get('modelName');
+            const displayName = formData.get('displayName');
+
+            try {
+                const authHeader = await getAuthHeader();
+                const response = await fetch(`${API_BASE}/api/admin/models`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': authHeader,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        modelName: modelName,
+                        displayName: displayName || modelName
+                    })
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        // Retry with new credentials
+                        sessionStorage.removeItem('adminPassword');
+                        const authHeader = await getAuthHeader();
+                        const retryResponse = await fetch(`${API_BASE}/api/admin/models`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': authHeader,
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                modelName: modelName,
+                                displayName: displayName || modelName
+                            })
+                        });
+                        if (!retryResponse.ok) {
+                            const error = await retryResponse.json();
+                            throw new Error(error.error || 'Failed to add model');
+                        }
+                        const data = await retryResponse.json();
+                        showMessage(`Model added! API Key: ${data.apiKey}`, 'success');
+                        e.target.reset();
+                        loadModels();
+                        return;
+                    }
+                    const error = await response.json();
+                    throw new Error(error.error || 'Failed to add model');
+                }
+
+                const data = await response.json();
+                showMessage(`Model added! API Key: ${data.apiKey}`, 'success');
+                e.target.reset();
+                loadModels();
+            } catch (error) {
+                showMessage(error.message || 'Error adding model', 'error');
+            }
+        });
+
+        // Load models on page load
+        loadModels();
+    </script>
+</body>
+</html>
+
