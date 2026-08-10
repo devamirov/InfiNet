@@ -1,0 +1,25 @@
+{
+  "name": "InfiNet - Internet Business Solutions",
+  "short_name": "InfiNet",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "theme_color": "#060097",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}
+

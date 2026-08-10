@@ -1,0 +1,24 @@
+User-agent: *
+Allow: /
+
+# Block legacy WordPress surfaces (site is static, these serve no value)
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /wp-json/
+Disallow: /wp-includes/*.php$
+Disallow: /feed/
+Disallow: /comments/
+
+# Backend / API paths (not public SEO surfaces)
+Disallow: /api/
+Disallow: /backend/
+Disallow: /admin/
+Disallow: /ai-studio-backend/
+Disallow: /file-converter-service/
+Disallow: /infinet-tools-backend/
+Disallow: /automation/
+Disallow: /templater/
+Disallow: /darkweb/
+Disallow: /infinethub/
+
+Sitemap: https://infinet.services/sitemap.xml

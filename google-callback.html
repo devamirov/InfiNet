@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Signing in...</title>
+</head>
+<body>
+<script>
+// Extract token and email from URL hash
+const hash = window.location.hash.substring(1);
+const params = new URLSearchParams(hash);
+const token = params.get('token');
+const email = params.get('email');
+
+if (token && email) {
+  // Store token and user info
+  localStorage.setItem('hosting_token', token);
+  localStorage.setItem('hosting_user', JSON.stringify({ email: decodeURIComponent(email) }));
+  
+  // Redirect to dashboard
+          window.location.href = '/hosting/dashboard';
+} else {
+  // Error - redirect back to sign in
+  window.location.href = '/hosting/?error=google_auth_failed';
+}
+</script>
+</body>
+</html>

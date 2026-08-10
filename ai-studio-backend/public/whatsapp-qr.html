@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WhatsApp QR – InfiNet AI</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #eee;
+      padding: 1rem;
+      text-align: center;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .sub { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+    #status { min-height: 2rem; margin-bottom: 1rem; font-weight: 500; }
+    #qrcode {
+      margin: 0 auto 1rem;
+      padding: 16px;
+      background: #fff;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    #qrcode canvas, #qrcode img { display: block !important; }
+    .ready { color: #22c55e; }
+    .init { color: #eab308; }
+    a { color: #60a5fa; }
+  </style>
+</head>
+<body>
+  <h1>InfiNet AI – WhatsApp</h1>
+  <p class="sub">Scan with the phone number +17473508060</p>
+  <div id="status" class="init">Loading…</div>
+  <div id="qrcode"></div>
+  <p class="sub"><a href="/api/whatsapp/status">Check status (JSON)</a></p>
+
+  <script>
+    (function () {
+      const statusEl = document.getElementById('status');
+      const qrcodeEl = document.getElementById('qrcode');
+      const pollUrl = '/api/whatsapp/qr';
+      let pollTimer = null;
+
+      function setStatus(text, isReady) {
+        statusEl.textContent = text;
+        statusEl.className = isReady ? 'ready' : 'init';
+      }
+
+      function renderQR(qrString) {
+        qrcodeEl.innerHTML = '';
+        if (!window.QRCode) {
+          setStatus('QR library failed to load.', false);
+          return;
+        }
+        try {
+          new QRCode(qrcodeEl, { text: qrString, width: 256, height: 256 });
+        } catch (e) {
+          setStatus('Failed to render QR: ' + e.message, false);
+        }
+      }
+
+      function poll() {
+        fetch(pollUrl)
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.ready) {
+              qrcodeEl.innerHTML = '';
+              setStatus('✓ ' + (data.message || 'WhatsApp is connected and ready.'), true);
+              clearInterval(pollTimer);
+              pollTimer = null;
+              return;
+            }
+            if (data.qr) {
+              setStatus('Scan this QR with WhatsApp on +17473508060', false);
+              renderQR(data.qr);
+            } else {
+              setStatus(data.message || 'WhatsApp is initializing…', false);
+              qrcodeEl.innerHTML = '';
+            }
+          })
+          .catch(function (err) {
+            setStatus('Error: ' + err.message, false);
+            qrcodeEl.innerHTML = '';
+          });
+      }
+
+      poll();
+      pollTimer = setInterval(poll, 4000);
+    })();
+  </script>
+</body>
+</html>

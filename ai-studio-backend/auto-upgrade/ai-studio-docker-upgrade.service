@@ -1,0 +1,15 @@
+[Unit]
+Description=AI Studio Backend: build and start Docker container
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/var/www/infinet.services/ai-studio-backend
+ExecStart=/var/www/infinet.services/ai-studio-backend/docker-upgrade.sh
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

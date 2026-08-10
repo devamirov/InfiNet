@@ -1,0 +1,19 @@
+# ai-studio-backend
+# Build: docker compose build
+# Run:   docker compose up -d
+# Logs:  docker compose logs -f ai-studio-backend
+services:
+  ai-studio-backend:
+    build: .
+    container_name: ai-studio-backend
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=production
+      - PORT=3002
+    env_file:
+      - .env
+    # Optional: mount .env from host
+    # volumes:
+    #   - ./.env:/app/.env:ro

@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Cedrus Capital — Grow Strong</title>
+<meta name="description" content="Cedrus Capital: sleek investing built for small investors. Low fees, diversified portfolios, and real human support."/>
+
+<style>
+  /* ============== Core Theme ============== */
+  :root{
+    --bg-1:#070914;
+    --bg-2:#0b1730;
+    --cedar-1:#facc15;
+    --cedar-2:#fde047;
+    --ink:#e8f1ff;
+    --ink-2:#a8b7d6;
+    --line:rgba(255,255,255,.12);
+    --glass:rgba(255,255,255,.06);
+    --shadow:0 10px 40px rgba(0,0,0,.35);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:radial-gradient(1200px 700px at 90% -10%, rgba(250,204,21,.12), transparent 55%), linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+  a{color:var(--cedar-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 18px}
+  .pill{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(8px);border-radius:999px;padding:8px 12px;color:var(--ink-2);font-size:.9rem}
+  .btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,var(--cedar-1),var(--cedar-2));color:#012d1b;box-shadow:var(--shadow)}
+  .btn-ghost{border:1px solid var(--line);background:transparent;color:var(--ink)}
+  .muted{color:var(--ink-2)}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .card{background:var(--glass);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-pad{padding:18px}
+  .tag{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:6px 10px;color:var(--ink-2);font-size:.82rem}
+
+  /* Floating orbs */
+  .orb{position:absolute;filter:blur(30px);opacity:.35;z-index:0}
+  .orb.a{width:240px;height:240px;background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.15), transparent 60%);top:80px;left:-60px;animation:float 12s ease-in-out infinite}
+  .orb.b{width:300px;height:300px;background:radial-gradient(circle at 70% 50%, rgba(255,255,255,.1), transparent 60%);bottom:8vh;right:-40px;animation:float 14s ease-in-out infinite reverse}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:30;background:rgba(7,9,20,.55);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.3px}
+  .brand svg{width:30px;height:30px}
+  .menu{display:flex;align-items:center;gap:20px}
+  .menu a{color:var(--ink);opacity:.9}
+  .burger{display:none;border:1px solid var(--line);color:var(--ink);background:transparent;border-radius:12px;padding:8px 10px}
+  @media (max-width:980px){
+    .menu{display:none}
+    .burger{display:inline-block}
+    .nav-open .menu{display:flex;position:absolute;left:0;right:0;top:56px;background:rgba(7,9,20,.98);padding:14px;border-bottom:1px solid var(--line);flex-direction:column}
+  }
+
+  /* Hero */
+  .hero{position:relative;z-index:1;padding:56px 0 28px}
+  .hero .title{font-size:clamp(2rem,5.6vw,3.8rem);line-height:1.03;margin:14px 0 10px;font-weight:900;letter-spacing:.2px}
+  .spark{background:linear-gradient(90deg,#fff, var(--cedar-2) 60%, var(--cedar-1));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{font-size:1.08rem;max-width:62ch}
+  .hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+  .kpi{padding:16px;border-radius:14px;border:1px dashed var(--line);background:rgba(255,255,255,.02)}
+  .kpi b{font-size:1.2rem}
+
+  /* Showcase Card */
+  .show{display:grid;grid-template-columns:1.1fr .9fr;gap:18px;margin-top:28px}
+  .screen{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03);min-height:320px}
+  .ticker{position:absolute;left:0;right:0;bottom:0;background:rgba(0,0,0,.25);border-top:1px solid var(--line);display:flex;gap:24px;overflow:auto;padding:10px 12px;font-family:ui-monospace,Menlo,monospace}
+  .ticker span{white-space:nowrap}
+  .estimator .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  input, select, textarea{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:12px;outline:none}
+  input:focus, select:focus, textarea:focus{border-color:var(--cedar-2)}
+
+  /* Plans */
+  .plans{margin-top:18px}
+  .plan{position:relative;overflow:hidden}
+  .plan .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .price{font-weight:900;font-size:1.8rem}
+  .plan.pop{outline:2px solid var(--cedar-2)}
+  .list{list-style:none;margin:10px 0 0;padding:0}
+  .list li{display:flex;gap:10px;align-items:flex-start;margin:8px 0;color:var(--ink-2)}
+  .list svg{min-width:18px;margin-top:2px}
+
+  /* Steps */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .step{padding:16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .num{width:30px;height:30px;border-radius:999px;background:linear-gradient(135deg,var(--cedar-1),var(--cedar-2));display:inline-flex;align-items:center;justify-content:center;color:#00231a;font-weight:900}
+
+  /* Testimonials (pure CSS slider) */
+  .slider{position:relative;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .slides{display:flex;transition:transform .6s ease}
+  .slide{min-width:100%;padding:18px}
+  .dots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+  .dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.25)}
+  .dot.active{background:var(--cedar-2)}
+
+  /* Trust */
+  .trust{display:grid;grid-template-columns:1.2fr .8fr;gap:18px}
+  .doc{padding:18px;border-radius:16px;border:1px dashed var(--cedar-2);background:rgba(0,0,0,.2)}
+
+  /* Footer */
+  footer{border-top:1px solid var(--line);margin-top:34px}
+  .foot{display:grid;grid-template-columns:2fr 1fr 1fr;gap:18px;padding:24px 0;color:var(--ink-2)}
+
+  /* Responsive */
+  @media (max-width:980px){
+    .grid-3,.grid-2{grid-template-columns:1fr}
+    .kpis{grid-template-columns:1fr 1fr}
+    .steps{grid-template-columns:repeat(2,1fr)}
+    .show{grid-template-columns:1fr}
+    .trust{grid-template-columns:1fr}
+  }
+</style>
+
+<style id="flat-bg-fix">
+/* Force a single, uniform page background */
+html, body{
+  background:#0b1730 !important;         /* flat navy */
+  background-image:none !important;       /* remove radial/linear hazes */
+}
+
+/* Remove any section/stripe backgrounds */
+section, .hero, .plans, .show, .trust, .steps, .kpis, .slider, footer{
+  background:transparent !important;
+}
+section::before, section::after, .plans::before, .plans::after{
+  content:none !important;
+}
+
+/* Neutralize specific overlays */
+.ticker{ background:transparent !important; }
+.screen{ background:rgba(255,255,255,.04) !important; } /* subtle glass, no tints */
+
+/* Keep cards readable without adding page tint */
+.card, .step, .plan{
+  background:rgba(255,255,255,.03) !important;
+  background-image:none !important;
+}
+</style>
+
+</head>
+<body>
+  <!-- Floating glow orbs -->
+  <div class="orb a"></div><div class="orb b"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="wrap nav" id="nav">
+      <a class="brand" href="#" aria-label="Cedrus Capital Home">
+        <!-- Cedar glyph -->
+        <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <defs><linearGradient id="g" x1="0" y1="0" x2="64" y2="64"><stop stop-color="#facc15"/><stop offset="1" stop-color="#fde047"/></linearGradient></defs>
+          <path d="M32 6c7 8 12 10 20 14-6 0-10 2-14 5 6 2 11 4 18 6-9 1-16 3-24 8-8-5-15-7-24-8 7-2 12-4 18-6-4-3-8-5-14-5 8-4 13-6 20-14z" fill="url(#g)"/>
+          <path d="M31 36h2v20h-2z" fill="#facc15"/>
+        </svg>
+        <span>Cedrus Capital</span>
+      </a>
+      <nav class="menu" aria-label="Primary">
+        <a href="#why">Why</a>
+        <a href="#plans">Portfolios</a>
+        <a href="#how">How</a>
+        <a href="#contact">Contact</a>
+        <a href="#open" class="btn btn-primary" style="text-decoration:none">Open Account</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Toggle menu">☰</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="pill">New • Zero deposit fees on local transfers</div>
+      <h1 class="title">Grow <span class="spark">strong</span>. Invest with <span class="spark">clarity</span>.</h1>
+      <p class="lead muted">Cedrus Capital helps small investors build wealth with diversified portfolios, transparent pricing, and a sleek experience tuned for mobile.</p>
+      <div class="hero-cta">
+        <a href="#plans" class="btn btn-primary">View Portfolios</a>
+        <a href="#contact" class="btn btn-ghost">Talk to an Advisor</a>
+      </div>
+
+      <div class="kpis">
+        <div class="kpi"><b>0.5%–1.0%</b><br><span class="muted">All-in annual fee</span></div>
+        <div class="kpi"><b>$100</b><br><span class="muted">Minimum to start</span></div>
+        <div class="kpi"><b>24/7</b><br><span class="muted">Dashboard access</span></div>
+      </div>
+
+      <div class="show">
+        <div class="screen card">
+          <!-- Mini dashboard mock -->
+          <div class="card-pad">
+            <div class="pill">Portfolio • Balanced</div>
+            <h3 style="margin:10px 0 0">₿ / 🌍 Global Mix</h3>
+            <p class="muted" style="margin:6px 0 12px">Equities + Bonds + Cash — auto-rebalanced</p>
+            <div class="grid-2">
+              <div class="card card-pad">
+                <div class="muted">Account Value</div>
+                <div style="font-weight:900;font-size:1.6rem">$18,420</div>
+                <div class="muted">+7.4% YTD</div>
+              </div>
+              <div class="card card-pad estimator">
+                <div class="muted" style="margin-bottom:6px">Illustrative Growth</div>
+                <div class="row">
+                  <input id="amt" type="number" value="1000" min="100" placeholder="Initial ($)"/>
+                  <input id="yrs" type="number" value="5" min="1" placeholder="Years"/>
+                </div>
+                <button id="calc" class="btn btn-primary" style="margin-top:10px">Estimate</button>
+                <div id="out" class="muted" style="margin-top:8px"></div>
+              </div>
+            </div>
+          </div>
+          <div class="ticker">
+            <span>US Equities ▲ 0.8%</span><span>EU Bonds ▲ 0.2%</span><span>EM Equities ▼ 0.4%</span><span>Gold ▲ 0.3%</span><span>Lebanon Eurobonds —</span>
+          </div>
+        </div>
+
+        <div class="card card-pad">
+          <h3 style="margin:0 0 8px">Why people switch</h3>
+          <div class="grid-3">
+            <div><span class="tag">Low fees</span><p class="muted">Keep more of your returns with transparent pricing.</p></div>
+            <div><span class="tag">Diversified</span><p class="muted">Global ETFs across sectors and regions.</p></div>
+            <div><span class="tag">Secure</span><p class="muted">Institutional-grade custody and controls.</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plans -->
+  <section id="plans" class="wrap plans">
+    <h2 style="margin:4px 0 10px">Portfolio Lineup</h2>
+    <p class="muted" style="margin:0 0 12px">Pick your track — or we’ll tailor it to your goals.</p>
+    <div class="grid-3">
+      <div class="card card-pad plan">
+        <div class="head"><span class="tag">Conservative</span><span class="price">2–4% target</span></div>
+        <ul class="list">
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Higher bond allocation</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Short duration exposure</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>1–3 year horizon</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost" style="margin-top:12px">Start Conservative</a>
+      </div>
+
+      <div class="card card-pad plan pop">
+        <div class="head"><span class="tag">Balanced</span><span class="price">5–7% target</span></div>
+        <ul class="list">
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Global equities + bonds</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Quarterly rebalancing</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Medium risk / 3–5 years</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary" style="margin-top:12px">Start Balanced</a>
+      </div>
+
+      <div class="card card-pad plan">
+        <div class="head"><span class="tag">Growth</span><span class="price">7–10% target</span></div>
+        <ul class="list">
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Higher equity allocation</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Best for 5+ years</li>
+          <li><svg width="18" height="18" viewBox="0 0 24 24"><path d="M5 12l4 4L19 6" stroke="currentColor" fill="none" stroke-width="2"/></svg>Volatility-tolerant</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost" style="margin-top:12px">Start Growth</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how" class="wrap" style="margin-top:24px">
+    <h2 style="margin:4px 0 10px">How it works</h2>
+    <div class="steps">
+      <div class="step"><span class="num">1</span><h3 style="margin:8px 0">Sign up</h3><p class="muted">Create your account and verify identity securely.</p></div>
+      <div class="step"><span class="num">2</span><h3 style="margin:8px 0">Pick a plan</h3><p class="muted">We match risk to your goals via a short assessment.</p></div>
+      <div class="step"><span class="num">3</span><h3 style="margin:8px 0">Fund</h3><p class="muted">Local bank transfers or cards — zero deposit fees.</p></div>
+      <div class="step"><span class="num">4</span><h3 style="margin:8px 0">Track</h3><p class="muted">Auto‑rebalance; you monitor 24/7 on mobile.</p></div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="wrap" style="margin-top:24px">
+    <h2 style="margin:4px 0 10px">What clients say</h2>
+    <div class="slider" id="slider">
+      <div class="slides" id="slides">
+        <div class="slide">
+          <p class="muted">“Clean app, simple fees, and I can finally automate monthly investing. Love the Balanced plan.”</p>
+          <b>— Rana A.</b>
+        </div>
+        <div class="slide">
+          <p class="muted">“Transparent. No hidden charges. Great support on WhatsApp.”</p>
+          <b>— Hadi K.</b>
+        </div>
+        <div class="slide">
+          <p class="muted">“Started with $200 and kept adding each month. Smooth experience.”</p>
+          <b>— Maya S.</b>
+        </div>
+      </div>
+    </div>
+    <div class="dots" id="dots">
+      <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section id="trust" class="wrap" style="margin-top:24px">
+    <h2 style="margin:4px 0 10px">Trust & Transparency</h2>
+    <div class="trust">
+      <div class="card card-pad">
+        <h3 style="margin:0 0 6px">Compliance first</h3>
+        <p class="muted">We operate under applicable regulations. Client assets are segregated and safeguarded with reputable partners. Risk disclosures and Terms apply.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+          <span class="tag">KYC/AML</span><span class="tag">Segregated Accounts</span><span class="tag">Two‑Factor Auth</span>
+        </div>
+      </div>
+      <div class="doc">
+<pre style="white-space:pre-wrap;margin:0;font-family:ui-monospace,Menlo,monospace;color:var(--ink)">
+Cedrus Capital SAL
+Commercial Reg. (CRN): <YOUR-CRN-HERE>
+VAT: <YOUR-VAT>
+Registered Office: <Your Address, Beirut, Lebanon>
+Incorporation Date: <DD Mon YYYY>
+Status: Active
+</pre>
+        <small class="muted">Replace placeholders with your official details.</small>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="wrap" style="margin-top:24px;margin-bottom:16px">
+    <h2 style="margin:4px 0 10px">Get started</h2>
+    <div class="grid-2">
+      <form id="lead" class="card card-pad" action="lead.php" method="POST" novalidate>
+        <div class="grid-2" style="gap:10px">
+          <input name="name" placeholder="Full name*" required/>
+          <input name="email" type="email" placeholder="Email*" required/>
+        </div>
+        <div class="grid-2" style="gap:10px;margin-top:10px">
+          <input name="phone" placeholder="Phone (+961…)" />
+          <select name="plan">
+            <option value="">Plan (optional)</option>
+            <option>Conservative</option>
+            <option>Balanced</option>
+            <option>Growth</option>
+          </select>
+        </div>
+        <textarea name="msg" rows="4" placeholder="Your goals (optional)" style="margin-top:10px"></textarea>
+        <div id="note" class="muted" style="margin:6px 0"></div>
+        <button class="btn btn-primary" type="submit">Request Callback</button>
+      </form>
+
+      <div class="card card-pad">
+        <h3 style="margin:0 0 6px">Visit us</h3>
+        <p class="muted">📍 Beirut, Lebanon<br>✉️ hello@cedruscapital.example<br>☎️ +961 [number]</p>
+        <form id="news" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px" action="newsletter.php" method="POST" novalidate>
+          <input type="email" name="email" placeholder="Join newsletter (email)"/>
+          <button class="btn btn-ghost" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap foot">
+      <div>
+        <b>Cedrus Capital</b>
+        <div class="muted">© <span id="year"></span> Cedrus Capital. All rights reserved.</div>
+      </div>
+      <div>
+        <b>Legal</b>
+        <div><a href="#" class="muted">Risk Disclosure</a></div>
+        <div><a href="#" class="muted">Terms of Service</a></div>
+        <div><a href="#" class="muted">Privacy Policy</a></div>
+      </div>
+      <div>
+        <b>Follow</b>
+        <div><a href="#" class="muted">Instagram</a></div>
+        <div><a href="#" class="muted">Facebook</a></div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Mobile nav
+  const burger = document.getElementById('burger');
+  burger?.addEventListener('click', ()=> document.body.classList.toggle('nav-open'));
+
+  // Year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Simple estimator (8% annual, monthly compounding; illustrative only)
+  function estimate(){
+    const P = Math.max(0, parseFloat(document.getElementById('amt').value||0));
+    const Y = Math.max(1, parseInt(document.getElementById('yrs').value||1,10));
+    const r = 0.08/12, n = Y*12;
+    const total = P*Math.pow(1+r,n);
+    document.getElementById('out').innerHTML = "Projected value: <b style='color:var(--cedar-2)'>$"+ total.toFixed(2) +"</b> <span class='muted'>(Illustrative)</span>";
+  }
+  document.getElementById('calc').addEventListener('click', estimate);
+
+  // Lead form basic validation
+  const lead = document.getElementById('lead');
+  lead.addEventListener('submit', function(e){
+    const note = document.getElementById('note');
+    const name = this.name.value.trim();
+    const email = this.email.value.trim();
+    if(!name || !email || !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){
+      e.preventDefault(); note.textContent = "Please add your name and a valid email.";
+    } else { note.textContent = "Submitting…"; }
+  });
+
+  // Newsletter email check
+  document.getElementById('news').addEventListener('submit', function(e){
+    const email = this.email.value.trim();
+    if(email && !/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){
+      e.preventDefault(); alert('Enter a valid email.');
+    }
+  });
+
+  // Tiny testimonial slider (auto-rotate)
+  const slides = document.getElementById('slides');
+  const dots = Array.from(document.getElementById('dots').children);
+  let idx = 0;
+  setInterval(()=>{
+    idx = (idx+1)%3;
+    slides.style.transform = `translateX(-${idx*100}%)`;
+    dots.forEach((d,i)=> d.classList.toggle('active', i===idx));
+  }, 4000);
+</script>
+</body>
+</html>
